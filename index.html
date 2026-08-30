@@ -1,420 +1,739 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>FACE OF KULZZY RADIO 2026 | Online Pageantry</title>
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>
+FACE OF KULZZY RADIO 2026
+</title>
+
 
 <style>
+
+/* =====================================================
+   RESET
+===================================================== */
+
 *{
     box-sizing:border-box;
     margin:0;
     padding:0;
 }
 
-html{
-    scroll-behavior:smooth;
-}
+
+/* =====================================================
+   BODY
+===================================================== */
 
 body{
-    font-family:Arial, Helvetica, sans-serif;
-    background:#07152f;
-    color:#fff;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background:
+        #06122a;
+
+    color:#ffffff;
+
 }
 
-/* =========================
+
+/* =====================================================
    HERO
-========================= */
+===================================================== */
 
 .hero{
+
     min-height:430px;
+
     display:flex;
+
     align-items:center;
+
     justify-content:center;
+
     text-align:center;
-    padding:55px 20px 35px;
+
+    padding:55px 20px 40px;
+
     background:
-        radial-gradient(circle at top, rgba(255,215,0,.16), transparent 45%),
-        linear-gradient(135deg,#020914,#07152f 55%,#0d2146);
-    border-bottom:2px solid #ffd700;
+
+        radial-gradient(
+            circle at top,
+            rgba(255,215,0,.18),
+            transparent 45%
+        ),
+
+        linear-gradient(
+            135deg,
+            #020817,
+            #07152f 55%,
+            #0d2146
+        );
+
+    border-bottom:
+        2px solid #ffd700;
+
 }
 
-.hero-content{
-    max-width:900px;
-}
 
 .crown{
-    font-size:55px;
+
+    font-size:60px;
+
     margin-bottom:10px;
-    filter:drop-shadow(0 0 12px rgba(255,215,0,.5));
+
 }
+
 
 .partner{
+
     color:#ffd700;
-    font-size:15px;
-    font-weight:bold;
+
+    font-size:14px;
+
+    font-weight:900;
+
     letter-spacing:2px;
+
     margin-bottom:12px;
+
 }
+
 
 .hero h1{
-    font-size:clamp(38px,8vw,76px);
+
+    font-size:
+        clamp(
+            38px,
+            8vw,
+            75px
+        );
+
     line-height:.95;
-    font-weight:1000;
+
     color:#ffd700;
-    text-shadow:0 4px 20px rgba(0,0,0,.5);
+
+    font-weight:1000;
+
+    text-shadow:
+        0 5px 20px rgba(0,0,0,.5);
+
 }
+
 
 .hero h2{
+
     margin-top:18px;
-    font-size:clamp(20px,4vw,34px);
+
+    font-size:
+        clamp(
+            20px,
+            4vw,
+            32px
+        );
+
     letter-spacing:4px;
+
 }
+
 
 .hero p{
-    margin:20px auto 0;
+
     max-width:650px;
-    color:#dce5f5;
+
+    margin:
+        20px auto 0;
+
+    color:#c8d3e5;
+
     line-height:1.7;
-    font-size:16px;
+
 }
 
-/* =========================
-   PRIZE MARQUEE
-========================= */
+
+/* =====================================================
+   PRIZE SLIDER
+===================================================== */
 
 .prize-wrapper{
+
     overflow:hidden;
+
     background:#ffd700;
-    color:#07152f;
-    border-top:2px solid #fff;
-    border-bottom:2px solid #fff;
+
+    color:#06122a;
+
+    border-bottom:
+        2px solid #ffffff;
+
 }
+
 
 .prize-track{
-    width:max-content;
+
     display:flex;
-    animation:prizeScroll 24s linear infinite;
+
+    width:max-content;
+
+    animation:
+        prizeScroll
+        25s
+        linear
+        infinite;
+
 }
 
-.prize-item{
+
+.prize{
+
     white-space:nowrap;
-    padding:18px 35px;
-    font-size:17px;
-    font-weight:900;
+
+    padding:
+        17px 35px;
+
+    font-size:16px;
+
+    font-weight:1000;
+
 }
 
-.prize-item span{
-    margin-left:8px;
-}
 
 @keyframes prizeScroll{
+
     from{
-        transform:translateX(0);
+
+        transform:
+            translateX(0);
+
     }
+
     to{
-        transform:translateX(-50%);
+
+        transform:
+            translateX(-50%);
+
     }
+
 }
 
-/* =========================
-   SECTION
-========================= */
 
-.section{
+/* =====================================================
+   MAIN
+===================================================== */
+
+.container{
+
     max-width:1200px;
+
     margin:auto;
-    padding:55px 18px;
+
+    padding:
+        50px 15px;
+
 }
+
 
 .section-title{
+
     text-align:center;
-    margin-bottom:35px;
+
+    margin-bottom:30px;
+
 }
+
 
 .section-title h2{
+
     color:#ffd700;
-    font-size:clamp(28px,5vw,42px);
+
+    font-size:
+        clamp(
+            28px,
+            5vw,
+            42px
+        );
+
 }
+
 
 .section-title p{
-    color:#aebbd0;
+
     margin-top:10px;
+
+    color:#aebbd0;
+
 }
 
-/* =========================
+
+/* =====================================================
    LEADERBOARD
-========================= */
+===================================================== */
 
 .leaderboard{
-    background:linear-gradient(145deg,#0b1d3d,#061127);
-    border:1px solid rgba(255,215,0,.35);
+
+    background:
+        linear-gradient(
+            145deg,
+            #0b1d3d,
+            #061127
+        );
+
+    border:
+        1px solid
+        rgba(
+            255,
+            215,
+            0,
+            .3
+        );
+
     border-radius:20px;
-    padding:22px;
+
+    padding:20px;
+
     margin-bottom:50px;
-    box-shadow:0 15px 45px rgba(0,0,0,.25);
+
 }
+
 
 .leaderboard h3{
-    color:#ffd700;
+
     text-align:center;
-    margin-bottom:18px;
-    font-size:24px;
+
+    color:#ffd700;
+
+    margin-bottom:15px;
+
 }
 
-.rank-row{
-    display:flex;
-    align-items:center;
-    gap:15px;
-    padding:15px;
-    border-bottom:1px solid rgba(255,255,255,.08);
-}
-
-.rank-row:last-child{
-    border-bottom:0;
-}
 
 .rank{
-    width:42px;
-    height:42px;
+
     display:flex;
+
     align-items:center;
-    justify-content:center;
-    border-radius:50%;
-    background:#ffd700;
-    color:#07152f;
-    font-weight:900;
+
+    gap:12px;
+
+    padding:14px;
+
+    border-bottom:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            .08
+        );
+
 }
+
+
+.rank:last-child{
+
+    border-bottom:0;
+
+}
+
+
+.rank-number{
+
+    width:40px;
+
+    height:40px;
+
+    border-radius:50%;
+
+    display:grid;
+
+    place-items:center;
+
+    background:#ffd700;
+
+    color:#06122a;
+
+    font-weight:1000;
+
+}
+
 
 .rank-name{
+
     flex:1;
+
     font-weight:bold;
+
 }
+
 
 .rank-votes{
+
     color:#ffd700;
-    font-weight:900;
+
+    font-weight:1000;
+
 }
 
-/* =========================
-   CONTESTANTS
-========================= */
+
+/* =====================================================
+   CONTESTANT GRID
+===================================================== */
 
 .contestants{
+
     display:grid;
-    grid-template-columns:repeat(3,1fr);
+
+    grid-template-columns:
+        repeat(
+            3,
+            1fr
+        );
+
     gap:25px;
+
 }
 
-.contestant{
-    background:linear-gradient(145deg,#0c2043,#061126);
-    border:1px solid rgba(255,215,0,.28);
-    border-radius:22px;
+
+.card{
+
     overflow:hidden;
-    box-shadow:0 15px 40px rgba(0,0,0,.28);
-    transition:.3s ease;
+
+    background:
+        linear-gradient(
+            145deg,
+            #0c2043,
+            #061126
+        );
+
+    border:
+        1px solid
+        rgba(
+            255,
+            215,
+            0,
+            .25
+        );
+
+    border-radius:22px;
+
+    box-shadow:
+        0 15px 40px
+        rgba(
+            0,
+            0,
+            0,
+            .3
+        );
+
+    transition:
+        .3s;
+
 }
 
-.contestant:hover{
-    transform:translateY(-7px);
-    border-color:#ffd700;
-    box-shadow:0 20px 55px rgba(255,215,0,.12);
+
+.card:hover{
+
+    transform:
+        translateY(-6px);
+
+    border-color:
+        #ffd700;
+
 }
+
+
+/* =====================================================
+   PHOTO
+===================================================== */
 
 .photo{
+
     position:relative;
+
     width:100%;
-    aspect-ratio:4/5;
-    background:#102448;
-    overflow:hidden;
+
+    aspect-ratio:
+        4 / 5;
+
+    background:
+        #14294b;
+
 }
+
 
 .photo img{
+
     width:100%;
+
     height:100%;
+
     object-fit:cover;
+
     display:block;
+
 }
 
-.number{
+
+.contestant-number{
+
     position:absolute;
+
     top:14px;
+
     left:14px;
+
     background:#ffd700;
-    color:#07152f;
-    padding:8px 13px;
+
+    color:#06122a;
+
+    padding:
+        8px 13px;
+
     border-radius:20px;
-    font-size:13px;
-    font-weight:900;
-}
 
-.contestant-info{
-    padding:20px;
-    text-align:center;
-}
+    font-size:12px;
 
-.contestant-name{
-    font-size:22px;
-    font-weight:900;
-    margin-bottom:13px;
-}
-
-.vote-count{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:8px;
-    color:#ffd700;
-    font-size:23px;
-    font-weight:900;
-}
-
-.vote-money{
-    color:#aebbd0;
-    font-size:14px;
-    margin-top:7px;
-}
-
-.vote-btn{
-    width:100%;
-    border:0;
-    border-radius:12px;
-    padding:15px;
-    margin-top:18px;
-    background:#ffd700;
-    color:#07152f;
-    font-size:16px;
     font-weight:1000;
-    cursor:pointer;
-    transition:.2s;
+
 }
 
-.vote-btn:hover{
-    background:#fff;
-    transform:scale(1.02);
-}
 
-/* =========================
-   HOW IT WORKS
-========================= */
+/* =====================================================
+   CARD INFO
+===================================================== */
 
-.how{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:20px;
-}
+.info{
 
-.step{
-    padding:25px;
+    padding:20px;
+
     text-align:center;
-    background:#0a1b38;
-    border-radius:18px;
-    border:1px solid rgba(255,215,0,.2);
+
 }
 
-.step-icon{
-    font-size:35px;
-    margin-bottom:12px;
+
+.name{
+
+    font-size:22px;
+
+    font-weight:1000;
+
 }
 
-.step h3{
+
+.votes{
+
+    margin-top:12px;
+
     color:#ffd700;
-    margin-bottom:10px;
+
+    font-size:24px;
+
+    font-weight:1000;
+
 }
 
-.step p{
+
+.money{
+
+    margin-top:6px;
+
     color:#aebbd0;
-    line-height:1.6;
+
+    font-size:14px;
+
 }
 
-/* =========================
+
+/* =====================================================
+   VOTE BUTTON
+===================================================== */
+
+.vote-button{
+
+    width:100%;
+
+    margin-top:18px;
+
+    padding:15px;
+
+    border:0;
+
+    border-radius:12px;
+
+    background:#ffd700;
+
+    color:#06122a;
+
+    font-size:16px;
+
+    font-weight:1000;
+
+    cursor:pointer;
+
+}
+
+
+.vote-button:hover{
+
+    background:#ffffff;
+
+}
+
+
+/* =====================================================
+   EMPTY
+===================================================== */
+
+.empty{
+
+    text-align:center;
+
+    padding:50px 20px;
+
+    color:#9baac0;
+
+}
+
+
+/* =====================================================
    FOOTER
-========================= */
+===================================================== */
 
 footer{
+
     text-align:center;
+
     padding:35px 20px;
-    border-top:1px solid rgba(255,215,0,.2);
+
+    border-top:
+        1px solid
+        rgba(
+            255,
+            215,
+            0,
+            .2
+        );
+
     color:#8290a8;
+
 }
+
 
 footer strong{
+
     color:#ffd700;
+
 }
 
-/* =========================
+
+/* =====================================================
    MOBILE
-========================= */
+===================================================== */
 
 @media(max-width:850px){
 
     .contestants{
-        grid-template-columns:repeat(2,1fr);
+
+        grid-template-columns:
+            repeat(
+                2,
+                1fr
+            );
+
     }
 
-    .how{
-        grid-template-columns:1fr;
-    }
 }
+
 
 @media(max-width:560px){
 
-    .hero{
-        min-height:400px;
-        padding:45px 15px 30px;
+    .contestants{
+
+        grid-template-columns:
+            1fr;
+
     }
+
 
     .hero h1{
+
         font-size:42px;
+
     }
+
 
     .hero h2{
+
         font-size:19px;
+
         letter-spacing:2px;
+
     }
 
-    .section{
-        padding:40px 12px;
-    }
-
-    .contestants{
-        grid-template-columns:1fr;
-        gap:20px;
-    }
-
-    .prize-item{
-        padding:16px 24px;
-        font-size:15px;
-    }
 }
+
 </style>
+
 </head>
+
 
 <body>
 
-<!-- =========================
+
+<!-- =====================================================
      HERO
-========================= -->
+===================================================== -->
 
 <header class="hero">
 
-    <div class="hero-content">
+    <div>
 
-        <div class="crown">👑</div>
-
-        <div class="partner">
-            IN PARTNERSHIP WITH BW EMPIRE
+        <div class="crown">
+            👑
         </div>
 
-        <h1>FACE OF<br>KULZZY RADIO 2026</h1>
 
-        <h2>ONLINE PAGEANTRY</h2>
+        <div class="partner">
+
+            IN PARTNERSHIP WITH BW EMPIRE
+
+        </div>
+
+
+        <h1>
+
+            FACE OF<br>
+            KULZZY RADIO 2026
+
+        </h1>
+
+
+        <h2>
+
+            ONLINE PAGEANTRY
+
+        </h2>
+
 
         <p>
-            Welcome to the official Face of Kulzzy Radio 2026 online
-            pageantry. Support your favourite contestant and watch
-            the competition unfold.
+
+            Welcome to the official
+            Face of Kulzzy Radio 2026
+            online pageantry.
+
+            Support your favourite contestant
+            and follow the competition live.
+
         </p>
 
     </div>
@@ -422,46 +741,82 @@ footer strong{
 </header>
 
 
-<!-- =========================
-     SLIDING PRIZES
-========================= -->
+
+<!-- =====================================================
+     PRIZES
+===================================================== -->
 
 <div class="prize-wrapper">
 
     <div class="prize-track">
 
-        <div class="prize-item">
-            🥇 1ST PRIZE <span>₦1,000,000</span>
+
+        <div class="prize">
+
+            🥇 1ST PRIZE —
+            ₦1,000,000
+
         </div>
 
-        <div class="prize-item">
-            🥈 2ND PRIZE <span>₦300,000</span>
+
+        <div class="prize">
+
+            🥈 2ND PRIZE —
+            ₦300,000
+
         </div>
 
-        <div class="prize-item">
-            🥉 3RD PRIZE <span>₦100,000</span>
+
+        <div class="prize">
+
+            🥉 3RD PRIZE —
+            ₦100,000
+
         </div>
 
-        <div class="prize-item">
-            🎁 4TH PRIZE <span>CONSOLATION PRIZE FOR ALL CONTESTANTS</span>
+
+        <div class="prize">
+
+            🎁 4TH PRIZE —
+            CONSOLATION PRIZE
+            FOR ALL CONTESTANTS
+
         </div>
 
-        <!-- Repeat -->
 
-        <div class="prize-item">
-            🥇 1ST PRIZE <span>₦1,000,000</span>
+
+        <!-- REPEAT -->
+
+        <div class="prize">
+
+            🥇 1ST PRIZE —
+            ₦1,000,000
+
         </div>
 
-        <div class="prize-item">
-            🥈 2ND PRIZE <span>₦300,000</span>
+
+        <div class="prize">
+
+            🥈 2ND PRIZE —
+            ₦300,000
+
         </div>
 
-        <div class="prize-item">
-            🥉 3RD PRIZE <span>₦100,000</span>
+
+        <div class="prize">
+
+            🥉 3RD PRIZE —
+            ₦100,000
+
         </div>
 
-        <div class="prize-item">
-            🎁 4TH PRIZE <span>CONSOLATION PRIZE FOR ALL CONTESTANTS</span>
+
+        <div class="prize">
+
+            🎁 4TH PRIZE —
+            CONSOLATION PRIZE
+            FOR ALL CONTESTANTS
+
         </div>
 
     </div>
@@ -469,73 +824,47 @@ footer strong{
 </div>
 
 
-<!-- =========================
-     CONTESTANTS
-========================= -->
 
-<main class="section">
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="container">
+
+
+<!-- =====================================================
+     LEADERBOARD
+===================================================== -->
+
+<section>
 
     <div class="section-title">
-        <h2>👑 MEET THE CONTESTANTS</h2>
-        <p>Choose your favourite contestant and support her journey.</p>
+
+        <h2>
+            🏆 LIVE LEADERBOARD
+        </h2>
+
+        <p>
+            Contestants are ranked by
+            verified votes.
+        </p>
+
     </div>
 
-
-    <!-- LEADERBOARD -->
 
     <div class="leaderboard">
 
-        <h3>🏆 LIVE LEADERBOARD</h3>
-
-        <div id="leaderboard"></div>
-
-    </div>
+        <h3>
+            CURRENT RANKING
+        </h3>
 
 
-    <!-- CONTESTANT CARDS -->
+        <div id="leaderboard">
 
-    <div class="contestants" id="contestants"></div>
+            <div class="empty">
+                Loading leaderboard...
+            </div>
 
-</main>
-
-
-<!-- =========================
-     HOW VOTING WORKS
-========================= -->
-
-<section class="section">
-
-    <div class="section-title">
-        <h2>HOW TO VOTE</h2>
-        <p>Support your favourite contestant.</p>
-    </div>
-
-    <div class="how">
-
-        <div class="step">
-            <div class="step-icon">👑</div>
-            <h3>1. Choose</h3>
-            <p>
-                Select the contestant you want to support.
-            </p>
-        </div>
-
-        <div class="step">
-            <div class="step-icon">❤️</div>
-            <h3>2. Vote</h3>
-            <p>
-                Click the vote button and select the number
-                of votes you want to purchase.
-            </p>
-        </div>
-
-        <div class="step">
-            <div class="step-icon">🏆</div>
-            <h3>3. Support</h3>
-            <p>
-                Your verified votes will be added to your
-                contestant's total.
-            </p>
         </div>
 
     </div>
@@ -543,234 +872,603 @@ footer strong{
 </section>
 
 
+
+<!-- =====================================================
+     CONTESTANTS
+===================================================== -->
+
+<section>
+
+    <div class="section-title">
+
+        <h2>
+            👑 MEET THE CONTESTANTS
+        </h2>
+
+        <p>
+            Choose your favourite contestant
+            and support her journey.
+        </p>
+
+    </div>
+
+
+    <div
+        id="contestants"
+        class="contestants"
+    >
+
+        <div class="empty">
+
+            Loading contestants...
+
+        </div>
+
+    </div>
+
+</section>
+
+
+</main>
+
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
 <footer>
-    <strong>FACE OF KULZZY RADIO 2026</strong><br>
-    In Partnership with BW EMPIRE<br><br>
-    Kulzzy Radio Network — Celebrating Lives Everyday
+
+    <strong>
+        FACE OF KULZZY RADIO 2026
+    </strong>
+
+    <br>
+
+    In Partnership with BW EMPIRE
+
+    <br><br>
+
+    Kulzzy Radio Network
+    — Celebrating Lives Everyday
+
 </footer>
 
 
-<script>
 
-/*
-==================================================
-FACE OF KULZZY RADIO 2026
-FRONT-END DEMO DATA
+<!-- =====================================================
+     FIREBASE
+===================================================== -->
 
-The contestants below are placeholders.
-Replace the names and image URLs when contestants
-are ready.
-
-REAL CASH VOTING WILL BE CONNECTED LATER.
-==================================================
-*/
-
-const contestants = [
-
-    {
-        id: "001",
-        name: "Contestant Name 1",
-        image: "https://via.placeholder.com/800x1000?text=Contestant+001",
-        votes: 0,
-        money: 0
-    },
-
-    {
-        id: "002",
-        name: "Contestant Name 2",
-        image: "https://via.placeholder.com/800x1000?text=Contestant+002",
-        votes: 0,
-        money: 0
-    },
-
-    {
-        id: "003",
-        name: "Contestant Name 3",
-        image: "https://via.placeholder.com/800x1000?text=Contestant+003",
-        votes: 0,
-        money: 0
-    },
-
-    {
-        id: "004",
-        name: "Contestant Name 4",
-        image: "https://via.placeholder.com/800x1000?text=Contestant+004",
-        votes: 0,
-        money: 0
-    },
-
-    {
-        id: "005",
-        name: "Contestant Name 5",
-        image: "https://via.placeholder.com/800x1000?text=Contestant+005",
-        votes: 0,
-        money: 0
-    },
-
-    {
-        id: "006",
-        name: "Contestant Name 6",
-        image: "https://via.placeholder.com/800x1000?text=Contestant+006",
-        votes: 0,
-        money: 0
-    }
-
-];
+<script type="module">
 
 
-/*
-==================================================
-DISPLAY CONTESTANTS
-==================================================
-*/
+/* =====================================================
+   FIREBASE IMPORT
+===================================================== */
 
-function displayContestants(){
+import {
 
-    const container =
-        document.getElementById("contestants");
-
-    container.innerHTML = "";
-
-    contestants.forEach(contestant => {
-
-        const card = document.createElement("article");
-
-        card.className = "contestant";
-
-        card.innerHTML = `
-
-            <div class="photo">
-
-                <img
-                    src="${contestant.image}"
-                    alt="${contestant.name}"
-                >
-
-                <div class="number">
-                    CONTESTANT #${contestant.id}
-                </div>
-
-            </div>
-
-            <div class="contestant-info">
-
-                <div class="contestant-name">
-                    ${contestant.name}
-                </div>
-
-                <div class="vote-count">
-                    ❤️ ${contestant.votes.toLocaleString()} VOTES
-                </div>
-
-                <div class="vote-money">
-                    ₦${contestant.money.toLocaleString()}
-                    RAISED
-                </div>
-
-                <button
-                    class="vote-btn"
-                    onclick="vote('${contestant.id}')"
-                >
-                    ❤️ VOTE FOR ME
-                </button>
-
-            </div>
-
-        `;
-
-        container.appendChild(card);
-
-    });
+    initializeApp
 
 }
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 
-/*
-==================================================
-LEADERBOARD
-==================================================
-*/
+import {
 
-function displayLeaderboard(){
+    getDatabase,
 
-    const board =
-        document.getElementById("leaderboard");
+    ref,
 
-    const sorted =
-        [...contestants].sort(
-            (a,b) => b.votes - a.votes
+    onValue
+
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+
+
+/* =====================================================
+   FIREBASE CONFIG
+===================================================== */
+
+const firebaseConfig = {
+
+    apiKey:
+        "AIzaSyBH85NGWsSAK5cubbPdnmunwYZFZpj_CB0",
+
+    authDomain:
+        "kulzzy-radio-chat.firebaseapp.com",
+
+    databaseURL:
+        "https://kulzzy-radio-chat-default-rtdb.europe-west1.firebasedatabase.app",
+
+    projectId:
+        "kulzzy-radio-chat",
+
+    storageBucket:
+        "kulzzy-radio-chat.firebasestorage.app",
+
+    messagingSenderId:
+        "510100635134",
+
+    appId:
+        "1:510100635134:web:9d3b2e983eb6e9a385d4af"
+
+};
+
+
+
+/* =====================================================
+   START FIREBASE
+===================================================== */
+
+const app =
+    initializeApp(
+        firebaseConfig
+    );
+
+
+const db =
+    getDatabase(
+        app
+    );
+
+
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
+const contestantsElement =
+    document.getElementById(
+        "contestants"
+    );
+
+
+const leaderboardElement =
+    document.getElementById(
+        "leaderboard"
+    );
+
+
+
+/* =====================================================
+   LISTEN FOR CONTESTANTS
+===================================================== */
+
+const contestantsReference =
+    ref(
+        db,
+        "faceOfKulzzy/contestants"
+    );
+
+
+onValue(
+
+    contestantsReference,
+
+    snapshot => {
+
+        const data =
+            snapshot.val() || {};
+
+
+        const contestants =
+            Object.entries(
+                data
+            )
+
+            .map(
+                ([id, contestant]) => ({
+
+                    id,
+
+                    ...contestant
+
+                })
+            )
+
+            .filter(
+                contestant =>
+                    contestant.active !== false
+            );
+
+
+        contestants.sort(
+
+            (a,b) =>
+
+                Number(
+                    b.votes || 0
+                )
+
+                -
+
+                Number(
+                    a.votes || 0
+                )
+
         );
 
-    board.innerHTML = "";
 
-    sorted.forEach((contestant,index) => {
+        displayLeaderboard(
+            contestants
+        );
 
-        const row =
-            document.createElement("div");
 
-        row.className = "rank-row";
+        displayContestants(
+            contestants
+        );
 
-        row.innerHTML = `
+    },
 
-            <div class="rank">
-                ${index + 1}
-            </div>
+    error => {
 
-            <div class="rank-name">
-                ${contestant.name}
-            </div>
+        console.error(
+            error
+        );
 
-            <div class="rank-votes">
-                ❤️ ${contestant.votes.toLocaleString()}
+
+        contestantsElement.innerHTML = `
+
+            <div class="empty">
+
+                Unable to load contestants.
+
+                Please try again later.
+
             </div>
 
         `;
 
-        board.appendChild(row);
+    }
 
-    });
+);
+
+
+
+/* =====================================================
+   DISPLAY LEADERBOARD
+===================================================== */
+
+function displayLeaderboard(
+    contestants
+){
+
+    if(
+        contestants.length === 0
+    ){
+
+        leaderboardElement.innerHTML = `
+
+            <div class="empty">
+
+                No contestants have been
+                published yet.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    leaderboardElement.innerHTML =
+
+        contestants
+
+        .map(
+
+            (contestant,index) => `
+
+                <div class="rank">
+
+
+                    <div class="rank-number">
+
+                        ${index + 1}
+
+                    </div>
+
+
+                    <div class="rank-name">
+
+                        ${escapeHTML(
+                            contestant.name
+                        )}
+
+                    </div>
+
+
+                    <div class="rank-votes">
+
+                        ❤️
+
+                        ${Number(
+                            contestant.votes || 0
+                        ).toLocaleString()}
+
+                    </div>
+
+
+                </div>
+
+            `
+
+        )
+
+        .join("");
 
 }
 
 
-/*
-==================================================
-VOTE BUTTON
 
-For now this only demonstrates the interface.
-It does NOT create a real paid vote.
+/* =====================================================
+   DISPLAY CONTESTANTS
+===================================================== */
 
-The payment gateway and secure server verification
-will be connected in the next stage.
-==================================================
-*/
+function displayContestants(
+    contestants
+){
 
-function vote(id){
+    if(
+        contestants.length === 0
+    ){
 
-    const contestant =
-        contestants.find(c => c.id === id);
+        contestantsElement.innerHTML = `
 
-    if(!contestant) return;
+            <div class="empty">
+
+                Contestants will appear
+                here soon.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    contestantsElement.innerHTML =
+
+        contestants
+
+        .map(
+
+            contestant => `
+
+                <article
+                    class="card"
+                >
+
+
+                    <div
+                        class="photo"
+                    >
+
+                        <img
+
+                            src="${escapeAttribute(
+                                contestant.imageUrl
+                            )}"
+
+                            alt="${escapeAttribute(
+                                contestant.name
+                            )}"
+
+                            loading="lazy"
+
+                        >
+
+
+                        <div
+                            class="contestant-number"
+                        >
+
+                            CONTESTANT #
+
+                            ${escapeHTML(
+                                contestant.number
+                            )}
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div
+                        class="info"
+                    >
+
+
+                        <div
+                            class="name"
+                        >
+
+                            ${escapeHTML(
+                                contestant.name
+                            )}
+
+                        </div>
+
+
+                        <div
+                            class="votes"
+                        >
+
+                            ❤️
+
+                            ${Number(
+                                contestant.votes || 0
+                            ).toLocaleString()}
+
+                            VOTES
+
+                        </div>
+
+
+                        <div
+                            class="money"
+                        >
+
+                            ₦
+
+                            ${Number(
+                                contestant.money || 0
+                            ).toLocaleString()}
+
+                            RAISED
+
+                        </div>
+
+
+                        <button
+
+                            class="vote-button"
+
+                            data-id="${escapeAttribute(
+                                contestant.id
+                            )}"
+
+                        >
+
+                            ❤️ VOTE FOR ME
+
+                        </button>
+
+
+                    </div>
+
+
+                </article>
+
+            `
+
+        )
+
+        .join("");
+
+
+
+    /* =================================================
+       VOTE BUTTONS
+    ================================================= */
+
+    document
+        .querySelectorAll(
+            ".vote-button"
+        )
+        .forEach(
+
+            button => {
+
+                button.addEventListener(
+
+                    "click",
+
+                    () => {
+
+                        const id =
+                            button.dataset.id;
+
+
+                        openVotingMessage(
+                            id
+                        );
+
+                    }
+
+                );
+
+            }
+
+        );
+
+}
+
+
+
+/* =====================================================
+   TEMPORARY VOTING MESSAGE
+===================================================== */
+
+function openVotingMessage(
+    contestantId
+){
 
     alert(
-        "Voting for " +
-        contestant.name +
-        " will be connected to the secure payment system."
+
+        "Cash voting will be connected here. " +
+
+        "Contestant ID: " +
+
+        contestantId
+
     );
 
 }
 
 
-/*
-==================================================
-START PAGE
-==================================================
-*/
 
-displayContestants();
-displayLeaderboard();
+/* =====================================================
+   SECURITY
+===================================================== */
+
+function escapeHTML(
+    value
+){
+
+    return String(
+        value ?? ""
+    )
+
+    .replace(
+        /[&<>"']/g,
+
+        character => ({
+
+            "&":
+                "&amp;",
+
+            "<":
+                "&lt;",
+
+            ">":
+                "&gt;",
+
+            '"':
+                "&quot;",
+
+            "'":
+                "&#039;"
+
+        }[character])
+
+    );
+
+}
+
+
+function escapeAttribute(
+    value
+){
+
+    return escapeHTML(
+        value
+    );
+
+}
 
 </script>
 
 </body>
+
 </html>

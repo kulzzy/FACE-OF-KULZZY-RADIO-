@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Face of Kulzzy Radio 2026 — Admin</title>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#06122a;
+    color:#fff;
+}
+
+header{
+    padding:25px 15px;
+    text-align:center;
+    background:
+        radial-gradient(circle at top,
+        rgba(255,215,0,.18),
+        transparent 45%),
+        linear-gradient(135deg,#020817,#0b2044);
+
+    border-bottom:2px solid #ffd700;
+}
+
+header h1{
+    margin:0;
+    color:#ffd700;
+    font-size:clamp(25px,6vw,45px);
+}
+
+header p{
+    margin:8px 0 0;
+    color:#b9c6da;
+}
+
+.container{
+    max-width:1100px;
+    margin:auto;
+    padding:20px;
+}
+
+.panel{
+    background:#0b1d3d;
+    border:1px solid rgba(255,215,0,.3);
+    border-radius:18px;
+    padding:20px;
+    margin-bottom:20px;
+}
+
+h2{
+    color:#ffd700;
+    margin-top:0;
+}
+
+label{
+    display:block;
+    font-weight:bold;
+    margin-bottom:7px;
+    color:#dce5f5;
+}
+
+input{
+    width:100%;
+    padding:14px;
+    border-radius:10px;
+    border:1px solid #29466f;
+    background:#06122a;
+    color:#fff;
+    outline:none;
+}
+
+input:focus{
+    border-color:#ffd700;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+button{
+    border:0;
+    border-radius:10px;
+    padding:13px 18px;
+    font-weight:900;
+    cursor:pointer;
+}
+
+.primary{
+    background:#ffd700;
+    color:#06122a;
+}
+
+.secondary{
+    background:#284467;
+    color:#fff;
+}
+
+.danger{
+    background:#c92b3d;
+    color:#fff;
+}
+
+.actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:16px;
+}
+
+.status{
+    margin-top:12px;
+    color:#b9c6da;
+    min-height:20px;
+}
+
+.preview{
+    width:160px;
+    height:200px;
+    object-fit:cover;
+    border-radius:12px;
+    background:#14294b;
+    border:1px solid #34517b;
+    display:block;
+    margin-top:12px;
+}
+
+.table-wrap{
+    width:100%;
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,
+td{
+    padding:12px;
+    border-bottom:1px solid rgba(255,255,255,.1);
+    text-align:left;
+    white-space:nowrap;
+}
+
+th{
+    color:#ffd700;
+}
+
+.thumb{
+    width:55px;
+    height:65px;
+    object-fit:cover;
+    border-radius:8px;
+}
+
+.hidden{
+    display:none;
+}
+
+@media(max-width:700px){
+
+    .grid{
+        grid-template-columns:1fr;
+    }
+
+    .container{
+        padding:12px;
+    }
+
+    .panel{
+        padding:15px;
+    }
+
+    .actions button{
+        width:100%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+    <h1>👑 FACE OF KULZZY RADIO 2026</h1>
+
+    <p>
+        ADMIN CONTROL CENTER
+        • IN PARTNERSHIP WITH BW EMPIRE
+    </p>
+
+</header>
+
+
+<div class="container">
+
+
+<!-- ==========================
+     LOGIN
+========================== -->
+
+<section
+    id="loginPanel"
+    class="panel"
+>
+
+    <h2>🔐 ADMIN LOGIN</h2>
+
+    <p>
+        Login with the Firebase administrator account
+        authorized to manage the pageantry.
+    </p>
+
+    <div class="grid">
+
+        <div>
+
+            <label>
+                Email
+            </label>
+
+            <input
+                id="email"
+                type="email"
+                placeholder="Admin email"
+                autocomplete="username"
+            >
+
+        </div>
+
+
+        <div>
+
+            <label>
+                Password
+            </label>
+
+            <input
+                id="password"
+                type="password"
+                placeholder="Password"
+                autocomplete="current-password"
+            >
+
+        </div>
+
+    </div>
+
+
+    <div class="actions">
+
+        <button
+            id="loginBtn"
+            class="primary"
+        >
+            LOGIN
+        </button>
+
+    </div>
+
+
+    <div
+        id="loginStatus"
+        class="status"
+    ></div>
+
+</section>
+
+
+
+<!-- ==========================
+     ADMIN AREA
+========================== -->
+
+<section
+    id="adminPanel"
+    class="hidden"
+>
+
+
+<!-- ADD CONTESTANT -->
+
+<div class="panel">
+
+    <h2>
+        ➕ ADD CONTESTANT
+    </h2>
+
+
+    <input
+        id="editId"
+        type="hidden"
+    >
+
+
+    <div class="grid">
+
+        <div>
+
+            <label>
+                Contestant Number
+            </label>
+
+            <input
+                id="contestantNo"
+                type="text"
+                placeholder="001"
+            >
+
+        </div>
+
+
+        <div>
+
+            <label>
+                Contestant Name
+            </label>
+
+            <input
+                id="contestantName"
+                type="text"
+                placeholder="Full name"
+            >
+
+        </div>
+
+    </div>
+
+
+    <br>
+
+
+    <label>
+        Contestant Picture
+    </label>
+
+    <input
+        id="photoFile"
+        type="file"
+        accept="image/*"
+    >
+
+
+    <img
+        id="preview"
+        class="preview"
+        alt="Picture preview"
+    >
+
+
+    <br>
+
+
+    <label>
+        OR IMAGE URL
+    </label>
+
+    <input
+        id="photoUrl"
+        type="url"
+        placeholder="https://example.com/photo.jpg"
+    >
+
+
+    <div class="actions">
+
+        <button
+            id="saveBtn"
+            class="primary"
+        >
+            👑 PUBLISH CONTESTANT
+        </button>
+
+
+        <button
+            id="clearBtn"
+            class="secondary"
+        >
+            CLEAR
+        </button>
+
+    </div>
+
+
+    <div
+        id="formStatus"
+        class="status"
+    ></div>
+
+</div>
+
+
+
+<!-- CONTESTANT LIST -->
+
+<div class="panel">
+
+    <h2>
+        👑 PUBLISHED CONTESTANTS
+    </h2>
+
+
+    <div class="actions">
+
+        <button
+            id="refreshBtn"
+            class="secondary"
+        >
+            🔄 REFRESH
+        </button>
+
+
+        <button
+            id="logoutBtn"
+            class="danger"
+        >
+            LOGOUT
+        </button>
+
+    </div>
+
+
+    <div
+        id="listStatus"
+        class="status"
+    ></div>
+
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        PHOTO
+                    </th>
+
+                    <th>
+                        NUMBER
+                    </th>
+
+                    <th>
+                        NAME
+                    </th>
+
+                    <th>
+                        VOTES
+                    </th>
+
+                    <th>
+                        RAISED
+                    </th>
+
+                    <th>
+                        STATUS
+                    </th>
+
+                    <th>
+                        ACTIONS
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody
+                id="contestantRows"
+            ></tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+</section>
+
+</div>
+
+
+<script type="module" src="face-admin.js"></script>
+
+</body>
+</html>

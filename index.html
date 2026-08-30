@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>FACE OF KULZZY RADIO 2026 | Online Pageantry</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background:#07152f;
+    color:#fff;
+}
+
+/* =========================
+   HERO
+========================= */
+
+.hero{
+    min-height:430px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:55px 20px 35px;
+    background:
+        radial-gradient(circle at top, rgba(255,215,0,.16), transparent 45%),
+        linear-gradient(135deg,#020914,#07152f 55%,#0d2146);
+    border-bottom:2px solid #ffd700;
+}
+
+.hero-content{
+    max-width:900px;
+}
+
+.crown{
+    font-size:55px;
+    margin-bottom:10px;
+    filter:drop-shadow(0 0 12px rgba(255,215,0,.5));
+}
+
+.partner{
+    color:#ffd700;
+    font-size:15px;
+    font-weight:bold;
+    letter-spacing:2px;
+    margin-bottom:12px;
+}
+
+.hero h1{
+    font-size:clamp(38px,8vw,76px);
+    line-height:.95;
+    font-weight:1000;
+    color:#ffd700;
+    text-shadow:0 4px 20px rgba(0,0,0,.5);
+}
+
+.hero h2{
+    margin-top:18px;
+    font-size:clamp(20px,4vw,34px);
+    letter-spacing:4px;
+}
+
+.hero p{
+    margin:20px auto 0;
+    max-width:650px;
+    color:#dce5f5;
+    line-height:1.7;
+    font-size:16px;
+}
+
+/* =========================
+   PRIZE MARQUEE
+========================= */
+
+.prize-wrapper{
+    overflow:hidden;
+    background:#ffd700;
+    color:#07152f;
+    border-top:2px solid #fff;
+    border-bottom:2px solid #fff;
+}
+
+.prize-track{
+    width:max-content;
+    display:flex;
+    animation:prizeScroll 24s linear infinite;
+}
+
+.prize-item{
+    white-space:nowrap;
+    padding:18px 35px;
+    font-size:17px;
+    font-weight:900;
+}
+
+.prize-item span{
+    margin-left:8px;
+}
+
+@keyframes prizeScroll{
+    from{
+        transform:translateX(0);
+    }
+    to{
+        transform:translateX(-50%);
+    }
+}
+
+/* =========================
+   SECTION
+========================= */
+
+.section{
+    max-width:1200px;
+    margin:auto;
+    padding:55px 18px;
+}
+
+.section-title{
+    text-align:center;
+    margin-bottom:35px;
+}
+
+.section-title h2{
+    color:#ffd700;
+    font-size:clamp(28px,5vw,42px);
+}
+
+.section-title p{
+    color:#aebbd0;
+    margin-top:10px;
+}
+
+/* =========================
+   LEADERBOARD
+========================= */
+
+.leaderboard{
+    background:linear-gradient(145deg,#0b1d3d,#061127);
+    border:1px solid rgba(255,215,0,.35);
+    border-radius:20px;
+    padding:22px;
+    margin-bottom:50px;
+    box-shadow:0 15px 45px rgba(0,0,0,.25);
+}
+
+.leaderboard h3{
+    color:#ffd700;
+    text-align:center;
+    margin-bottom:18px;
+    font-size:24px;
+}
+
+.rank-row{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    padding:15px;
+    border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.rank-row:last-child{
+    border-bottom:0;
+}
+
+.rank{
+    width:42px;
+    height:42px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    background:#ffd700;
+    color:#07152f;
+    font-weight:900;
+}
+
+.rank-name{
+    flex:1;
+    font-weight:bold;
+}
+
+.rank-votes{
+    color:#ffd700;
+    font-weight:900;
+}
+
+/* =========================
+   CONTESTANTS
+========================= */
+
+.contestants{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:25px;
+}
+
+.contestant{
+    background:linear-gradient(145deg,#0c2043,#061126);
+    border:1px solid rgba(255,215,0,.28);
+    border-radius:22px;
+    overflow:hidden;
+    box-shadow:0 15px 40px rgba(0,0,0,.28);
+    transition:.3s ease;
+}
+
+.contestant:hover{
+    transform:translateY(-7px);
+    border-color:#ffd700;
+    box-shadow:0 20px 55px rgba(255,215,0,.12);
+}
+
+.photo{
+    position:relative;
+    width:100%;
+    aspect-ratio:4/5;
+    background:#102448;
+    overflow:hidden;
+}
+
+.photo img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
+.number{
+    position:absolute;
+    top:14px;
+    left:14px;
+    background:#ffd700;
+    color:#07152f;
+    padding:8px 13px;
+    border-radius:20px;
+    font-size:13px;
+    font-weight:900;
+}
+
+.contestant-info{
+    padding:20px;
+    text-align:center;
+}
+
+.contestant-name{
+    font-size:22px;
+    font-weight:900;
+    margin-bottom:13px;
+}
+
+.vote-count{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:8px;
+    color:#ffd700;
+    font-size:23px;
+    font-weight:900;
+}
+
+.vote-money{
+    color:#aebbd0;
+    font-size:14px;
+    margin-top:7px;
+}
+
+.vote-btn{
+    width:100%;
+    border:0;
+    border-radius:12px;
+    padding:15px;
+    margin-top:18px;
+    background:#ffd700;
+    color:#07152f;
+    font-size:16px;
+    font-weight:1000;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.vote-btn:hover{
+    background:#fff;
+    transform:scale(1.02);
+}
+
+/* =========================
+   HOW IT WORKS
+========================= */
+
+.how{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+}
+
+.step{
+    padding:25px;
+    text-align:center;
+    background:#0a1b38;
+    border-radius:18px;
+    border:1px solid rgba(255,215,0,.2);
+}
+
+.step-icon{
+    font-size:35px;
+    margin-bottom:12px;
+}
+
+.step h3{
+    color:#ffd700;
+    margin-bottom:10px;
+}
+
+.step p{
+    color:#aebbd0;
+    line-height:1.6;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+    text-align:center;
+    padding:35px 20px;
+    border-top:1px solid rgba(255,215,0,.2);
+    color:#8290a8;
+}
+
+footer strong{
+    color:#ffd700;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:850px){
+
+    .contestants{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .how{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:560px){
+
+    .hero{
+        min-height:400px;
+        padding:45px 15px 30px;
+    }
+
+    .hero h1{
+        font-size:42px;
+    }
+
+    .hero h2{
+        font-size:19px;
+        letter-spacing:2px;
+    }
+
+    .section{
+        padding:40px 12px;
+    }
+
+    .contestants{
+        grid-template-columns:1fr;
+        gap:20px;
+    }
+
+    .prize-item{
+        padding:16px 24px;
+        font-size:15px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =========================
+     HERO
+========================= -->
+
+<header class="hero">
+
+    <div class="hero-content">
+
+        <div class="crown">👑</div>
+
+        <div class="partner">
+            IN PARTNERSHIP WITH BW EMPIRE
+        </div>
+
+        <h1>FACE OF<br>KULZZY RADIO 2026</h1>
+
+        <h2>ONLINE PAGEANTRY</h2>
+
+        <p>
+            Welcome to the official Face of Kulzzy Radio 2026 online
+            pageantry. Support your favourite contestant and watch
+            the competition unfold.
+        </p>
+
+    </div>
+
+</header>
+
+
+<!-- =========================
+     SLIDING PRIZES
+========================= -->
+
+<div class="prize-wrapper">
+
+    <div class="prize-track">
+
+        <div class="prize-item">
+            🥇 1ST PRIZE <span>₦1,000,000</span>
+        </div>
+
+        <div class="prize-item">
+            🥈 2ND PRIZE <span>₦300,000</span>
+        </div>
+
+        <div class="prize-item">
+            🥉 3RD PRIZE <span>₦100,000</span>
+        </div>
+
+        <div class="prize-item">
+            🎁 4TH PRIZE <span>CONSOLATION PRIZE FOR ALL CONTESTANTS</span>
+        </div>
+
+        <!-- Repeat -->
+
+        <div class="prize-item">
+            🥇 1ST PRIZE <span>₦1,000,000</span>
+        </div>
+
+        <div class="prize-item">
+            🥈 2ND PRIZE <span>₦300,000</span>
+        </div>
+
+        <div class="prize-item">
+            🥉 3RD PRIZE <span>₦100,000</span>
+        </div>
+
+        <div class="prize-item">
+            🎁 4TH PRIZE <span>CONSOLATION PRIZE FOR ALL CONTESTANTS</span>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     CONTESTANTS
+========================= -->
+
+<main class="section">
+
+    <div class="section-title">
+        <h2>👑 MEET THE CONTESTANTS</h2>
+        <p>Choose your favourite contestant and support her journey.</p>
+    </div>
+
+
+    <!-- LEADERBOARD -->
+
+    <div class="leaderboard">
+
+        <h3>🏆 LIVE LEADERBOARD</h3>
+
+        <div id="leaderboard"></div>
+
+    </div>
+
+
+    <!-- CONTESTANT CARDS -->
+
+    <div class="contestants" id="contestants"></div>
+
+</main>
+
+
+<!-- =========================
+     HOW VOTING WORKS
+========================= -->
+
+<section class="section">
+
+    <div class="section-title">
+        <h2>HOW TO VOTE</h2>
+        <p>Support your favourite contestant.</p>
+    </div>
+
+    <div class="how">
+
+        <div class="step">
+            <div class="step-icon">👑</div>
+            <h3>1. Choose</h3>
+            <p>
+                Select the contestant you want to support.
+            </p>
+        </div>
+
+        <div class="step">
+            <div class="step-icon">❤️</div>
+            <h3>2. Vote</h3>
+            <p>
+                Click the vote button and select the number
+                of votes you want to purchase.
+            </p>
+        </div>
+
+        <div class="step">
+            <div class="step-icon">🏆</div>
+            <h3>3. Support</h3>
+            <p>
+                Your verified votes will be added to your
+                contestant's total.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+
+<footer>
+    <strong>FACE OF KULZZY RADIO 2026</strong><br>
+    In Partnership with BW EMPIRE<br><br>
+    Kulzzy Radio Network — Celebrating Lives Everyday
+</footer>
+
+
+<script>
+
+/*
+==================================================
+FACE OF KULZZY RADIO 2026
+FRONT-END DEMO DATA
+
+The contestants below are placeholders.
+Replace the names and image URLs when contestants
+are ready.
+
+REAL CASH VOTING WILL BE CONNECTED LATER.
+==================================================
+*/
+
+const contestants = [
+
+    {
+        id: "001",
+        name: "Contestant Name 1",
+        image: "https://via.placeholder.com/800x1000?text=Contestant+001",
+        votes: 0,
+        money: 0
+    },
+
+    {
+        id: "002",
+        name: "Contestant Name 2",
+        image: "https://via.placeholder.com/800x1000?text=Contestant+002",
+        votes: 0,
+        money: 0
+    },
+
+    {
+        id: "003",
+        name: "Contestant Name 3",
+        image: "https://via.placeholder.com/800x1000?text=Contestant+003",
+        votes: 0,
+        money: 0
+    },
+
+    {
+        id: "004",
+        name: "Contestant Name 4",
+        image: "https://via.placeholder.com/800x1000?text=Contestant+004",
+        votes: 0,
+        money: 0
+    },
+
+    {
+        id: "005",
+        name: "Contestant Name 5",
+        image: "https://via.placeholder.com/800x1000?text=Contestant+005",
+        votes: 0,
+        money: 0
+    },
+
+    {
+        id: "006",
+        name: "Contestant Name 6",
+        image: "https://via.placeholder.com/800x1000?text=Contestant+006",
+        votes: 0,
+        money: 0
+    }
+
+];
+
+
+/*
+==================================================
+DISPLAY CONTESTANTS
+==================================================
+*/
+
+function displayContestants(){
+
+    const container =
+        document.getElementById("contestants");
+
+    container.innerHTML = "";
+
+    contestants.forEach(contestant => {
+
+        const card = document.createElement("article");
+
+        card.className = "contestant";
+
+        card.innerHTML = `
+
+            <div class="photo">
+
+                <img
+                    src="${contestant.image}"
+                    alt="${contestant.name}"
+                >
+
+                <div class="number">
+                    CONTESTANT #${contestant.id}
+                </div>
+
+            </div>
+
+            <div class="contestant-info">
+
+                <div class="contestant-name">
+                    ${contestant.name}
+                </div>
+
+                <div class="vote-count">
+                    ❤️ ${contestant.votes.toLocaleString()} VOTES
+                </div>
+
+                <div class="vote-money">
+                    ₦${contestant.money.toLocaleString()}
+                    RAISED
+                </div>
+
+                <button
+                    class="vote-btn"
+                    onclick="vote('${contestant.id}')"
+                >
+                    ❤️ VOTE FOR ME
+                </button>
+
+            </div>
+
+        `;
+
+        container.appendChild(card);
+
+    });
+
+}
+
+
+/*
+==================================================
+LEADERBOARD
+==================================================
+*/
+
+function displayLeaderboard(){
+
+    const board =
+        document.getElementById("leaderboard");
+
+    const sorted =
+        [...contestants].sort(
+            (a,b) => b.votes - a.votes
+        );
+
+    board.innerHTML = "";
+
+    sorted.forEach((contestant,index) => {
+
+        const row =
+            document.createElement("div");
+
+        row.className = "rank-row";
+
+        row.innerHTML = `
+
+            <div class="rank">
+                ${index + 1}
+            </div>
+
+            <div class="rank-name">
+                ${contestant.name}
+            </div>
+
+            <div class="rank-votes">
+                ❤️ ${contestant.votes.toLocaleString()}
+            </div>
+
+        `;
+
+        board.appendChild(row);
+
+    });
+
+}
+
+
+/*
+==================================================
+VOTE BUTTON
+
+For now this only demonstrates the interface.
+It does NOT create a real paid vote.
+
+The payment gateway and secure server verification
+will be connected in the next stage.
+==================================================
+*/
+
+function vote(id){
+
+    const contestant =
+        contestants.find(c => c.id === id);
+
+    if(!contestant) return;
+
+    alert(
+        "Voting for " +
+        contestant.name +
+        " will be connected to the secure payment system."
+    );
+
+}
+
+
+/*
+==================================================
+START PAGE
+==================================================
+*/
+
+displayContestants();
+displayLeaderboard();
+
+</script>
+
+</body>
+</html>

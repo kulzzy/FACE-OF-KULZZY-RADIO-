@@ -5,10 +5,11 @@
 
 <meta charset="UTF-8">
 
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<meta name="theme-color"
+      content="#06122a">
 
 <title>
 FACE OF KULZZY RADIO 2026
@@ -32,6 +33,10 @@ FACE OF KULZZY RADIO 2026
    BODY
 ===================================================== */
 
+html{
+    scroll-behavior:smooth;
+}
+
 body{
 
     font-family:
@@ -39,10 +44,11 @@ body{
         Helvetica,
         sans-serif;
 
-    background:
-        #06122a;
+    background:#06122a;
 
     color:#ffffff;
+
+    min-height:100vh;
 
 }
 
@@ -63,7 +69,7 @@ body{
 
     text-align:center;
 
-    padding:55px 20px 40px;
+    padding:55px 20px 45px;
 
     background:
 
@@ -105,7 +111,7 @@ body{
 
     letter-spacing:2px;
 
-    margin-bottom:12px;
+    margin-bottom:14px;
 
 }
 
@@ -126,14 +132,15 @@ body{
     font-weight:1000;
 
     text-shadow:
-        0 5px 20px rgba(0,0,0,.5);
+        0 5px 20px
+        rgba(0,0,0,.5);
 
 }
 
 
 .hero h2{
 
-    margin-top:18px;
+    margin-top:20px;
 
     font-size:
         clamp(
@@ -149,10 +156,9 @@ body{
 
 .hero p{
 
-    max-width:650px;
+    max-width:700px;
 
-    margin:
-        20px auto 0;
+    margin:20px auto 0;
 
     color:#c8d3e5;
 
@@ -166,6 +172,8 @@ body{
 ===================================================== */
 
 .prize-wrapper{
+
+    width:100%;
 
     overflow:hidden;
 
@@ -187,7 +195,7 @@ body{
 
     animation:
         prizeScroll
-        25s
+        28s
         linear
         infinite;
 
@@ -233,6 +241,8 @@ body{
 
 .container{
 
+    width:100%;
+
     max-width:1200px;
 
     margin:auto;
@@ -242,6 +252,10 @@ body{
 
 }
 
+
+/* =====================================================
+   SECTION TITLE
+===================================================== */
 
 .section-title{
 
@@ -262,6 +276,8 @@ body{
             5vw,
             42px
         );
+
+    font-weight:1000;
 
 }
 
@@ -301,7 +317,7 @@ body{
 
     padding:20px;
 
-    margin-bottom:50px;
+    margin-bottom:55px;
 
 }
 
@@ -314,6 +330,8 @@ body{
 
     margin-bottom:15px;
 
+    font-size:20px;
+
 }
 
 
@@ -325,7 +343,7 @@ body{
 
     gap:12px;
 
-    padding:14px;
+    padding:14px 8px;
 
     border-bottom:
         1px solid
@@ -350,6 +368,8 @@ body{
 
     width:40px;
 
+    min-width:40px;
+
     height:40px;
 
     border-radius:50%;
@@ -373,6 +393,12 @@ body{
 
     font-weight:bold;
 
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+
+    white-space:nowrap;
+
 }
 
 
@@ -382,11 +408,13 @@ body{
 
     font-weight:1000;
 
+    white-space:nowrap;
+
 }
 
 
 /* =====================================================
-   CONTESTANT GRID
+   CONTESTANTS GRID
 ===================================================== */
 
 .contestants{
@@ -396,13 +424,20 @@ body{
     grid-template-columns:
         repeat(
             3,
-            1fr
+            minmax(
+                0,
+                1fr
+            )
         );
 
     gap:25px;
 
 }
 
+
+/* =====================================================
+   CONTESTANT CARD
+===================================================== */
 
 .card{
 
@@ -436,7 +471,8 @@ body{
         );
 
     transition:
-        .3s;
+        transform .3s,
+        border-color .3s;
 
 }
 
@@ -446,8 +482,7 @@ body{
     transform:
         translateY(-6px);
 
-    border-color:
-        #ffd700;
+    border-color:#ffd700;
 
 }
 
@@ -462,11 +497,11 @@ body{
 
     width:100%;
 
-    aspect-ratio:
-        4 / 5;
+    aspect-ratio:4 / 5;
 
-    background:
-        #14294b;
+    background:#14294b;
+
+    overflow:hidden;
 
 }
 
@@ -527,6 +562,8 @@ body{
 
     font-weight:1000;
 
+    word-break:break-word;
+
 }
 
 
@@ -580,6 +617,8 @@ body{
 
     cursor:pointer;
 
+    transition:.2s;
+
 }
 
 
@@ -590,8 +629,17 @@ body{
 }
 
 
+.vote-button:disabled{
+
+    opacity:.6;
+
+    cursor:not-allowed;
+
+}
+
+
 /* =====================================================
-   EMPTY
+   EMPTY / LOADING
 ===================================================== */
 
 .empty{
@@ -601,6 +649,236 @@ body{
     padding:50px 20px;
 
     color:#9baac0;
+
+    grid-column:1 / -1;
+
+}
+
+
+/* =====================================================
+   VOTING MODAL
+===================================================== */
+
+.vote-modal{
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:9999;
+
+    display:none;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:20px;
+
+    background:
+        rgba(
+            0,
+            0,
+            0,
+            .78
+        );
+
+    backdrop-filter:
+        blur(8px);
+
+}
+
+
+.vote-modal.active{
+
+    display:flex;
+
+}
+
+
+.vote-box{
+
+    width:100%;
+
+    max-width:450px;
+
+    max-height:
+        calc(
+            100vh - 40px
+        );
+
+    overflow:auto;
+
+    background:
+        linear-gradient(
+            145deg,
+            #0c2145,
+            #061127
+        );
+
+    border:
+        1px solid
+        rgba(
+            255,
+            215,
+            0,
+            .4
+        );
+
+    border-radius:22px;
+
+    padding:25px;
+
+    box-shadow:
+        0 30px 80px
+        rgba(
+            0,
+            0,
+            0,
+            .6
+        );
+
+}
+
+
+.vote-box h2{
+
+    color:#ffd700;
+
+    text-align:center;
+
+    margin-bottom:8px;
+
+}
+
+
+.vote-box p{
+
+    text-align:center;
+
+    color:#aebbd0;
+
+    line-height:1.5;
+
+}
+
+
+.vote-input,
+.vote-email,
+.vote-name{
+
+    width:100%;
+
+    margin-top:12px;
+
+    padding:15px;
+
+    border-radius:12px;
+
+    border:
+        1px solid #35517b;
+
+    background:#06122a;
+
+    color:#ffffff;
+
+    font-size:16px;
+
+    outline:none;
+
+}
+
+
+.vote-input{
+
+    margin-top:20px;
+
+    font-size:18px;
+
+}
+
+
+.vote-input:focus,
+.vote-email:focus,
+.vote-name:focus{
+
+    border-color:#ffd700;
+
+}
+
+
+.vote-preview{
+
+    text-align:center;
+
+    margin-top:13px;
+
+    color:#ffd700;
+
+    font-weight:900;
+
+    line-height:1.5;
+
+}
+
+
+.vote-actions{
+
+    display:flex;
+
+    gap:10px;
+
+    margin-top:20px;
+
+}
+
+
+.vote-actions button{
+
+    flex:1;
+
+    padding:14px;
+
+    border:0;
+
+    border-radius:12px;
+
+    font-weight:900;
+
+    cursor:pointer;
+
+}
+
+
+.pay-now{
+
+    background:#ffd700;
+
+    color:#06122a;
+
+}
+
+
+.cancel-vote{
+
+    background:#294568;
+
+    color:#ffffff;
+
+}
+
+
+.vote-message{
+
+    margin-top:15px;
+
+    text-align:center;
+
+    min-height:20px;
+
+    color:#c8d3e5;
+
+    line-height:1.5;
 
 }
 
@@ -626,6 +904,8 @@ footer{
 
     color:#8290a8;
 
+    line-height:1.7;
+
 }
 
 
@@ -637,7 +917,7 @@ footer strong{
 
 
 /* =====================================================
-   MOBILE
+   TABLET
 ===================================================== */
 
 @media(max-width:850px){
@@ -647,7 +927,10 @@ footer strong{
         grid-template-columns:
             repeat(
                 2,
-                1fr
+                minmax(
+                    0,
+                    1fr
+                )
             );
 
     }
@@ -655,12 +938,26 @@ footer strong{
 }
 
 
+/* =====================================================
+   MOBILE
+===================================================== */
+
 @media(max-width:560px){
 
     .contestants{
 
         grid-template-columns:
             1fr;
+
+    }
+
+
+    .hero{
+
+        min-height:390px;
+
+        padding:
+            45px 15px 35px;
 
     }
 
@@ -677,6 +974,55 @@ footer strong{
         font-size:19px;
 
         letter-spacing:2px;
+
+    }
+
+
+    .hero p{
+
+        font-size:14px;
+
+    }
+
+
+    .rank{
+
+        padding:
+            12px 2px;
+
+    }
+
+
+    .rank-number{
+
+        width:34px;
+
+        min-width:34px;
+
+        height:34px;
+
+        font-size:13px;
+
+    }
+
+
+    .rank-name{
+
+        font-size:14px;
+
+    }
+
+
+    .rank-votes{
+
+        font-size:13px;
+
+    }
+
+
+    .vote-actions{
+
+        flex-direction:column;
 
     }
 
@@ -743,7 +1089,7 @@ footer strong{
 
 
 <!-- =====================================================
-     PRIZES
+     PRIZE SLIDER
 ===================================================== -->
 
 <div class="prize-wrapper">
@@ -784,8 +1130,7 @@ footer strong{
         </div>
 
 
-
-        <!-- REPEAT -->
+        <!-- REPEAT FOR CONTINUOUS SLIDER -->
 
         <div class="prize">
 
@@ -862,7 +1207,9 @@ footer strong{
         <div id="leaderboard">
 
             <div class="empty">
+
                 Loading leaderboard...
+
             </div>
 
         </div>
@@ -914,6 +1261,107 @@ footer strong{
 
 
 <!-- =====================================================
+     VOTE MODAL
+===================================================== -->
+
+<div
+    id="voteModal"
+    class="vote-modal"
+>
+
+    <div class="vote-box">
+
+        <h2>
+            ❤️ SUPPORT CONTESTANT
+        </h2>
+
+
+        <p id="selectedContestant">
+
+            Contestant
+
+        </p>
+
+
+        <input
+            id="voterName"
+            class="vote-name"
+            type="text"
+            placeholder="Your name"
+            autocomplete="name"
+        >
+
+
+        <input
+            id="voterEmail"
+            class="vote-email"
+            type="email"
+            placeholder="Your email"
+            autocomplete="email"
+        >
+
+
+        <input
+            id="voteAmount"
+            class="vote-input"
+            type="number"
+            min="100"
+            step="100"
+            inputmode="numeric"
+            placeholder="Enter amount e.g. 1000"
+        >
+
+
+        <div
+            id="votePreview"
+            class="vote-preview"
+        >
+
+            ₦100 = 1 vote
+
+        </div>
+
+
+        <div class="vote-actions">
+
+
+            <button
+                id="cancelVote"
+                class="cancel-vote"
+                type="button"
+            >
+
+                CANCEL
+
+            </button>
+
+
+            <button
+                id="payNow"
+                class="pay-now"
+                type="button"
+            >
+
+                CONTINUE TO PAYMENT
+
+            </button>
+
+
+        </div>
+
+
+        <div
+            id="voteMessage"
+            class="vote-message"
+        ></div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
      FOOTER
 ===================================================== -->
 
@@ -927,7 +1375,7 @@ footer strong{
 
     In Partnership with BW EMPIRE
 
-    <br><br>
+    <br>
 
     Kulzzy Radio Network
     — Celebrating Lives Everyday
@@ -944,7 +1392,7 @@ footer strong{
 
 
 /* =====================================================
-   FIREBASE IMPORT
+   FIREBASE IMPORTS
 ===================================================== */
 
 import {
@@ -1034,9 +1482,81 @@ const leaderboardElement =
     );
 
 
+const voteModal =
+    document.getElementById(
+        "voteModal"
+    );
+
+
+const selectedContestantElement =
+    document.getElementById(
+        "selectedContestant"
+    );
+
+
+const voteAmount =
+    document.getElementById(
+        "voteAmount"
+    );
+
+
+const votePreview =
+    document.getElementById(
+        "votePreview"
+    );
+
+
+const voterName =
+    document.getElementById(
+        "voterName"
+    );
+
+
+const voterEmail =
+    document.getElementById(
+        "voterEmail"
+    );
+
+
+const voteMessage =
+    document.getElementById(
+        "voteMessage"
+    );
+
+
+const payNow =
+    document.getElementById(
+        "payNow"
+    );
+
+
+const cancelVote =
+    document.getElementById(
+        "cancelVote"
+    );
+
+
 
 /* =====================================================
-   LISTEN FOR CONTESTANTS
+   VOTE UNIT
+===================================================== */
+
+const VOTE_UNIT = 100;
+
+
+
+/* =====================================================
+   CONTESTANT MEMORY
+===================================================== */
+
+let contestants = [];
+
+let selectedContestant = null;
+
+
+
+/* =====================================================
+   FIREBASE CONTESTANTS
 ===================================================== */
 
 const contestantsReference =
@@ -1056,12 +1576,14 @@ onValue(
             snapshot.val() || {};
 
 
-        const contestants =
+        contestants =
+
             Object.entries(
                 data
             )
 
             .map(
+
                 ([id, contestant]) => ({
 
                     id,
@@ -1069,11 +1591,15 @@ onValue(
                     ...contestant
 
                 })
+
             )
 
             .filter(
+
                 contestant =>
+
                     contestant.active !== false
+
             );
 
 
@@ -1108,6 +1634,7 @@ onValue(
     error => {
 
         console.error(
+            "Firebase error:",
             error
         );
 
@@ -1124,6 +1651,17 @@ onValue(
 
         `;
 
+
+        leaderboardElement.innerHTML = `
+
+            <div class="empty">
+
+                Unable to load leaderboard.
+
+            </div>
+
+        `;
+
     }
 
 );
@@ -1131,15 +1669,15 @@ onValue(
 
 
 /* =====================================================
-   DISPLAY LEADERBOARD
+   LEADERBOARD
 ===================================================== */
 
 function displayLeaderboard(
-    contestants
+    list
 ){
 
     if(
-        contestants.length === 0
+        list.length === 0
     ){
 
         leaderboardElement.innerHTML = `
@@ -1160,7 +1698,7 @@ function displayLeaderboard(
 
     leaderboardElement.innerHTML =
 
-        contestants
+        list
 
         .map(
 
@@ -1209,15 +1747,15 @@ function displayLeaderboard(
 
 
 /* =====================================================
-   DISPLAY CONTESTANTS
+   CONTESTANT CARDS
 ===================================================== */
 
 function displayContestants(
-    contestants
+    list
 ){
 
     if(
-        contestants.length === 0
+        list.length === 0
     ){
 
         contestantsElement.innerHTML = `
@@ -1238,7 +1776,7 @@ function displayContestants(
 
     contestantsElement.innerHTML =
 
-        contestants
+        list
 
         .map(
 
@@ -1253,6 +1791,7 @@ function displayContestants(
                         class="photo"
                     >
 
+
                         <img
 
                             src="${escapeAttribute(
@@ -1265,6 +1804,10 @@ function displayContestants(
 
                             loading="lazy"
 
+                            onerror="
+                                this.style.display='none';
+                            "
+
                         >
 
 
@@ -1275,10 +1818,12 @@ function displayContestants(
                             CONTESTANT #
 
                             ${escapeHTML(
-                                contestant.number
+                                contestant.number ||
+                                ""
                             )}
 
                         </div>
+
 
                     </div>
 
@@ -1338,6 +1883,8 @@ function displayContestants(
                                 contestant.id
                             )}"
 
+                            type="button"
+
                         >
 
                             ❤️ VOTE FOR ME
@@ -1358,10 +1905,6 @@ function displayContestants(
 
 
 
-    /* =================================================
-       VOTE BUTTONS
-    ================================================= */
-
     document
         .querySelectorAll(
             ".vote-button"
@@ -1376,12 +1919,8 @@ function displayContestants(
 
                     () => {
 
-                        const id =
-                            button.dataset.id;
-
-
-                        openVotingMessage(
-                            id
+                        openVotingModal(
+                            button.dataset.id
                         );
 
                     }
@@ -1397,20 +1936,90 @@ function displayContestants(
 
 
 /* =====================================================
-   TEMPORARY VOTING MESSAGE
+   OPEN VOTING MODAL
 ===================================================== */
 
-function openVotingMessage(
+function openVotingModal(
     contestantId
 ){
 
-    alert(
+    selectedContestant =
 
-        "Cash voting will be connected here. " +
+        contestants.find(
 
-        "Contestant ID: " +
+            contestant =>
 
-        contestantId
+                contestant.id ===
+                contestantId
+
+        );
+
+
+    if(
+        !selectedContestant
+    ){
+
+        return;
+
+    }
+
+
+    selectedContestantElement.textContent =
+
+        "Contestant #" +
+
+        (
+            selectedContestant.number ||
+            ""
+        ) +
+
+        " — " +
+
+        selectedContestant.name;
+
+
+    voterName.value =
+        "";
+
+
+    voterEmail.value =
+        "";
+
+
+    voteAmount.value =
+        "";
+
+
+    votePreview.textContent =
+        "₦100 = 1 vote";
+
+
+    voteMessage.textContent =
+        "";
+
+
+    payNow.disabled =
+        false;
+
+
+    payNow.textContent =
+        "CONTINUE TO PAYMENT";
+
+
+    voteModal.classList.add(
+        "active"
+    );
+
+
+    setTimeout(
+
+        () => {
+
+            voterName.focus();
+
+        },
+
+        100
 
     );
 
@@ -1419,7 +2028,428 @@ function openVotingMessage(
 
 
 /* =====================================================
-   SECURITY
+   CLOSE MODAL
+===================================================== */
+
+cancelVote.addEventListener(
+
+    "click",
+
+    closeVotingModal
+
+);
+
+
+voteModal.addEventListener(
+
+    "click",
+
+    event => {
+
+        if(
+            event.target ===
+            voteModal
+        ){
+
+            closeVotingModal();
+
+        }
+
+    }
+
+);
+
+
+function closeVotingModal(){
+
+    voteModal.classList.remove(
+        "active"
+    );
+
+}
+
+
+
+/* =====================================================
+   ESC KEY
+===================================================== */
+
+document.addEventListener(
+
+    "keydown",
+
+    event => {
+
+        if(
+            event.key ===
+            "Escape"
+        ){
+
+            closeVotingModal();
+
+        }
+
+    }
+
+);
+
+
+
+/* =====================================================
+   LIVE VOTE CALCULATOR
+===================================================== */
+
+voteAmount.addEventListener(
+
+    "input",
+
+    () => {
+
+        const amount =
+            Number(
+                voteAmount.value
+            );
+
+
+        if(
+            !amount
+        ){
+
+            votePreview.textContent =
+                "₦100 = 1 vote";
+
+            return;
+
+        }
+
+
+        if(
+            amount < VOTE_UNIT
+        ){
+
+            votePreview.textContent =
+                "Minimum voting amount is ₦100.";
+
+            return;
+
+        }
+
+
+        if(
+            amount % VOTE_UNIT !== 0
+        ){
+
+            votePreview.textContent =
+                "Enter an amount in multiples of ₦100.";
+
+            return;
+
+        }
+
+
+        const votes =
+            amount /
+            VOTE_UNIT;
+
+
+        votePreview.textContent =
+
+            "❤️ " +
+
+            votes.toLocaleString() +
+
+            " vote" +
+
+            (
+                votes === 1
+                    ? ""
+                    : "s"
+            ) +
+
+            " for ₦" +
+
+            amount.toLocaleString();
+
+    }
+
+);
+
+
+
+/* =====================================================
+   START KORA PAYMENT
+===================================================== */
+
+payNow.addEventListener(
+
+    "click",
+
+    startPayment
+
+);
+
+
+async function startPayment(){
+
+    if(
+        !selectedContestant
+    ){
+
+        return;
+
+    }
+
+
+    const name =
+        voterName.value.trim();
+
+
+    const email =
+        voterEmail.value.trim();
+
+
+    const amount =
+        Number(
+            voteAmount.value
+        );
+
+
+    /* -----------------------------------------------
+       VALIDATE NAME
+    ----------------------------------------------- */
+
+    if(
+        !name
+    ){
+
+        voteMessage.textContent =
+            "Please enter your name.";
+
+        voterName.focus();
+
+        return;
+
+    }
+
+
+    /* -----------------------------------------------
+       VALIDATE EMAIL
+    ----------------------------------------------- */
+
+    if(
+        !email ||
+        !isValidEmail(email)
+    ){
+
+        voteMessage.textContent =
+            "Please enter a valid email address.";
+
+        voterEmail.focus();
+
+        return;
+
+    }
+
+
+    /* -----------------------------------------------
+       VALIDATE AMOUNT
+    ----------------------------------------------- */
+
+    if(
+        !Number.isFinite(
+            amount
+        ) ||
+
+        amount < VOTE_UNIT
+    ){
+
+        voteMessage.textContent =
+            "Minimum voting amount is ₦100.";
+
+        voteAmount.focus();
+
+        return;
+
+    }
+
+
+    if(
+        amount % VOTE_UNIT !== 0
+    ){
+
+        voteMessage.textContent =
+            "Amount must be a multiple of ₦100.";
+
+        voteAmount.focus();
+
+        return;
+
+    }
+
+
+    /* -----------------------------------------------
+       DISABLE BUTTON
+    ----------------------------------------------- */
+
+    payNow.disabled =
+        true;
+
+
+    payNow.textContent =
+        "CREATING PAYMENT...";
+
+
+    voteMessage.textContent =
+        "Please wait while we prepare your payment...";
+
+
+    try{
+
+
+        /* -------------------------------------------
+           SEND TO SECURE BACKEND
+        ------------------------------------------- */
+
+        const response =
+            await fetch(
+
+                "/.netlify/functions/create-payment",
+
+                {
+
+                    method:
+                        "POST",
+
+                    headers:{
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body:
+
+                        JSON.stringify({
+
+                            contestantId:
+                                selectedContestant.id,
+
+                            amount,
+
+                            voterName:
+                                name,
+
+                            voterEmail:
+                                email
+
+                        })
+
+                }
+
+            );
+
+
+        let result;
+
+
+        try{
+
+            result =
+                await response.json();
+
+        }
+
+        catch{
+
+            result = {};
+
+        }
+
+
+        if(
+            !response.ok
+        ){
+
+            throw new Error(
+
+                result.message ||
+
+                "Unable to create payment."
+
+            );
+
+        }
+
+
+        if(
+            !result.checkout_url
+        ){
+
+            throw new Error(
+
+                "Kora checkout link was not returned."
+
+            );
+
+        }
+
+
+        /* -------------------------------------------
+           SEND CUSTOMER TO KORA
+        ------------------------------------------- */
+
+        window.location.href =
+            result.checkout_url;
+
+    }
+
+    catch(error){
+
+        console.error(
+            "Payment error:",
+            error
+        );
+
+
+        voteMessage.textContent =
+
+            error.message ||
+
+            "Unable to start payment. Please try again.";
+
+
+        payNow.disabled =
+            false;
+
+
+        payNow.textContent =
+            "CONTINUE TO PAYMENT";
+
+    }
+
+}
+
+
+
+/* =====================================================
+   EMAIL VALIDATION
+===================================================== */
+
+function isValidEmail(
+    email
+){
+
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        .test(
+            email
+        );
+
+}
+
+
+
+/* =====================================================
+   HTML SECURITY
 ===================================================== */
 
 function escapeHTML(

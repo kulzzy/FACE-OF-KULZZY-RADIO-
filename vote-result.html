@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+>
+
+<title>
+Vote Result — Face of Kulzzy Radio 2026
+</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+
+    margin:0;
+
+    min-height:100vh;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:20px;
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    background:#06122a;
+
+    color:white;
+
+}
+
+
+.box{
+
+    width:100%;
+
+    max-width:500px;
+
+    text-align:center;
+
+    padding:35px 25px;
+
+    border-radius:22px;
+
+    background:#0b1d3d;
+
+    border:
+        1px solid
+        rgba(
+            255,
+            215,
+            0,
+            .35
+        );
+
+}
+
+
+.icon{
+
+    font-size:60px;
+
+}
+
+
+h1{
+
+    color:#ffd700;
+
+}
+
+
+p{
+
+    color:#b9c6da;
+
+    line-height:1.6;
+
+}
+
+
+.back{
+
+    display:inline-block;
+
+    margin-top:20px;
+
+    padding:14px 25px;
+
+    border-radius:12px;
+
+    background:#ffd700;
+
+    color:#06122a;
+
+    font-weight:900;
+
+    text-decoration:none;
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="box">
+
+    <div
+        id="icon"
+        class="icon"
+    >
+        ⏳
+    </div>
+
+
+    <h1 id="title">
+        Checking Payment...
+    </h1>
+
+
+    <p id="message">
+        Please wait while we verify
+        your payment.
+    </p>
+
+
+    <a
+        class="back"
+        href="index.html"
+    >
+        BACK TO CONTESTANTS
+    </a>
+
+</div>
+
+
+
+<script>
+
+const params =
+    new URLSearchParams(
+        window.location.search
+    );
+
+
+const reference =
+    params.get(
+        "reference"
+    );
+
+
+const icon =
+    document.getElementById(
+        "icon"
+    );
+
+
+const title =
+    document.getElementById(
+        "title"
+    );
+
+
+const message =
+    document.getElementById(
+        "message"
+    );
+
+
+async function checkPayment(){
+
+    if(!reference){
+
+        icon.textContent =
+            "❌";
+
+        title.textContent =
+            "Payment Reference Missing";
+
+        message.textContent =
+            "We could not find your payment reference.";
+
+        return;
+
+    }
+
+
+    try{
+
+        const response =
+            await fetch(
+
+                `/.netlify/functions/payment-status?reference=${encodeURIComponent(reference)}`
+
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if(
+            result.status ===
+            "credited"
+        ){
+
+            icon.textContent =
+                "🎉";
+
+
+            title.textContent =
+                "VOTE SUCCESSFUL!";
+
+
+            message.innerHTML =
+
+                "Your support for <strong>" +
+
+                escapeHTML(
+                    result.contestantName
+                ) +
+
+                "</strong> has been recorded.<br><br>" +
+
+                "❤️ Votes added: <strong>" +
+
+                Number(
+                    result.votes
+                ).toLocaleString() +
+
+                "</strong><br>" +
+
+                "💰 Amount paid: <strong>₦" +
+
+                Number(
+                    result.amount
+                ).toLocaleString() +
+
+                "</strong>";
+
+            return;
+
+        }
+
+
+        if(
+            result.status ===
+            "underpaid"
+        ){
+
+            icon.textContent =
+                "⚠️";
+
+
+            title.textContent =
+                "Payment Requires Review";
+
+
+            message.textContent =
+                "The payment amount did not match the expected voting amount.";
+
+            return;
+
+        }
+
+
+        icon.textContent =
+            "⏳";
+
+
+        title.textContent =
+            "Payment Still Processing";
+
+
+        message.textContent =
+            "Your payment has not been confirmed yet. Please wait a moment and refresh this page.";
+
+    }
+
+    catch(error){
+
+        console.error(
+            error
+        );
+
+
+        icon.textContent =
+            "❌";
+
+
+        title.textContent =
+            "Unable to Verify";
+
+
+        message.textContent =
+            "We could not verify the payment right now. Please try again shortly.";
+
+    }
+
+}
+
+
+function escapeHTML(
+    value
+){
+
+    return String(
+        value ?? ""
+    )
+
+    .replace(
+        /[&<>"']/g,
+
+        character => ({
+
+            "&":
+                "&amp;",
+
+            "<":
+                "&lt;",
+
+            ">":
+                "&gt;",
+
+            '"':
+                "&quot;",
+
+            "'":
+                "&#039;"
+
+        }[character])
+
+    );
+
+}
+
+
+checkPayment();
+
+</script>
+
+</body>
+
+</html>

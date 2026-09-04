@@ -107,7 +107,7 @@ const CLOUDINARY_CLOUD_NAME =
 
 
 const CLOUDINARY_UPLOAD_PRESET =
-    "Community Chat";
+    "face-of-kulzzy-radio-2026";
 
 
 /* =====================================================

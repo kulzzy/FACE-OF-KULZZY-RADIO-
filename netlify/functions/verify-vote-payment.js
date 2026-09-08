@@ -1,6 +1,7 @@
 const { getStore } = require("@netlify/blobs");
 
-const ALLOWED_ORIGIN = "https://kulzzy.github.io";
+const ALLOWED_ORIGIN =
+  "https://kulzzy.github.io";
 
 const FIREBASE_DATABASE_URL =
   "https://kulzzy-radio-chat-default-rtdb.europe-west1.firebasedatabase.app";
@@ -36,16 +37,254 @@ function response(statusCode, body) {
 }
 
 
-exports.handler = async function (event) {
+/* =====================================================
+   FIREBASE URL
+===================================================== */
+
+function contestantUrl(
+  contestantId
+) {
+
+  return (
+
+    FIREBASE_DATABASE_URL +
+
+    "/faceOfKulzzy/contestants/" +
+
+    encodeURIComponent(
+      contestantId
+    ) +
+
+    ".json?auth=" +
+
+    encodeURIComponent(
+      process.env.FIREBASE_DATABASE_SECRET
+    )
+
+  );
+
+}
+
+
+/* =====================================================
+   ADD VOTES USING FIREBASE ETAG
+===================================================== */
+
+async function addVotesToContestant(
+  contestantId,
+  votesToAdd
+) {
+
+  const url =
+    contestantUrl(
+      contestantId
+    );
+
+
+  const MAX_RETRIES = 5;
+
+
+  for (
+    let attempt = 1;
+    attempt <= MAX_RETRIES;
+    attempt++
+  ) {
+
+    /* ---------------------------------------------
+       GET CURRENT CONTESTANT + ETAG
+    --------------------------------------------- */
+
+    const getResponse =
+      await fetch(
+        url,
+        {
+          method: "GET",
+
+          headers: {
+
+            "X-Firebase-ETag":
+              "true"
+
+          }
+
+        }
+      );
+
+
+    if (
+      !getResponse.ok
+    ) {
+
+      throw new Error(
+        "Unable to read contestant from Firebase."
+      );
+
+    }
+
+
+    const etag =
+      getResponse.headers.get(
+        "ETag"
+      );
+
+
+    const contestant =
+      await getResponse.json();
+
+
+    if (!contestant) {
+
+      throw new Error(
+        "Contestant no longer exists."
+      );
+
+    }
+
+
+    if (
+      contestant.active === false
+    ) {
+
+      throw new Error(
+        "This contestant is no longer active."
+      );
+
+    }
+
+
+    const currentVotes =
+      Number(
+        contestant.votes || 0
+      );
+
+
+    const newVotes =
+      currentVotes +
+      Number(votesToAdd);
+
+
+    const updatedContestant = {
+
+      ...contestant,
+
+      votes:
+        newVotes
+
+    };
+
+
+    /* ---------------------------------------------
+       CONDITIONAL UPDATE
+    --------------------------------------------- */
+
+    const updateResponse =
+      await fetch(
+        url,
+        {
+
+          method:
+            "PUT",
+
+          headers: {
+
+            "Content-Type":
+              "application/json",
+
+            "If-Match":
+              etag || "*"
+
+          },
+
+          body:
+            JSON.stringify(
+              updatedContestant
+            )
+
+        }
+      );
+
+
+    /* ---------------------------------------------
+       SUCCESS
+    --------------------------------------------- */
+
+    if (
+      updateResponse.ok
+    ) {
+
+      return {
+
+        previousVotes:
+          currentVotes,
+
+        newVotes
+
+      };
+
+    }
+
+
+    /* ---------------------------------------------
+       ETAG CONFLICT
+       TRY AGAIN
+    --------------------------------------------- */
+
+    if (
+      updateResponse.status === 412
+    ) {
+
+      continue;
+
+    }
+
+
+    let errorText = "";
+
+    try {
+
+      errorText =
+        await updateResponse.text();
+
+    } catch {}
+
+    console.error(
+      "FIREBASE UPDATE ERROR:",
+      errorText
+    );
+
+
+    throw new Error(
+      "Unable to update contestant votes."
+    );
+
+  }
+
+
+  throw new Error(
+    "The contestant votes changed while processing the payment. Please try again."
+  );
+
+}
+
+
+/* =====================================================
+   MAIN HANDLER
+===================================================== */
+
+exports.handler =
+  async function(event) {
+
 
   if (
-    event.httpMethod === "OPTIONS"
+    event.httpMethod ===
+    "OPTIONS"
   ) {
 
     return response(
       200,
       {
-        success: true
+        success:
+          true
       }
     );
 
@@ -53,15 +292,20 @@ exports.handler = async function (event) {
 
 
   if (
-    event.httpMethod !== "POST"
+    event.httpMethod !==
+    "POST"
   ) {
 
     return response(
       405,
       {
-        success: false,
+
+        success:
+          false,
+
         message:
-          "Method not allowed"
+          "Method not allowed."
+
       }
     );
 
@@ -70,6 +314,10 @@ exports.handler = async function (event) {
 
   try {
 
+    /* ---------------------------------------------
+       CHECK ENVIRONMENT VARIABLES
+    --------------------------------------------- */
+
     if (
       !process.env.FLW_SECRET_KEY
     ) {
@@ -77,9 +325,13 @@ exports.handler = async function (event) {
       return response(
         500,
         {
-          success: false,
+
+          success:
+            false,
+
           message:
             "Flutterwave secret key is not configured."
+
         }
       );
 
@@ -93,20 +345,28 @@ exports.handler = async function (event) {
       return response(
         500,
         {
-          success: false,
+
+          success:
+            false,
+
           message:
             "Firebase database secret is not configured."
+
         }
       );
 
     }
 
 
-    let data;
+    /* ---------------------------------------------
+       READ REQUEST
+    --------------------------------------------- */
+
+    let requestData;
 
     try {
 
-      data =
+      requestData =
         JSON.parse(
           event.body || "{}"
         );
@@ -116,48 +376,70 @@ exports.handler = async function (event) {
       return response(
         400,
         {
-          success: false,
+
+          success:
+            false,
+
           message:
             "Invalid verification request."
+
         }
       );
 
     }
 
 
-    const {
-
-      txRef,
-
-      transactionId
-
-    } = data;
+    const txRef =
+      String(
+        requestData.txRef || ""
+      ).trim();
 
 
-    /* =================================================
-       VALIDATE REQUEST
-    ================================================= */
+    const transactionId =
+      String(
+        requestData.transactionId || ""
+      ).trim();
 
-    if (
-      !txRef ||
-      !transactionId
-    ) {
+
+    if (!txRef) {
 
       return response(
         400,
         {
-          success: false,
+
+          success:
+            false,
+
           message:
-            "Transaction information is missing."
+            "Transaction reference is missing."
+
         }
       );
 
     }
 
 
-    /* =================================================
-       LOAD PENDING VOTE
-    ================================================= */
+    if (!transactionId) {
+
+      return response(
+        400,
+        {
+
+          success:
+            false,
+
+          message:
+            "Flutterwave transaction ID is missing."
+
+        }
+      );
+
+    }
+
+
+    /* ---------------------------------------------
+       OPEN VOTE STORE
+    --------------------------------------------- */
 
     const store =
       getStore({
@@ -171,36 +453,22 @@ exports.handler = async function (event) {
       });
 
 
-    const pending =
+    /* ---------------------------------------------
+       CHECK IF ALREADY PROCESSED
+    --------------------------------------------- */
+
+    const alreadyProcessed =
       await store.get(
-        "pending/" + txRef,
+        `processed/${txRef}`,
         {
-          type: "json"
+          type:
+            "json"
         }
       );
 
-
-    if (!pending) {
-
-      return response(
-        404,
-        {
-          success: false,
-          message:
-            "Pending vote could not be found."
-        }
-      );
-
-    }
-
-
-    /* =================================================
-       PREVENT DUPLICATE PROCESSING
-    ================================================= */
 
     if (
-      pending.status ===
-      "PAID"
+      alreadyProcessed
     ) {
 
       return response(
@@ -213,14 +481,17 @@ exports.handler = async function (event) {
           alreadyProcessed:
             true,
 
+          contestantName:
+            alreadyProcessed.contestantName,
+
+          votesAdded:
+            alreadyProcessed.votesAdded,
+
+          totalVotes:
+            alreadyProcessed.totalVotes,
+
           message:
-            "This payment has already been processed.",
-
-          contestantId:
-            pending.contestantId,
-
-          votes:
-            pending.votes
+            "This payment has already been processed."
 
         }
       );
@@ -228,17 +499,53 @@ exports.handler = async function (event) {
     }
 
 
-    /* =================================================
-       VERIFY WITH FLUTTERWAVE
-    ================================================= */
+    /* ---------------------------------------------
+       GET PENDING VOTE
+    --------------------------------------------- */
 
-    const verificationResponse =
+    const pendingVote =
+      await store.get(
+        `pending/${txRef}`,
+        {
+          type:
+            "json"
+        }
+      );
+
+
+    if (
+      !pendingVote
+    ) {
+
+      return response(
+        404,
+        {
+
+          success:
+            false,
+
+          message:
+            "Voting transaction could not be found."
+
+        }
+      );
+
+    }
+
+
+    /* ---------------------------------------------
+       VERIFY TRANSACTION WITH FLUTTERWAVE
+    --------------------------------------------- */
+
+    const verifyResponse =
       await fetch(
 
         "https://api.flutterwave.com/v3/transactions/" +
+
         encodeURIComponent(
           transactionId
         ) +
+
         "/verify",
 
         {
@@ -250,10 +557,7 @@ exports.handler = async function (event) {
 
             "Authorization":
               "Bearer " +
-              process.env.FLW_SECRET_KEY,
-
-            "Content-Type":
-              "application/json"
+              process.env.FLW_SECRET_KEY
 
           }
 
@@ -262,12 +566,12 @@ exports.handler = async function (event) {
       );
 
 
-    let verification = {};
+    let verification;
 
     try {
 
       verification =
-        await verificationResponse.json();
+        await verifyResponse.json();
 
     } catch {
 
@@ -277,10 +581,16 @@ exports.handler = async function (event) {
 
 
     if (
-      !verificationResponse.ok ||
-      verification.status !== "success" ||
+      !verifyResponse.ok ||
+      verification.status !==
+        "success" ||
       !verification.data
     ) {
+
+      console.error(
+        "FLUTTERWAVE VERIFY ERROR:",
+        verification
+      );
 
       return response(
         400,
@@ -298,17 +608,25 @@ exports.handler = async function (event) {
     }
 
 
-    const transaction =
+    const payment =
       verification.data;
 
 
-    /* =================================================
-       CHECK PAYMENT STATUS
-    ================================================= */
+    /* ---------------------------------------------
+       VERIFY PAYMENT STATUS
+    --------------------------------------------- */
+
+    const paymentStatus =
+      String(
+        payment.status || ""
+      ).toLowerCase();
+
 
     if (
-      transaction.status !==
-        "successful"
+      paymentStatus !==
+        "successful" &&
+      paymentStatus !==
+        "completed"
     ) {
 
       return response(
@@ -327,17 +645,15 @@ exports.handler = async function (event) {
     }
 
 
-    /* =================================================
-       CHECK TRANSACTION REFERENCE
-    ================================================= */
+    /* ---------------------------------------------
+       VERIFY TRANSACTION REFERENCE
+    --------------------------------------------- */
 
     if (
       String(
-        transaction.tx_ref || ""
+        payment.tx_ref || ""
       ) !==
-      String(
-        txRef
-      )
+      txRef
     ) {
 
       return response(
@@ -356,13 +672,13 @@ exports.handler = async function (event) {
     }
 
 
-    /* =================================================
-       CHECK CURRENCY
-    ================================================= */
+    /* ---------------------------------------------
+       VERIFY CURRENCY
+    --------------------------------------------- */
 
     if (
       String(
-        transaction.currency || ""
+        payment.currency || ""
       ).toUpperCase() !==
       "NGN"
     ) {
@@ -383,19 +699,19 @@ exports.handler = async function (event) {
     }
 
 
-    /* =================================================
-       CHECK AMOUNT
-    ================================================= */
+    /* ---------------------------------------------
+       VERIFY AMOUNT
+    --------------------------------------------- */
 
     const paidAmount =
       Number(
-        transaction.amount
+        payment.amount
       );
 
 
     const expectedAmount =
       Number(
-        pending.amount
+        pendingVote.amount
       );
 
 
@@ -403,7 +719,7 @@ exports.handler = async function (event) {
       !Number.isFinite(
         paidAmount
       ) ||
-      paidAmount <
+      paidAmount !==
         expectedAmount
     ) {
 
@@ -415,7 +731,7 @@ exports.handler = async function (event) {
             false,
 
           message:
-            "The verified payment amount does not match the voting amount."
+            "The payment amount does not match the voting amount."
 
         }
       );
@@ -423,17 +739,19 @@ exports.handler = async function (event) {
     }
 
 
-    /* =================================================
-       CALCULATE VOTES
-    ================================================= */
+    /* ---------------------------------------------
+       CALCULATE VERIFIED VOTES
+    --------------------------------------------- */
 
     const votesToAdd =
-      Math.floor(
-        expectedAmount / 100
-      );
+      expectedAmount /
+      100;
 
 
     if (
+      !Number.isInteger(
+        votesToAdd
+      ) ||
       votesToAdd < 1
     ) {
 
@@ -445,7 +763,7 @@ exports.handler = async function (event) {
             false,
 
           message:
-            "Invalid vote amount."
+            "Invalid voting amount."
 
         }
       );
@@ -453,254 +771,102 @@ exports.handler = async function (event) {
     }
 
 
-    /* =================================================
-       GET CURRENT CONTESTANT
-    ================================================= */
+    /* ---------------------------------------------
+       ADD VERIFIED VOTES
+    --------------------------------------------- */
 
-    const contestantUrl =
-      FIREBASE_DATABASE_URL +
-      "/faceOfKulzzy/contestants/" +
-      encodeURIComponent(
-        pending.contestantId
-      ) +
-      ".json?auth=" +
-      encodeURIComponent(
-        process.env.FIREBASE_DATABASE_SECRET
+    const updateResult =
+      await addVotesToContestant(
+
+        pendingVote.contestantId,
+
+        votesToAdd
+
       );
 
 
-    let updateComplete =
-      false;
+    /* ---------------------------------------------
+       SAVE PROCESSED PAYMENT
+    --------------------------------------------- */
 
+    const processedVote = {
 
-    /*
-       Firebase ETag retry loop.
-
-       This protects against two payments
-       arriving at almost exactly the same time.
-    */
-
-    for (
-      let attempt = 0;
-      attempt < 10;
-      attempt++
-    ) {
-
-      const contestantResponse =
-        await fetch(
-          contestantUrl,
-          {
-
-            method:
-              "GET",
-
-            headers: {
-
-              "X-Firebase-ETag":
-                "true"
-
-            }
-
-          }
-        );
-
-
-      if (
-        !contestantResponse.ok
-      ) {
-
-        throw new Error(
-          "Unable to read contestant."
-        );
-
-      }
-
-
-      const contestant =
-        await contestantResponse.json();
-
-
-      if (!contestant) {
-
-        return response(
-          404,
-          {
-
-            success:
-              false,
-
-            message:
-              "Contestant no longer exists."
-
-          }
-        );
-
-      }
-
-
-      if (
-        contestant.active === false
-      ) {
-
-        return response(
-          400,
-          {
-
-            success:
-              false,
-
-            message:
-              "Voting for this contestant is closed."
-
-          }
-        );
-
-      }
-
-
-      const currentVotes =
-        Number(
-          contestant.votes || 0
-        );
-
-
-      const newVotes =
-        currentVotes +
-        votesToAdd;
-
-
-      const etag =
-        contestantResponse.headers.get(
-          "etag"
-        );
-
-
-      const updateResponse =
-        await fetch(
-          contestantUrl,
-          {
-
-            method:
-              "PUT",
-
-            headers: {
-
-              "Content-Type":
-                "application/json",
-
-              "If-Match":
-                etag || "*"
-
-            },
-
-            body:
-              JSON.stringify({
-
-                ...contestant,
-
-                votes:
-                  newVotes
-
-              })
-
-          }
-        );
-
-
-      if (
-        updateResponse.status ===
-        412
-      ) {
-
-        continue;
-
-      }
-
-
-      if (
-        !updateResponse.ok
-      ) {
-
-        throw new Error(
-          "Unable to update contestant votes."
-        );
-
-      }
-
-
-      updateComplete =
-        true;
-
-      break;
-
-    }
-
-
-    if (
-      !updateComplete
-    ) {
-
-      throw new Error(
-        "Unable to safely update votes."
-      );
-
-    }
-
-
-    /* =================================================
-       MARK PAYMENT AS PAID
-    ================================================= */
-
-    const paidVote = {
-
-      ...pending,
-
-      status:
+      voteStatus:
         "PAID",
 
+      txRef,
+
       transactionId:
+
         String(
-          transaction.id ||
           transactionId
         ),
 
-      paymentStatus:
-        transaction.status,
+      contestantId:
+        pendingVote.contestantId,
 
-      paymentType:
-        transaction.payment_type ||
-        "",
+      contestantName:
+        pendingVote.contestantName,
 
-      paidAmount,
+      voterName:
+        pendingVote.voterName,
 
-      votes:
+      voterEmail:
+        pendingVote.voterEmail,
+
+      amount:
+        expectedAmount,
+
+      votesAdded:
         votesToAdd,
 
-      verifiedAt:
+      totalVotes:
+        updateResult.newVotes,
+
+      currency:
+        "NGN",
+
+      flutterwaveStatus:
+        payment.status,
+
+      processedAt:
         new Date().toISOString()
 
     };
 
 
     await store.setJSON(
-      "pending/" + txRef,
-      paidVote
+      `processed/${txRef}`,
+      processedVote
     );
 
 
-    /* =================================================
-       SAVE COMPLETED PAYMENT
-    ================================================= */
+    /* ---------------------------------------------
+       MARK PENDING RECORD AS PAID
+    --------------------------------------------- */
 
     await store.setJSON(
-      "paid/" + txRef,
-      paidVote
+      `pending/${txRef}`,
+      {
+
+        ...pendingVote,
+
+        voteStatus:
+          "PAID",
+
+        transactionId:
+          String(transactionId),
+
+        processedAt:
+          new Date().toISOString()
+
+      }
     );
 
 
-    /* =================================================
-       RETURN SUCCESS
-    ================================================= */
+    /* ---------------------------------------------
+       SUCCESS
+    --------------------------------------------- */
 
     return response(
       200,
@@ -709,28 +875,28 @@ exports.handler = async function (event) {
         success:
           true,
 
-        message:
-          "Payment verified and votes added successfully.",
-
-        contestantId:
-          pending.contestantId,
+        alreadyProcessed:
+          false,
 
         contestantName:
-          pending.contestantName,
+          pendingVote.contestantName,
 
-        votes:
+        votesAdded:
           votesToAdd,
+
+        totalVotes:
+          updateResult.newVotes,
 
         amount:
           expectedAmount,
 
         transactionId:
-          String(
-            transaction.id ||
-            transactionId
-          ),
+          String(transactionId),
 
-        txRef
+        txRef,
+
+        message:
+          "Payment verified and votes added successfully."
 
       }
     );
@@ -752,7 +918,8 @@ exports.handler = async function (event) {
           false,
 
         message:
-          "Unable to verify payment. Please contact Kulzzy Radio if money was deducted."
+          error.message ||
+          "Unable to verify payment."
 
       }
     );

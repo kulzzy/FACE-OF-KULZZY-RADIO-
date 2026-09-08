@@ -1,6 +1,8 @@
 const { getStore } = require("@netlify/blobs");
 
 const ALLOWED_ORIGIN = "https://kulzzy.github.io";
+const ALLOWED_PAGE =
+  "https://kulzzy.github.io/FACE-OF-KULZZY-RADIO-/";
 
 const FIREBASE_DATABASE_URL =
   "https://kulzzy-radio-chat-default-rtdb.europe-west1.firebasedatabase.app";
@@ -18,6 +20,29 @@ function response(statusCode, body) {
   };
 }
 
+async function getContestant(contestantId) {
+  const secret = process.env.FIREBASE_DATABASE_SECRET;
+
+  if (!secret) {
+    throw new Error("Firebase database secret is not configured.");
+  }
+
+  const url =
+    FIREBASE_DATABASE_URL +
+    "/faceOfKulzzy/contestants/" +
+    encodeURIComponent(contestantId) +
+    ".json?auth=" +
+    encodeURIComponent(secret);
+
+  const result = await fetch(url);
+
+  if (!result.ok) {
+    throw new Error("Unable to read contestant.");
+  }
+
+  return await result.json();
+}
+
 exports.handler = async function (event) {
 
   if (event.httpMethod === "OPTIONS") {
@@ -29,7 +54,7 @@ exports.handler = async function (event) {
   if (event.httpMethod !== "POST") {
     return response(405, {
       success: false,
-      message: "Method not allowed"
+      message: "Method not allowed."
     });
   }
 
@@ -52,171 +77,178 @@ exports.handler = async function (event) {
     let data;
 
     try {
-
-      data = JSON.parse(
-        event.body || "{}"
-      );
-
-    } catch {
-
+      data = JSON.parse(event.body || "{}");
+    } catch (error) {
       return response(400, {
         success: false,
         message: "Invalid request data."
       });
-
     }
-
 
     const {
       contestantId,
       amount,
       voterName,
-      voterEmail
+      voterEmail,
+      redirectUrl
     } = data;
 
-
-    /* =================================================
+    /* ---------------------------------------------
        VALIDATE CONTESTANT
-    ================================================= */
+    --------------------------------------------- */
 
     if (
       !contestantId ||
-      typeof contestantId !== "string"
+      !String(contestantId).trim()
     ) {
-
       return response(400, {
         success: false,
-        message: "Invalid contestant."
+        message: "Contestant was not selected."
       });
-
     }
 
-
-    /* =================================================
-       VALIDATE AMOUNT
-    ================================================= */
-
-    const numericAmount =
-      Number(amount);
-
-
-    if (
-      !Number.isFinite(numericAmount) ||
-      numericAmount < 100 ||
-      numericAmount % 100 !== 0
-    ) {
-
-      return response(400, {
-        success: false,
-        message:
-          "Voting amount must be at least ₦100 and a multiple of ₦100."
-      });
-
-    }
-
-
-    /* =================================================
+    /* ---------------------------------------------
        VALIDATE NAME
-    ================================================= */
+    --------------------------------------------- */
 
     if (
       !voterName ||
       !String(voterName).trim()
     ) {
-
       return response(400, {
         success: false,
         message: "Please enter your name."
       });
-
     }
 
-
-    /* =================================================
+    /* ---------------------------------------------
        VALIDATE EMAIL
-    ================================================= */
+    --------------------------------------------- */
 
     const email =
       String(voterEmail || "")
         .trim()
         .toLowerCase();
 
-
     if (
       !email ||
       !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
     ) {
-
       return response(400, {
         success: false,
         message: "Please enter a valid email address."
       });
-
     }
 
+    /* ---------------------------------------------
+       VALIDATE AMOUNT
+    --------------------------------------------- */
 
-    /* =================================================
-       GET CONTESTANT FROM FIREBASE
-    ================================================= */
+    const numericAmount =
+      Number(amount);
 
-    const contestantUrl =
-      FIREBASE_DATABASE_URL +
-      "/faceOfKulzzy/contestants/" +
-      encodeURIComponent(contestantId) +
-      ".json?auth=" +
-      encodeURIComponent(
-        process.env.FIREBASE_DATABASE_SECRET
-      );
-
-
-    const contestantResponse =
-      await fetch(
-        contestantUrl
-      );
-
-
-    if (!contestantResponse.ok) {
-
-      return response(500, {
+    if (
+      !Number.isFinite(numericAmount) ||
+      numericAmount < 100
+    ) {
+      return response(400, {
         success: false,
-        message: "Unable to check contestant."
+        message: "Minimum voting amount is ₦100."
       });
+    }
+
+    if (
+      numericAmount % 100 !== 0
+    ) {
+      return response(400, {
+        success: false,
+        message: "Amount must be a multiple of ₦100."
+      });
+    }
+
+    /* ---------------------------------------------
+       VALIDATE REDIRECT URL
+    --------------------------------------------- */
+
+    let safeRedirectUrl =
+      ALLOWED_PAGE;
+
+    if (redirectUrl) {
+
+      try {
+
+        const suppliedUrl =
+          new URL(
+            String(redirectUrl)
+          );
+
+        if (
+          suppliedUrl.origin !==
+          ALLOWED_ORIGIN
+        ) {
+          return response(400, {
+            success: false,
+            message: "Invalid payment return URL."
+          });
+        }
+
+        safeRedirectUrl =
+          ALLOWED_PAGE;
+
+      } catch (error) {
+
+        return response(400, {
+          success: false,
+          message: "Invalid payment return URL."
+        });
+
+      }
 
     }
 
+    /* ---------------------------------------------
+       READ CONTESTANT FROM FIREBASE
+    --------------------------------------------- */
 
     const contestant =
-      await contestantResponse.json();
-
+      await getContestant(
+        String(contestantId).trim()
+      );
 
     if (!contestant) {
-
       return response(404, {
         success: false,
         message: "Contestant not found."
       });
-
     }
-
 
     if (
       contestant.active === false
     ) {
-
       return response(400, {
         success: false,
-        message: "Voting for this contestant is closed."
+        message: "This contestant is no longer active."
       });
-
     }
 
+    const contestantName =
+      String(
+        contestant.name || ""
+      ).trim();
 
-    /* =================================================
-       CREATE UNIQUE TRANSACTION REFERENCE
-    ================================================= */
+    if (!contestantName) {
+      return response(400, {
+        success: false,
+        message: "Contestant information is incomplete."
+      });
+    }
+
+    /* ---------------------------------------------
+       CREATE TRANSACTION REFERENCE
+    --------------------------------------------- */
 
     const txRef =
-      "KULZZY-FACE-" +
+      "KULZZY-VOTE-" +
       Date.now() +
       "-" +
       Math.floor(
@@ -224,249 +256,213 @@ exports.handler = async function (event) {
         Math.random() * 900000
       );
 
-
-    /* =================================================
-       SAVE PENDING PAYMENT
-    ================================================= */
+    /* ---------------------------------------------
+       SAVE PENDING VOTE
+    --------------------------------------------- */
 
     const store =
       getStore({
-        name:
-          "kulzzy-face-votes",
-        consistency:
-          "strong"
+        name: "kulzzy-face-votes",
+        consistency: "strong"
       });
-
 
     const pendingVote = {
 
-      status:
+      voteStatus:
         "PENDING_PAYMENT",
 
       txRef,
 
-      contestantId,
+      contestantId:
+        String(contestantId).trim(),
 
-      contestantName:
-        String(
-          contestant.name || ""
-        ),
+      contestantName,
 
-      contestantNumber:
-        String(
-          contestant.number || ""
-        ),
+      voterName:
+        String(voterName).trim(),
+
+      voterEmail:
+        email,
 
       amount:
         numericAmount,
 
-      votes:
+      expectedVotes:
         numericAmount / 100,
 
       currency:
         "NGN",
-
-      voterName:
-        String(
-          voterName
-        ).trim(),
-
-      voterEmail:
-        email,
 
       createdAt:
         new Date().toISOString()
 
     };
 
-
     await store.setJSON(
-      "pending/" + txRef,
+      `pending/${txRef}`,
       pendingVote
     );
 
-
-    /* =================================================
+    /* ---------------------------------------------
        CREATE FLUTTERWAVE PAYMENT
-    ================================================= */
-
-    const origin =
-      event.headers?.origin ||
-      ALLOWED_ORIGIN;
-
-
-    const redirectUrl =
-      origin +
-      (
-        origin.endsWith("/")
-          ? ""
-          : "/"
-      );
-
+    --------------------------------------------- */
 
     const flutterwaveResponse =
       await fetch(
         "https://api.flutterwave.com/v3/payments",
         {
-
-          method:
-            "POST",
+          method: "POST",
 
           headers: {
-
             "Authorization":
               "Bearer " +
               process.env.FLW_SECRET_KEY,
 
             "Content-Type":
               "application/json"
-
           },
 
-          body:
-            JSON.stringify({
+          body: JSON.stringify({
 
-              tx_ref:
-                txRef,
+            tx_ref:
+              txRef,
 
-              amount:
-                numericAmount,
+            amount:
+              numericAmount,
 
-              currency:
-                "NGN",
+            currency:
+              "NGN",
 
-              redirect_url:
-                redirectUrl,
+            redirect_url:
+              safeRedirectUrl,
 
-              payment_options:
-                "card,banktransfer,ussd",
+            payment_options:
+              "card,banktransfer,ussd",
 
-              customer: {
+            customer: {
 
-                email:
-                  email,
+              email:
+                email,
 
-                name:
-                  String(
-                    voterName
-                  ).trim()
+              name:
+                String(voterName).trim()
+
+            },
+
+            customizations: {
+
+              title:
+                "Kulzzy Radio Network",
+
+              description:
+                "Face of Kulzzy Radio 2026 - Vote for " +
+                contestantName,
+
+              logo:
+                "https://kulzzy.github.io/app/icon-192.png"
+
+            },
+
+            meta: [
+
+              {
+                metaname:
+                  "contestantId",
+
+                metavalue:
+                  String(contestantId).trim()
 
               },
 
-              customizations: {
+              {
+                metaname:
+                  "contestantName",
 
-                title:
-                  "FACE OF KULZZY RADIO 2026",
-
-                description:
-                  "Vote for " +
-                  String(
-                    contestant.name || ""
-                  ),
-
-                logo:
-                  "https://kulzzy.github.io/app/icon-192.png"
+                metavalue:
+                  contestantName
 
               },
 
-              meta: [
+              {
+                metaname:
+                  "voterName",
 
-                {
-                  metaname:
-                    "contestantId",
+                metavalue:
+                  String(voterName).trim()
 
-                  metavalue:
-                    contestantId
-                },
+              },
 
-                {
-                  metaname:
-                    "contestantName",
+              {
+                metaname:
+                  "voterEmail",
 
-                  metavalue:
-                    String(
-                      contestant.name || ""
-                    )
-                },
+                metavalue:
+                  email
 
-                {
-                  metaname:
-                    "contestantNumber",
+              },
 
-                  metavalue:
-                    String(
-                      contestant.number || ""
-                    )
-                },
+              {
+                metaname:
+                  "voteAmount",
 
-                {
-                  metaname:
-                    "votes",
+                metavalue:
+                  String(numericAmount)
 
-                  metavalue:
-                    String(
-                      numericAmount / 100
-                    )
-                },
+              },
 
-                {
-                  metaname:
-                    "voterName",
+              {
+                metaname:
+                  "votes",
 
-                  metavalue:
-                    String(
-                      voterName
-                    ).trim()
-                }
+                metavalue:
+                  String(numericAmount / 100)
 
-              ]
+              }
 
-            })
+            ]
+
+          })
 
         }
       );
 
-
-    let paymentData = {};
+    let flutterwaveResult;
 
     try {
 
-      paymentData =
+      flutterwaveResult =
         await flutterwaveResponse.json();
 
     } catch {
 
-      paymentData = {};
+      flutterwaveResult = {};
 
     }
 
-
     if (
       !flutterwaveResponse.ok ||
-      paymentData.status !== "success" ||
-      !paymentData.data ||
-      !paymentData.data.link
+      flutterwaveResult.status !==
+        "success" ||
+      !flutterwaveResult.data ||
+      !flutterwaveResult.data.link
     ) {
 
       console.error(
         "FLUTTERWAVE CREATE ERROR:",
-        paymentData
+        flutterwaveResult
       );
-
 
       return response(500, {
         success: false,
         message:
-          paymentData.message ||
           "Unable to create Flutterwave payment."
       });
 
     }
 
-
-    /* =================================================
-       SUCCESS
-    ================================================= */
+    /* ---------------------------------------------
+       RETURN CHECKOUT LINK
+    --------------------------------------------- */
 
     return response(200, {
 
@@ -478,14 +474,11 @@ exports.handler = async function (event) {
       amount:
         numericAmount,
 
-      votes:
-        numericAmount / 100,
-
       currency:
         "NGN",
 
       checkout_url:
-        paymentData.data.link
+        flutterwaveResult.data.link
 
     });
 
@@ -496,15 +489,11 @@ exports.handler = async function (event) {
       error
     );
 
-
     return response(500, {
-
-      success:
-        false,
-
+      success: false,
       message:
-        "Unable to create payment. Please try again."
-
+        error.message ||
+        "Unable to create payment."
     });
 
   }

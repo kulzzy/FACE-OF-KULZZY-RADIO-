@@ -1,0 +1,2764 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<meta name="theme-color"
+      content="#06122a">
+
+<title>
+FACE OF KULZZY RADIO 2026
+</title>
+
+<script src="https://checkout.flutterwave.com/v3.js"></script>
+
+
+<style>
+
+/* =====================================================
+   RESET
+===================================================== */
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+
+/* =====================================================
+   BODY
+===================================================== */
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background:#06122a;
+
+    color:#ffffff;
+
+    min-height:100vh;
+
+}
+
+
+/* =====================================================
+   HERO
+===================================================== */
+
+.hero{
+
+    min-height:430px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    text-align:center;
+
+    padding:55px 20px 45px;
+
+    background:
+
+        radial-gradient(
+            circle at top,
+            rgba(255,215,0,.18),
+            transparent 45%
+        ),
+
+        linear-gradient(
+            135deg,
+            #020817,
+            #07152f 55%,
+            #0d2146
+        );
+
+    border-bottom:
+        2px solid #ffd700;
+
+}
+
+
+.crown{
+
+    font-size:60px;
+
+    margin-bottom:10px;
+
+}
+
+
+.partner{
+
+    color:#ffd700;
+
+    font-size:14px;
+
+    font-weight:900;
+
+    letter-spacing:2px;
+
+    margin-bottom:14px;
+
+}
+
+
+.hero h1{
+
+    font-size:
+        clamp(
+            38px,
+            8vw,
+            75px
+        );
+
+    line-height:.95;
+
+    color:#ffd700;
+
+    font-weight:1000;
+
+    text-shadow:
+        0 5px 20px
+        rgba(0,0,0,.5);
+
+}
+
+
+.hero h2{
+
+    margin-top:20px;
+
+    font-size:
+        clamp(
+            20px,
+            4vw,
+            32px
+        );
+
+    letter-spacing:4px;
+
+}
+
+
+.hero p{
+
+    max-width:700px;
+
+    margin:20px auto 0;
+
+    color:#c8d3e5;
+
+    line-height:1.7;
+
+}
+
+
+/* =====================================================
+   PRIZE SLIDER
+===================================================== */
+
+.prize-wrapper{
+
+    width:100%;
+
+    overflow:hidden;
+
+    background:#ffd700;
+
+    color:#06122a;
+
+    border-bottom:
+        2px solid #ffffff;
+
+}
+
+
+.prize-track{
+
+    display:flex;
+
+    width:max-content;
+
+    animation:
+        prizeScroll
+        28s
+        linear
+        infinite;
+
+}
+
+
+.prize{
+
+    white-space:nowrap;
+
+    padding:
+        17px 35px;
+
+    font-size:16px;
+
+    font-weight:1000;
+
+}
+
+
+@keyframes prizeScroll{
+
+    from{
+
+        transform:
+            translateX(0);
+
+    }
+
+    to{
+
+        transform:
+            translateX(-50%);
+
+    }
+
+}
+
+
+/* =====================================================
+   MAIN
+===================================================== */
+
+.container{
+
+    width:100%;
+
+    max-width:1200px;
+
+    margin:auto;
+
+    padding:
+        50px 15px;
+
+}
+
+
+/* =====================================================
+   SECTION TITLE
+===================================================== */
+
+.section-title{
+
+    text-align:center;
+
+    margin-bottom:30px;
+
+}
+
+
+.section-title h2{
+
+    color:#ffd700;
+
+    font-size:
+        clamp(
+            28px,
+            5vw,
+            42px
+        );
+
+    font-weight:1000;
+
+}
+
+
+.section-title p{
+
+    margin-top:10px;
+
+    color:#aebbd0;
+
+}
+
+
+/* =====================================================
+   LEADERBOARD
+===================================================== */
+
+.leaderboard{
+
+    background:
+        linear-gradient(
+            145deg,
+            #0b1d3d,
+            #061127
+        );
+
+    border:
+        1px solid
+        rgba(
+            255,
+            215,
+            0,
+            .3
+        );
+
+    border-radius:20px;
+
+    padding:20px;
+
+    margin-bottom:55px;
+
+}
+
+
+.leaderboard h3{
+
+    text-align:center;
+
+    color:#ffd700;
+
+    margin-bottom:15px;
+
+    font-size:20px;
+
+}
+
+
+.rank{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    padding:14px 8px;
+
+    border-bottom:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            .08
+        );
+
+}
+
+
+.rank:last-child{
+
+    border-bottom:0;
+
+}
+
+
+.rank-number{
+
+    width:40px;
+
+    min-width:40px;
+
+    height:40px;
+
+    border-radius:50%;
+
+    display:grid;
+
+    place-items:center;
+
+    background:#ffd700;
+
+    color:#06122a;
+
+    font-weight:1000;
+
+}
+
+
+.rank-name{
+
+    flex:1;
+
+    font-weight:bold;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+
+    white-space:nowrap;
+
+}
+
+
+.rank-votes{
+
+    color:#ffd700;
+
+    font-weight:1000;
+
+    white-space:nowrap;
+
+}
+
+
+/* =====================================================
+   CONTESTANTS GRID
+===================================================== */
+
+.contestants{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(
+                0,
+                1fr
+            )
+        );
+
+    gap:25px;
+
+}
+
+
+/* =====================================================
+   CONTESTANT CARD
+===================================================== */
+
+.card{
+
+    overflow:hidden;
+
+    background:
+        linear-gradient(
+            145deg,
+            #0c2043,
+            #061126
+        );
+
+    border:
+        1px solid
+        rgba(
+            255,
+            215,
+            0,
+            .25
+        );
+
+    border-radius:22px;
+
+    box-shadow:
+        0 15px 40px
+        rgba(
+            0,
+            0,
+            0,
+            .3
+        );
+
+    transition:
+        transform .3s,
+        border-color .3s;
+
+}
+
+
+.card:hover{
+
+    transform:
+        translateY(-6px);
+
+    border-color:#ffd700;
+
+}
+
+
+/* =====================================================
+   PHOTO
+===================================================== */
+
+.photo{
+
+    position:relative;
+
+    width:100%;
+
+    aspect-ratio:4 / 5;
+
+    background:#14294b;
+
+    overflow:hidden;
+
+}
+
+
+.photo img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+    display:block;
+
+}
+
+
+.contestant-number{
+
+    position:absolute;
+
+    top:14px;
+
+    left:14px;
+
+    background:#ffd700;
+
+    color:#06122a;
+
+    padding:
+        8px 13px;
+
+    border-radius:20px;
+
+    font-size:12px;
+
+    font-weight:1000;
+
+}
+
+
+/* =====================================================
+   CARD INFO
+===================================================== */
+
+.info{
+
+    padding:20px;
+
+    text-align:center;
+
+}
+
+
+.name{
+
+    font-size:22px;
+
+    font-weight:1000;
+
+    word-break:break-word;
+
+}
+
+
+.votes{
+
+    margin-top:12px;
+
+    color:#ffd700;
+
+    font-size:24px;
+
+    font-weight:1000;
+
+}
+
+
+/* =====================================================
+   VOTE BUTTON
+===================================================== */
+
+.vote-button{
+
+    width:100%;
+
+    margin-top:18px;
+
+    padding:15px;
+
+    border:0;
+
+    border-radius:12px;
+
+    background:#ffd700;
+
+    color:#06122a;
+
+    font-size:16px;
+
+    font-weight:1000;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+
+.vote-button:hover{
+
+    background:#ffffff;
+
+}
+
+
+.vote-button:disabled{
+
+    opacity:.6;
+
+    cursor:not-allowed;
+
+}
+
+
+/* =====================================================
+   EMPTY / LOADING
+===================================================== */
+
+.empty{
+
+    text-align:center;
+
+    padding:50px 20px;
+
+    color:#9baac0;
+
+    grid-column:1 / -1;
+
+}
+
+
+/* =====================================================
+   VOTING MODAL
+===================================================== */
+
+.vote-modal{
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:9999;
+
+    display:none;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:20px;
+
+    background:
+        rgba(
+            0,
+            0,
+            0,
+            .78
+        );
+
+    backdrop-filter:
+        blur(8px);
+
+}
+
+
+.vote-modal.active{
+
+    display:flex;
+
+}
+
+
+.vote-box{
+
+    width:100%;
+
+    max-width:450px;
+
+    max-height:
+        calc(
+            100vh - 40px
+        );
+
+    overflow:auto;
+
+    background:
+        linear-gradient(
+            145deg,
+            #0c2145,
+            #061127
+        );
+
+    border:
+        1px solid
+        rgba(
+            255,
+            215,
+            0,
+            .4
+        );
+
+    border-radius:22px;
+
+    padding:25px;
+
+    box-shadow:
+        0 30px 80px
+        rgba(
+            0,
+            0,
+            0,
+            .6
+        );
+
+}
+
+
+.vote-box h2{
+
+    color:#ffd700;
+
+    text-align:center;
+
+    margin-bottom:8px;
+
+}
+
+
+.vote-box p{
+
+    text-align:center;
+
+    color:#aebbd0;
+
+    line-height:1.5;
+
+}
+
+
+.vote-input,
+.vote-email,
+.vote-name{
+
+    width:100%;
+
+    margin-top:12px;
+
+    padding:15px;
+
+    border-radius:12px;
+
+    border:
+        1px solid #35517b;
+
+    background:#06122a;
+
+    color:#ffffff;
+
+    font-size:16px;
+
+    outline:none;
+
+}
+
+
+.vote-input{
+
+    margin-top:20px;
+
+    font-size:18px;
+
+}
+
+
+.vote-input:focus,
+.vote-email:focus,
+.vote-name:focus{
+
+    border-color:#ffd700;
+
+}
+
+
+.vote-preview{
+
+    text-align:center;
+
+    margin-top:13px;
+
+    color:#ffd700;
+
+    font-weight:900;
+
+    line-height:1.5;
+
+}
+
+
+.vote-actions{
+
+    display:flex;
+
+    gap:10px;
+
+    margin-top:20px;
+
+}
+
+
+.vote-actions button{
+
+    flex:1;
+
+    padding:14px;
+
+    border:0;
+
+    border-radius:12px;
+
+    font-weight:900;
+
+    cursor:pointer;
+
+}
+
+
+.pay-now{
+
+    background:#ffd700;
+
+    color:#06122a;
+
+}
+
+
+.cancel-vote{
+
+    background:#294568;
+
+    color:#ffffff;
+
+}
+
+
+.vote-message{
+
+    margin-top:15px;
+
+    text-align:center;
+
+    min-height:20px;
+
+    color:#c8d3e5;
+
+    line-height:1.5;
+
+}
+
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+footer{
+
+    text-align:center;
+
+    padding:35px 20px;
+
+    border-top:
+        1px solid
+        rgba(
+            255,
+            215,
+            0,
+            .2
+        );
+
+    color:#8290a8;
+
+    line-height:1.7;
+
+}
+
+
+footer strong{
+
+    color:#ffd700;
+
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media(max-width:850px){
+
+    .contestants{
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(
+                    0,
+                    1fr
+                )
+            );
+
+    }
+
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media(max-width:560px){
+
+    .contestants{
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .hero{
+
+        min-height:390px;
+
+        padding:
+            45px 15px 35px;
+
+    }
+
+
+    .hero h1{
+
+        font-size:42px;
+
+    }
+
+
+    .hero h2{
+
+        font-size:19px;
+
+        letter-spacing:2px;
+
+    }
+
+
+    .hero p{
+
+        font-size:14px;
+
+    }
+
+
+    .rank{
+
+        padding:
+            12px 2px;
+
+    }
+
+
+    .rank-number{
+
+        width:34px;
+
+        min-width:34px;
+
+        height:34px;
+
+        font-size:13px;
+
+    }
+
+
+    .rank-name{
+
+        font-size:14px;
+
+    }
+
+
+    .rank-votes{
+
+        font-size:13px;
+
+    }
+
+
+    .vote-actions{
+
+        flex-direction:column;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     HERO
+===================================================== -->
+
+<header class="hero">
+
+    <div>
+
+        <div class="crown">
+            👑
+        </div>
+
+
+        <div class="partner">
+
+            IN PARTNERSHIP WITH BW EMPIRE
+
+        </div>
+
+
+        <h1>
+
+            FACE OF<br>
+            KULZZY RADIO 2026
+
+        </h1>
+
+
+        <h2>
+
+            ONLINE PAGEANTRY
+
+        </h2>
+
+
+        <p>
+
+            Welcome to the official
+            Face of Kulzzy Radio 2026
+            online pageantry.
+
+            Support your favourite contestant
+            and follow the competition live.
+
+        </p>
+
+    </div>
+
+</header>
+
+
+
+<!-- =====================================================
+     PRIZE SLIDER
+===================================================== -->
+
+<div class="prize-wrapper">
+
+    <div class="prize-track">
+
+
+        <div class="prize">
+
+            🥇 1ST PRIZE —
+            ₦1,000,000
+
+        </div>
+
+
+        <div class="prize">
+
+            🥈 2ND PRIZE —
+            ₦300,000
+
+        </div>
+
+
+        <div class="prize">
+
+            🥉 3RD PRIZE —
+            ₦100,000
+
+        </div>
+
+
+        <div class="prize">
+
+            🎁 4TH PRIZE —
+            CONSOLATION PRIZE
+            FOR ALL CONTESTANTS
+
+        </div>
+
+
+        <div class="prize">
+
+            🥇 1ST PRIZE —
+            ₦1,000,000
+
+        </div>
+
+
+        <div class="prize">
+
+            🥈 2ND PRIZE —
+            ₦300,000
+
+        </div>
+
+
+        <div class="prize">
+
+            🥉 3RD PRIZE —
+            ₦100,000
+
+        </div>
+
+
+        <div class="prize">
+
+            🎁 4TH PRIZE —
+            CONSOLATION PRIZE
+            FOR ALL CONTESTANTS
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="container">
+
+
+<section>
+
+    <div class="section-title">
+
+        <h2>
+            🏆 LIVE LEADERBOARD
+        </h2>
+
+        <p>
+            Contestants are ranked by
+            verified votes.
+        </p>
+
+    </div>
+
+
+    <div class="leaderboard">
+
+        <h3>
+            CURRENT RANKING
+        </h3>
+
+
+        <div id="leaderboard">
+
+            <div class="empty">
+
+                Loading leaderboard...
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<section>
+
+    <div class="section-title">
+
+        <h2>
+            👑 MEET THE CONTESTANTS
+        </h2>
+
+        <p>
+            Choose your favourite contestant
+            and support her journey.
+        </p>
+
+    </div>
+
+
+    <div
+        id="contestants"
+        class="contestants"
+    >
+
+        <div class="empty">
+
+            Loading contestants...
+
+        </div>
+
+    </div>
+
+</section>
+
+
+</main>
+
+
+
+<!-- =====================================================
+     VOTE MODAL
+===================================================== -->
+
+<div
+    id="voteModal"
+    class="vote-modal"
+>
+
+    <div class="vote-box">
+
+        <h2>
+            ❤️ SUPPORT CONTESTANT
+        </h2>
+
+
+        <p id="selectedContestant">
+
+            Contestant
+
+        </p>
+
+
+        <input
+            id="voterName"
+            class="vote-name"
+            type="text"
+            placeholder="Your name"
+            autocomplete="name"
+        >
+
+
+        <input
+            id="voterEmail"
+            class="vote-email"
+            type="email"
+            placeholder="Your email"
+            autocomplete="email"
+        >
+
+
+        <input
+            id="voteAmount"
+            class="vote-input"
+            type="number"
+            min="100"
+            step="100"
+            inputmode="numeric"
+            placeholder="Enter amount e.g. 1000"
+        >
+
+
+        <div
+            id="votePreview"
+            class="vote-preview"
+        >
+
+            ₦100 = 1 vote
+
+        </div>
+
+
+        <div class="vote-actions">
+
+
+            <button
+                id="cancelVote"
+                class="cancel-vote"
+                type="button"
+            >
+
+                CANCEL
+
+            </button>
+
+
+            <button
+                id="payNow"
+                class="pay-now"
+                type="button"
+            >
+
+                CONTINUE TO PAYMENT
+
+            </button>
+
+
+        </div>
+
+
+        <div
+            id="voteMessage"
+            class="vote-message"
+        ></div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer>
+
+    <strong>
+        FACE OF KULZZY RADIO 2026
+    </strong>
+
+    <br>
+
+    In Partnership with BW EMPIRE
+
+    <br>
+
+    Kulzzy Radio Network
+    — Celebrating Lives Everyday
+
+</footer>
+
+
+
+<!-- =====================================================
+     FIREBASE
+===================================================== -->
+
+<script type="module">
+
+
+/* =====================================================
+   FIREBASE IMPORTS
+===================================================== */
+
+import {
+
+    initializeApp
+
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+
+import {
+
+    getDatabase,
+
+    ref,
+
+    onValue
+
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+
+
+/* =====================================================
+   FIREBASE CONFIG
+===================================================== */
+
+const firebaseConfig = {
+
+    apiKey:
+        "AIzaSyBH85NGWsSAK5cubbPdnmunwYZFZpj_CB0",
+
+    authDomain:
+        "kulzzy-radio-chat.firebaseapp.com",
+
+    databaseURL:
+        "https://kulzzy-radio-chat-default-rtdb.europe-west1.firebasedatabase.app",
+
+    projectId:
+        "kulzzy-radio-chat",
+
+    storageBucket:
+        "kulzzy-radio-chat.firebasestorage.app",
+
+    messagingSenderId:
+        "510100635134",
+
+    appId:
+        "1:510100635134:web:9d3b2e983eb6e9a385d4af"
+
+};
+
+
+
+/* =====================================================
+   START FIREBASE
+===================================================== */
+
+const app =
+    initializeApp(
+        firebaseConfig
+    );
+
+
+const db =
+    getDatabase(
+        app
+    );
+
+
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
+const contestantsElement =
+    document.getElementById(
+        "contestants"
+    );
+
+
+const leaderboardElement =
+    document.getElementById(
+        "leaderboard"
+    );
+
+
+const voteModal =
+    document.getElementById(
+        "voteModal"
+    );
+
+
+const selectedContestantElement =
+    document.getElementById(
+        "selectedContestant"
+    );
+
+
+const voteAmount =
+    document.getElementById(
+        "voteAmount"
+    );
+
+
+const votePreview =
+    document.getElementById(
+        "votePreview"
+    );
+
+
+const voterName =
+    document.getElementById(
+        "voterName"
+    );
+
+
+const voterEmail =
+    document.getElementById(
+        "voterEmail"
+    );
+
+
+const voteMessage =
+    document.getElementById(
+        "voteMessage"
+    );
+
+
+const payNow =
+    document.getElementById(
+        "payNow"
+    );
+
+
+const cancelVote =
+    document.getElementById(
+        "cancelVote"
+    );
+
+
+
+/* =====================================================
+   VOTE UNIT
+===================================================== */
+
+const VOTE_UNIT = 100;
+
+
+
+/* =====================================================
+   CONTESTANT MEMORY
+===================================================== */
+
+let contestants = [];
+
+let selectedContestant = null;
+
+
+
+/* =====================================================
+   FIREBASE CONTESTANTS
+===================================================== */
+
+const contestantsReference =
+    ref(
+        db,
+        "faceOfKulzzy/contestants"
+    );
+
+
+onValue(
+
+    contestantsReference,
+
+    snapshot => {
+
+        const data =
+            snapshot.val() || {};
+
+
+        contestants =
+
+            Object.entries(
+                data
+            )
+
+            .map(
+
+                ([id, contestant]) => ({
+
+                    id,
+
+                    ...contestant
+
+                })
+
+            )
+
+            .filter(
+
+                contestant =>
+
+                    contestant.active !== false
+
+            );
+
+
+        contestants.sort(
+
+            (a,b) =>
+
+                Number(
+                    b.votes || 0
+                )
+
+                -
+
+                Number(
+                    a.votes || 0
+                )
+
+        );
+
+
+        displayLeaderboard(
+            contestants
+        );
+
+
+        displayContestants(
+            contestants
+        );
+
+    },
+
+    error => {
+
+        console.error(
+            "Firebase error:",
+            error
+        );
+
+
+        contestantsElement.innerHTML = `
+
+            <div class="empty">
+
+                Unable to load contestants.
+
+                Please try again later.
+
+            </div>
+
+        `;
+
+
+        leaderboardElement.innerHTML = `
+
+            <div class="empty">
+
+                Unable to load leaderboard.
+
+            </div>
+
+        `;
+
+    }
+
+);
+
+
+
+/* =====================================================
+   LEADERBOARD
+===================================================== */
+
+function displayLeaderboard(
+    list
+){
+
+    if(
+        list.length === 0
+    ){
+
+        leaderboardElement.innerHTML = `
+
+            <div class="empty">
+
+                No contestants have been
+                published yet.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    leaderboardElement.innerHTML =
+
+        list
+
+        .map(
+
+            (contestant,index) => `
+
+                <div class="rank">
+
+
+                    <div class="rank-number">
+
+                        ${index + 1}
+
+                    </div>
+
+
+                    <div class="rank-name">
+
+                        ${escapeHTML(
+                            contestant.name
+                        )}
+
+                    </div>
+
+
+                    <div class="rank-votes">
+
+                        ❤️
+
+                        ${Number(
+                            contestant.votes || 0
+                        ).toLocaleString()}
+
+                    </div>
+
+
+                </div>
+
+            `
+
+        )
+
+        .join("");
+
+}
+
+
+
+/* =====================================================
+   CONTESTANT CARDS
+===================================================== */
+
+function displayContestants(
+    list
+){
+
+    if(
+        list.length === 0
+    ){
+
+        contestantsElement.innerHTML = `
+
+            <div class="empty">
+
+                Contestants will appear
+                here soon.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    contestantsElement.innerHTML =
+
+        list
+
+        .map(
+
+            contestant => `
+
+                <article
+                    class="card"
+                >
+
+
+                    <div
+                        class="photo"
+                    >
+
+
+                        <img
+
+                            src="${escapeAttribute(
+                                contestant.imageUrl
+                            )}"
+
+                            alt="${escapeAttribute(
+                                contestant.name
+                            )}"
+
+                            loading="lazy"
+
+                            onerror="
+                                this.style.display='none';
+                            "
+
+                        >
+
+
+                        <div
+                            class="contestant-number"
+                        >
+
+                            CONTESTANT #
+
+                            ${escapeHTML(
+                                contestant.number ||
+                                ""
+                            )}
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <div
+                        class="info"
+                    >
+
+
+                        <div
+                            class="name"
+                        >
+
+                            ${escapeHTML(
+                                contestant.name
+                            )}
+
+                        </div>
+
+
+                        <div
+                            class="votes"
+                        >
+
+                            ❤️
+
+                            ${Number(
+                                contestant.votes || 0
+                            ).toLocaleString()}
+
+                            VOTES
+
+                        </div>
+
+
+                        <button
+
+                            class="vote-button"
+
+                            data-id="${escapeAttribute(
+                                contestant.id
+                            )}"
+
+                            type="button"
+
+                        >
+
+                            ❤️ VOTE FOR ME
+
+                        </button>
+
+
+                    </div>
+
+
+                </article>
+
+            `
+
+        )
+
+        .join("");
+
+
+
+    document
+        .querySelectorAll(
+            ".vote-button"
+        )
+        .forEach(
+
+            button => {
+
+                button.addEventListener(
+
+                    "click",
+
+                    () => {
+
+                        openVotingModal(
+                            button.dataset.id
+                        );
+
+                    }
+
+                );
+
+            }
+
+        );
+
+}
+
+
+
+/* =====================================================
+   OPEN VOTING MODAL
+===================================================== */
+
+function openVotingModal(
+    contestantId
+){
+
+    selectedContestant =
+
+        contestants.find(
+
+            contestant =>
+
+                contestant.id ===
+                contestantId
+
+        );
+
+
+    if(
+        !selectedContestant
+    ){
+
+        return;
+
+    }
+
+
+    selectedContestantElement.textContent =
+
+        "Contestant #" +
+
+        (
+            selectedContestant.number ||
+            ""
+        ) +
+
+        " — " +
+
+        selectedContestant.name;
+
+
+    voterName.value =
+        "";
+
+
+    voterEmail.value =
+        "";
+
+
+    voteAmount.value =
+        "";
+
+
+    votePreview.textContent =
+        "₦100 = 1 vote";
+
+
+    voteMessage.textContent =
+        "";
+
+
+    payNow.disabled =
+        false;
+
+
+    payNow.textContent =
+        "CONTINUE TO PAYMENT";
+
+
+    voteModal.classList.add(
+        "active"
+    );
+
+
+    setTimeout(
+
+        () => {
+
+            voterName.focus();
+
+        },
+
+        100
+
+    );
+
+}
+
+
+
+/* =====================================================
+   CLOSE MODAL
+===================================================== */
+
+cancelVote.addEventListener(
+
+    "click",
+
+    closeVotingModal
+
+);
+
+
+voteModal.addEventListener(
+
+    "click",
+
+    event => {
+
+        if(
+            event.target ===
+            voteModal
+        ){
+
+            closeVotingModal();
+
+        }
+
+    }
+
+);
+
+
+function closeVotingModal(){
+
+    voteModal.classList.remove(
+        "active"
+    );
+
+}
+
+
+
+/* =====================================================
+   ESC KEY
+===================================================== */
+
+document.addEventListener(
+
+    "keydown",
+
+    event => {
+
+        if(
+            event.key ===
+            "Escape"
+        ){
+
+            closeVotingModal();
+
+        }
+
+    }
+
+);
+
+
+
+/* =====================================================
+   LIVE VOTE CALCULATOR
+===================================================== */
+
+voteAmount.addEventListener(
+
+    "input",
+
+    () => {
+
+        const amount =
+            Number(
+                voteAmount.value
+            );
+
+
+        if(
+            !amount
+        ){
+
+            votePreview.textContent =
+                "₦100 = 1 vote";
+
+            return;
+
+        }
+
+
+        if(
+            amount < VOTE_UNIT
+        ){
+
+            votePreview.textContent =
+                "Minimum voting amount is ₦100.";
+
+            return;
+
+        }
+
+
+        if(
+            amount % VOTE_UNIT !== 0
+        ){
+
+            votePreview.textContent =
+                "Enter an amount in multiples of ₦100.";
+
+            return;
+
+        }
+
+
+        const votes =
+            amount /
+            VOTE_UNIT;
+
+
+        votePreview.textContent =
+
+            "❤️ " +
+
+            votes.toLocaleString() +
+
+            " vote" +
+
+            (
+                votes === 1
+                    ? ""
+                    : "s"
+            ) +
+
+            " for ₦" +
+
+            amount.toLocaleString();
+
+    }
+
+);
+
+
+
+/* =====================================================
+   FLUTTERWAVE PAYMENT
+===================================================== */
+
+payNow.addEventListener(
+
+    "click",
+
+    startPayment
+
+);
+
+
+async function startPayment(){
+
+    if(
+        !selectedContestant
+    ){
+
+        return;
+
+    }
+
+
+    const name =
+        voterName.value.trim();
+
+
+    const email =
+        voterEmail.value.trim();
+
+
+    const amount =
+        Number(
+            voteAmount.value
+        );
+
+
+    /* -----------------------------------------------
+       VALIDATE NAME
+    ----------------------------------------------- */
+
+    if(
+        !name
+    ){
+
+        voteMessage.textContent =
+            "Please enter your name.";
+
+        voterName.focus();
+
+        return;
+
+    }
+
+
+    /* -----------------------------------------------
+       VALIDATE EMAIL
+    ----------------------------------------------- */
+
+    if(
+        !email ||
+        !isValidEmail(email)
+    ){
+
+        voteMessage.textContent =
+            "Please enter a valid email address.";
+
+        voterEmail.focus();
+
+        return;
+
+    }
+
+
+    /* -----------------------------------------------
+       VALIDATE AMOUNT
+    ----------------------------------------------- */
+
+    if(
+        !Number.isFinite(
+            amount
+        ) ||
+
+        amount < VOTE_UNIT
+    ){
+
+        voteMessage.textContent =
+            "Minimum voting amount is ₦100.";
+
+        voteAmount.focus();
+
+        return;
+
+    }
+
+
+    if(
+        amount % VOTE_UNIT !== 0
+    ){
+
+        voteMessage.textContent =
+            "Amount must be a multiple of ₦100.";
+
+        voteAmount.focus();
+
+        return;
+
+    }
+
+
+    /* -----------------------------------------------
+       DISABLE BUTTON
+    ----------------------------------------------- */
+
+    payNow.disabled =
+        true;
+
+
+    payNow.textContent =
+        "CREATING PAYMENT...";
+
+
+    voteMessage.textContent =
+        "Please wait while we prepare your Flutterwave payment...";
+
+
+    try{
+
+
+        /* -------------------------------------------
+           CREATE PAYMENT
+        ------------------------------------------- */
+
+        const response =
+            await fetch(
+
+                "/.netlify/functions/create-vote-payment",
+
+                {
+
+                    method:
+                        "POST",
+
+                    headers:{
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body:
+
+                        JSON.stringify({
+
+                            contestantId:
+                                selectedContestant.id,
+
+                            amount,
+
+                            voterName:
+                                name,
+
+                            voterEmail:
+                                email
+
+                        })
+
+                }
+
+            );
+
+
+        let result;
+
+
+        try{
+
+            result =
+                await response.json();
+
+        }
+
+        catch{
+
+            result = {};
+
+        }
+
+
+        if(
+            !response.ok ||
+            !result.success
+        ){
+
+            throw new Error(
+
+                result.message ||
+
+                "Unable to create payment."
+
+            );
+
+        }
+
+
+        if(
+            !result.checkout_url
+        ){
+
+            throw new Error(
+
+                "Flutterwave checkout link was not returned."
+
+            );
+
+        }
+
+
+        /* -------------------------------------------
+           REDIRECT TO FLUTTERWAVE
+        ------------------------------------------- */
+
+        window.location.href =
+            result.checkout_url;
+
+    }
+
+    catch(error){
+
+        console.error(
+            "Flutterwave payment error:",
+            error
+        );
+
+
+        voteMessage.textContent =
+
+            error.message ||
+
+            "Unable to start payment. Please try again.";
+
+
+        payNow.disabled =
+            false;
+
+
+        payNow.textContent =
+            "CONTINUE TO PAYMENT";
+
+    }
+
+}
+
+
+
+/* =====================================================
+   VERIFY PAYMENT AFTER FLUTTERWAVE REDIRECT
+===================================================== */
+
+async function verifyReturnedPayment(){
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+
+    const status =
+        params.get(
+            "status"
+        );
+
+
+    const txRef =
+        params.get(
+            "tx_ref"
+        );
+
+
+    const transactionId =
+        params.get(
+            "transaction_id"
+        );
+
+
+    /*
+       Nothing to verify if Flutterwave
+       did not redirect with payment details.
+    */
+
+    if(
+        !txRef &&
+        !transactionId
+    ){
+
+        return;
+
+    }
+
+
+    /*
+       Clean the URL after reading
+       the payment information.
+    */
+
+    try{
+
+        window.history.replaceState(
+            {},
+            document.title,
+            window.location.pathname
+        );
+
+    }
+
+    catch{
+
+        /* Ignore URL cleanup errors */
+
+    }
+
+
+    /*
+       User cancelled the payment.
+    */
+
+    if(
+        status &&
+        status.toLowerCase() !==
+        "successful"
+    ){
+
+        showPaymentResult(
+
+            "Payment was not completed. Your votes were not added."
+
+        );
+
+        return;
+
+    }
+
+
+    if(
+        !txRef ||
+        !transactionId
+    ){
+
+        showPaymentResult(
+
+            "Payment information is incomplete. Your votes were not added."
+
+        );
+
+        return;
+
+    }
+
+
+    showPaymentResult(
+
+        "Verifying your payment securely. Please wait..."
+
+    );
+
+
+    try{
+
+        const response =
+            await fetch(
+
+                "/.netlify/functions/verify-vote-payment",
+
+                {
+
+                    method:
+                        "POST",
+
+                    headers:{
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body:
+
+                        JSON.stringify({
+
+                            txRef,
+
+                            transactionId
+
+                        })
+
+                }
+
+            );
+
+
+        let result;
+
+
+        try{
+
+            result =
+                await response.json();
+
+        }
+
+        catch{
+
+            result = {};
+
+        }
+
+
+        if(
+            !response.ok ||
+            !result.success
+        ){
+
+            throw new Error(
+
+                result.message ||
+
+                "Payment verification failed."
+
+            );
+
+        }
+
+
+        showPaymentResult(
+
+            "✅ Payment verified successfully! " +
+
+            Number(
+                result.votes || 0
+            ).toLocaleString() +
+
+            " vote" +
+
+            (
+                Number(
+                    result.votes || 0
+                ) === 1
+                    ? ""
+                    : "s"
+            ) +
+
+            " added for " +
+
+            (
+                result.contestantName ||
+                "the contestant"
+            ) +
+
+            "."
+
+        );
+
+    }
+
+    catch(error){
+
+        console.error(
+            "Verification error:",
+            error
+        );
+
+
+        showPaymentResult(
+
+            error.message ||
+
+            "Unable to verify payment. If money was deducted, please contact Kulzzy Radio."
+
+        );
+
+    }
+
+}
+
+
+
+/* =====================================================
+   PAYMENT RESULT
+===================================================== */
+
+function showPaymentResult(
+    message
+){
+
+    /*
+       Re-use the existing modal
+       without changing the interface.
+    */
+
+    voteModal.classList.add(
+        "active"
+    );
+
+
+    selectedContestantElement.textContent =
+        "PAYMENT RESULT";
+
+
+    voterName.value =
+        "";
+
+
+    voterEmail.value =
+        "";
+
+
+    voteAmount.value =
+        "";
+
+
+    votePreview.textContent =
+        "";
+
+
+    payNow.disabled =
+        true;
+
+
+    payNow.textContent =
+        "PAYMENT PROCESSED";
+
+
+    voteMessage.textContent =
+        message;
+
+}
+
+
+
+/* =====================================================
+   EMAIL VALIDATION
+===================================================== */
+
+function isValidEmail(
+    email
+){
+
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        .test(
+            email
+        );
+
+}
+
+
+
+/* =====================================================
+   HTML SECURITY
+===================================================== */
+
+function escapeHTML(
+    value
+){
+
+    return String(
+        value ?? ""
+    )
+
+    .replace(
+        /[&<>"']/g,
+
+        character => ({
+
+            "&":
+                "&amp;",
+
+            "<":
+                "&lt;",
+
+            ">":
+                "&gt;",
+
+            '"':
+                "&quot;",
+
+            "'":
+                "&#039;"
+
+        }[character])
+
+    );
+
+}
+
+
+function escapeAttribute(
+    value
+){
+
+    return escapeHTML(
+        value
+    );
+
+}
+
+
+
+/* =====================================================
+   CHECK FOR FLUTTERWAVE RETURN
+===================================================== */
+
+verifyReturnedPayment();
+
+
+</script>
+
+</body>
+
+</html>

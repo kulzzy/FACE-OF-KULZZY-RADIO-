@@ -2367,21 +2367,22 @@ async function startPayment(){
 
         }
 
+if(
+    !response.ok ||
+    !result.success
+){
 
-        if(
-            !response.ok ||
-            !result.success
-        ){
+    throw new Error(
 
-            throw new Error(
+        result.error ||
 
-                result.message ||
+        result.message ||
 
-                "Unable to create payment."
+        "Unable to create payment."
 
-            );
+    );
 
-        }
+}
 
 
         if(

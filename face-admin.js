@@ -12,25 +12,28 @@
 const firebaseConfig = {
 
     apiKey:
-        "AIzaSyBH85NGWsSAK5cubbPdnmunwYZFZpj_CB0",
+        "AIzaSyD-Oqmq3P5bNoxcHBdkTAh7O9W9HVsKDVc",
 
     authDomain:
-        "kulzzy-radio-chat.firebaseapp.com",
+        "face-of-kulzzy-radio-2026.firebaseapp.com",
 
     databaseURL:
-        "https://kulzzy-radio-chat-default-rtdb.europe-west1.firebasedatabase.app",
+        "https://face-of-kulzzy-radio-2026-default-rtdb.europe-west1.firebasedatabase.app",
 
     projectId:
-        "kulzzy-radio-chat",
+        "face-of-kulzzy-radio-2026",
 
     storageBucket:
-        "kulzzy-radio-chat.firebasestorage.app",
+        "face-of-kulzzy-radio-2026.firebasestorage.app",
 
     messagingSenderId:
-        "510100635134",
+        "175657004245",
 
     appId:
-        "1:510100635134:web:9d3b2e983eb6e9a385d4af"
+        "1:175657004245:web:022d50bc14ed86e036065c",
+
+    measurementId:
+        "G-WQDFT2B0RH"
 
 };
 

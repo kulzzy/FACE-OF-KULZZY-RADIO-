@@ -11,8 +11,7 @@
 
 const firebaseConfig = {
 
-    apiKey:
-        "AIzaSyD-Oqmq3P5bNoxcHBdkTAh7O9W9HVsKDVc",
+    apiKey: "AIzaSyD-Oqmq3P5bNoxcHBdkTAw7O9W9HVsKDVc",
 
     authDomain:
         "face-of-kulzzy-radio-2026.firebaseapp.com",

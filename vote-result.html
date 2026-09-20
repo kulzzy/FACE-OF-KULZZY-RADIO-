@@ -1,21 +1,12 @@
-<!DOCTYPE html>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta
+name="viewport"
+content="width=device-width,initial-scale=1"
 
-<html lang="en">
-
-<head>
-
-<meta charset="UTF-8">
-
-<meta
-    name="viewport"
-    content="width=device-width,initial-scale=1"
->
+«»
 
 <title>
 Vote Result — Face of Kulzzy Radio 2026
-</title>
-
-<style>
+</title><style>
 
 *{
     box-sizing:border-box;
@@ -115,57 +106,37 @@ p{
 
 }
 
-</style>
-
-</head>
-
-
-<body>
-
-
-<div class="box">
-
-    <div
-        id="icon"
-        class="icon"
-    >
-        ⏳
-    </div>
-
-
-    <h1 id="title">
-        Checking Payment...
-    </h1>
-
-
-    <p id="message">
-        Please wait while we verify
-        your payment.
-    </p>
-
-
-    <a
-        class="back"
-        href="index.html"
-    >
-        BACK TO CONTESTANTS
-    </a>
-
+</style></head><body><div class="box"><div
+    id="icon"
+    class="icon"
+>
+    ⏳
 </div>
 
 
+<h1 id="title">
+    Checking Payment...
+</h1>
 
-<script>
+
+<p id="message">
+    Please wait while we verify
+    your payment.
+</p>
+
+
+<a
+    class="back"
+    href="index.html"
+>
+    BACK TO CONTESTANTS
+</a>
+
+</div><script>
 
 const params =
     new URLSearchParams(
         window.location.search
-    );
-
-
-const reference =
-    params.get(
-        "reference"
     );
 
 
@@ -187,135 +158,107 @@ const message =
     );
 
 
-async function checkPayment(){
+function showResult(){
 
-    if(!reference){
+    const status =
+        params.get(
+            "status"
+        );
+
+
+    const contestantName =
+        params.get(
+            "contestantName"
+        );
+
+
+    const votes =
+        Number(
+            params.get(
+                "votes"
+            ) || 0
+        );
+
+
+    const amount =
+        Number(
+            params.get(
+                "amount"
+            ) || 0
+        );
+
+
+    if(
+        status ===
+        "success"
+    ){
 
         icon.textContent =
-            "❌";
+            "🎉";
+
 
         title.textContent =
-            "Payment Reference Missing";
+            "VOTE SUCCESSFUL!";
 
-        message.textContent =
-            "We could not find your payment reference.";
+
+        message.innerHTML =
+
+            "Your support for <strong>" +
+
+            escapeHTML(
+                contestantName
+            ) +
+
+            "</strong> has been recorded.<br><br>" +
+
+            "❤️ Votes added: <strong>" +
+
+            votes.toLocaleString() +
+
+            "</strong><br>" +
+
+            "💰 Amount paid: <strong>₦" +
+
+            amount.toLocaleString() +
+
+            "</strong>";
 
         return;
 
     }
 
 
-    try{
-
-        const response =
-            await fetch(
-
-                `/.netlify/functions/payment-status?reference=${encodeURIComponent(reference)}`
-
-            );
-
-
-        const result =
-            await response.json();
-
-
-        if(
-            result.status ===
-            "credited"
-        ){
-
-            icon.textContent =
-                "🎉";
-
-
-            title.textContent =
-                "VOTE SUCCESSFUL!";
-
-
-            message.innerHTML =
-
-                "Your support for <strong>" +
-
-                escapeHTML(
-                    result.contestantName
-                ) +
-
-                "</strong> has been recorded.<br><br>" +
-
-                "❤️ Votes added: <strong>" +
-
-                Number(
-                    result.votes
-                ).toLocaleString() +
-
-                "</strong><br>" +
-
-                "💰 Amount paid: <strong>₦" +
-
-                Number(
-                    result.amount
-                ).toLocaleString() +
-
-                "</strong>";
-
-            return;
-
-        }
-
-
-        if(
-            result.status ===
-            "underpaid"
-        ){
-
-            icon.textContent =
-                "⚠️";
-
-
-            title.textContent =
-                "Payment Requires Review";
-
-
-            message.textContent =
-                "The payment amount did not match the expected voting amount.";
-
-            return;
-
-        }
-
-
-        icon.textContent =
-            "⏳";
-
-
-        title.textContent =
-            "Payment Still Processing";
-
-
-        message.textContent =
-            "Your payment has not been confirmed yet. Please wait a moment and refresh this page.";
-
-    }
-
-    catch(error){
-
-        console.error(
-            error
-        );
-
+    if(
+        status ===
+        "failed"
+    ){
 
         icon.textContent =
             "❌";
 
 
         title.textContent =
-            "Unable to Verify";
+            "PAYMENT NOT CONFIRMED";
 
 
         message.textContent =
-            "We could not verify the payment right now. Please try again shortly.";
+            "Your payment could not be confirmed. Please return to the contestants page and try again.";
+
+        return;
 
     }
+
+
+    icon.textContent =
+        "⏳";
+
+
+    title.textContent =
+        "Payment Processing";
+
+
+    message.textContent =
+        "Your payment is being processed. Please return to the contestants page if you need to check your vote status.";
 
 }
 
@@ -355,10 +298,8 @@ function escapeHTML(
 }
 
 
-checkPayment();
+showResult();
 
 </script>
-
 </body>
-
 </html>

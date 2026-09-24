@@ -2513,30 +2513,69 @@ async function startPayment(){
         ------------------------------------------- */
 
         const responseText =
-            await response.text();
+    await response.text();
 
+let data = null;
 
-        let data = {};
+try{
 
+    data =
+        JSON.parse(
+            responseText
+        );
 
-        try{
+}
 
-            data =
-                JSON.parse(
-                    responseText
-                );
+catch(parseError){
 
-        }
+    console.error(
+        "Cloud Core returned non-JSON:",
+        responseText
+    );
 
-        catch(parseError){
+    throw new Error(
+        "Cloud Core returned an invalid response (HTTP " +
+        response.status +
+        "): " +
+        (responseText || "empty response")
+    );
 
-            console.error(
-                "Cloud Core returned non-JSON:",
-                responseText
-            );
+}
 
-        }
+if(!response.ok){
 
+    const providerDetail =
+        data.providerMessage
+            ? " — " + data.providerMessage
+            : "";
+
+    throw new Error(
+        (
+            data.message ||
+            data.error ||
+            ("Payment server returned HTTP " + response.status)
+        ) +
+        providerDetail
+    );
+
+}
+
+if(!data || data.ok !== true){
+
+    const providerDetail =
+        data && data.providerMessage
+            ? " — " + data.providerMessage
+            : "";
+
+    throw new Error(
+        (
+            (data && (data.message || data.error)) ||
+            "Cloud Core returned an unsuccessful payment response."
+        ) +
+        providerDetail
+    );
+
+}
 
         /* -------------------------------------------
            PAYMENT API VALIDATION

@@ -2267,32 +2267,92 @@ payNow.addEventListener(
 );
 
 
-async function startPayment(){
+async function startPayment() {
+  if (!selectedContestant) {
+    showToast("Please select a contestant.");
+    return;
+  }
 
-    if(
-        !selectedContestant
-    ){
+  const name = document.getElementById("voterName").value.trim();
+  const email = document.getElementById("voterEmail").value.trim();
+  const amount = Number(document.getElementById("voteAmount").value);
 
-        voteMessage.textContent =
-            "Please select a contestant.";
+  if (!name) {
+    showToast("Please enter your name.");
+    return;
+  }
 
-        return;
+  if (!email || !email.includes("@")) {
+    showToast("Please enter a valid email address.");
+    return;
+  }
 
+  if (!Number.isFinite(amount) || amount < 100 || amount % 100 !== 0) {
+    showToast("Minimum voting amount is ₦100 and must be in multiples of ₦100.");
+    return;
+  }
+
+  const votes = amount / 100;
+
+  const returnUrl =
+    window.location.origin +
+    window.location.pathname;
+
+  const paymentUrl = new URL(
+    "https://kulzzy-cloud-core-jzh19i.v2.appdeploy.ai/api/face-kulzzy/votes/start-payment"
+  );
+
+  paymentUrl.searchParams.set(
+    "contestantId",
+    selectedContestant.id
+  );
+
+  paymentUrl.searchParams.set(
+    "votes",
+    String(votes)
+  );
+
+  paymentUrl.searchParams.set(
+    "email",
+    email
+  );
+
+  paymentUrl.searchParams.set(
+    "name",
+    name
+  );
+
+  paymentUrl.searchParams.set(
+    "returnUrl",
+    returnUrl
+  );
+
+  /* Tell Cloud Core to open the configured payment provider directly */
+  paymentUrl.searchParams.set(
+    "browser",
+    "1"
+  );
+
+  const button = document.getElementById("continuePaymentBtn");
+
+  if (button) {
+    button.disabled = true;
+    button.textContent = "OPENING PAYMENT...";
+  }
+
+  try {
+    window.location.assign(paymentUrl.toString());
+  } catch (error) {
+    console.error("Payment redirect error:", error);
+
+    if (button) {
+      button.disabled = false;
+      button.textContent = "CONTINUE TO PAYMENT";
     }
 
-
-    const name =
-        voterName.value.trim();
-
-
-    const email =
-        voterEmail.value.trim();
-
-
-    const amount =
-        Number(
-            voteAmount.value
-        );
+    showToast("Unable to open the payment page. Please try again.");
+  }
+}
 
 
     /* -----------------------------------------------

@@ -2,402 +2,403 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#06122a">
 <title>Contestant Dashboard | Face of Kulzzy Radio 2026</title>
 
 <style>
 :root {
-    --navy: #06122a;
-    --navy2: #0b1d3d;
-    --gold: #f5c542;
-    --gold2: #ffe49a;
-    --white: #ffffff;
-    --muted: #aebbd1;
-    --green: #26d69a;
-    --red: #ff7777;
-    --border: rgba(245,197,66,.25);
+  --navy:#06122a;
+  --navy2:#0b1d3d;
+  --gold:#f5c542;
+  --gold-light:#ffe49a;
+  --white:#fff;
+  --muted:#aebbd1;
+  --green:#26d69a;
+  --red:#ff7777;
+  --border:rgba(245,197,66,.25);
 }
 
 * {
-    box-sizing: border-box;
+  box-sizing:border-box;
 }
 
 html {
-    min-height: 100%;
-    background: var(--navy);
+  min-height:100%;
+  background:var(--navy);
 }
 
 body {
-    margin: 0;
-    min-height: 100vh;
-    background:
-        radial-gradient(ellipse at top, #173568 0%, transparent 55%),
-        var(--navy);
-    color: var(--white);
-    font-family: Arial, Helvetica, sans-serif;
+  margin:0;
+  min-height:100vh;
+  color:var(--white);
+  font-family:Arial,Helvetica,sans-serif;
+  background:
+    radial-gradient(ellipse at top,#173568 0%,transparent 55%),
+    var(--navy);
 }
 
-button,
-input {
-    font: inherit;
+button,input {
+  font:inherit;
+}
+
+button,a {
+  -webkit-tap-highlight-color:transparent;
 }
 
 button {
-    cursor: pointer;
+  cursor:pointer;
 }
 
 button:disabled {
-    opacity: .5;
-    cursor: not-allowed;
+  opacity:.55;
+  cursor:not-allowed;
 }
 
 header {
-    padding: 24px 16px;
-    text-align: center;
-    border-bottom: 1px solid var(--border);
-    background: rgba(3, 12, 29, .88);
+  padding:24px 16px;
+  text-align:center;
+  border-bottom:1px solid var(--border);
+  background:rgba(3,12,29,.9);
 }
 
 .logo {
-    font-size: 32px;
-    margin-bottom: 8px;
+  font-size:34px;
+  margin-bottom:8px;
 }
 
 header h1 {
-    color: var(--gold);
-    font-size: clamp(21px, 5vw, 32px);
-    margin: 0;
-    line-height: 1.3;
+  color:var(--gold);
+  font-size:clamp(21px,5vw,32px);
+  margin:0;
+  line-height:1.3;
 }
 
 header p {
-    margin: 8px 0 0;
-    color: var(--muted);
-    font-size: 13px;
+  margin:8px 0 0;
+  color:var(--muted);
+  font-size:13px;
 }
 
 .container {
-    width: 100%;
-    max-width: 1050px;
-    margin: auto;
-    padding: 20px 14px 45px;
+  width:100%;
+  max-width:1050px;
+  margin:auto;
+  padding:20px 14px 45px;
 }
 
 .card {
-    background: linear-gradient(145deg, rgba(16,39,78,.97), rgba(7,21,46,.98));
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    padding: 20px;
-    margin-bottom: 18px;
-    box-shadow: 0 10px 28px rgba(0,0,0,.18);
+  background:linear-gradient(145deg,rgba(16,39,78,.97),rgba(7,21,46,.98));
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:20px;
+  margin-bottom:18px;
+  box-shadow:0 10px 28px rgba(0,0,0,.18);
 }
 
 .card h2 {
-    color: var(--gold);
-    font-size: 18px;
-    margin: 0 0 16px;
+  color:var(--gold);
+  font-size:18px;
+  margin:0 0 16px;
 }
 
 .login-card {
-    max-width: 460px;
-    margin: 30px auto;
+  max-width:460px;
+  margin:30px auto;
 }
 
 label {
-    display: block;
-    color: var(--gold2);
-    font-size: 13px;
-    margin: 15px 0 7px;
+  display:block;
+  color:var(--gold-light);
+  font-size:13px;
+  margin:15px 0 7px;
 }
 
 input {
-    display: block;
-    width: 100%;
-    padding: 14px;
-    border: 1px solid #344d75;
-    border-radius: 10px;
-    outline: none;
-    background: #06142d;
-    color: white;
+  display:block;
+  width:100%;
+  padding:14px;
+  border:1px solid #344d75;
+  border-radius:10px;
+  outline:none;
+  background:#06142d;
+  color:white;
 }
 
 input:focus {
-    border-color: var(--gold);
+  border-color:var(--gold);
 }
 
 .btn {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 16px;
-    border: 1px solid transparent;
-    border-radius: 10px;
-    background: var(--gold);
-    color: #071329;
-    font-weight: bold;
-    text-decoration: none;
-    text-align: center;
-    transition: transform .15s ease;
+  display:inline-flex;
+  justify-content:center;
+  align-items:center;
+  gap:8px;
+  padding:12px 16px;
+  border:1px solid transparent;
+  border-radius:10px;
+  background:var(--gold);
+  color:#071329;
+  font-weight:bold;
+  text-decoration:none;
+  text-align:center;
+  transition:transform .15s ease;
 }
 
 .btn:active {
-    transform: scale(.98);
+  transform:scale(.98);
 }
 
 .btn-full {
-    width: 100%;
-    margin-top: 16px;
+  width:100%;
+  margin-top:16px;
 }
 
 .btn-secondary {
-    background: transparent;
-    border-color: var(--border);
-    color: var(--gold);
+  background:transparent;
+  border-color:var(--border);
+  color:var(--gold);
 }
 
 .btn-small {
-    padding: 9px 12px;
-    font-size: 12px;
+  padding:9px 12px;
+  font-size:12px;
 }
 
 .message {
-    display: none;
-    margin-top: 14px;
-    padding: 12px;
-    border-radius: 10px;
-    font-size: 13px;
-    line-height: 1.5;
-    overflow-wrap: anywhere;
+  display:none;
+  margin-top:14px;
+  padding:12px;
+  border-radius:10px;
+  font-size:13px;
+  line-height:1.6;
+  overflow-wrap:anywhere;
 }
 
 .message.show {
-    display: block;
+  display:block;
 }
 
 .message.error {
-    background: rgba(255,119,119,.12);
-    border: 1px solid rgba(255,119,119,.4);
-    color: #ffd0d0;
+  background:rgba(255,119,119,.12);
+  border:1px solid rgba(255,119,119,.4);
+  color:#ffd0d0;
 }
 
 .message.success {
-    background: rgba(38,214,154,.1);
-    border: 1px solid rgba(38,214,154,.35);
-    color: #aaffdf;
+  background:rgba(38,214,154,.1);
+  border:1px solid rgba(38,214,154,.35);
+  color:#aaffdf;
 }
 
 .message.info {
-    background: rgba(245,197,66,.1);
-    border: 1px solid var(--border);
-    color: var(--gold2);
+  background:rgba(245,197,66,.1);
+  border:1px solid var(--border);
+  color:var(--gold-light);
 }
 
 .hidden {
-    display: none !important;
+  display:none!important;
 }
 
 .welcome {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 15px;
-    flex-wrap: wrap;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  flex-wrap:wrap;
 }
 
 .welcome h2 {
-    font-size: 22px;
-    margin: 0 0 6px;
+  font-size:22px;
+  margin:0 0 6px;
 }
 
 .welcome p {
-    color: var(--muted);
-    margin: 0;
-    font-size: 13px;
-    overflow-wrap: anywhere;
+  color:var(--muted);
+  margin:0;
+  font-size:13px;
+  overflow-wrap:anywhere;
 }
 
 .badge {
-    display: inline-block;
-    border: 1px solid var(--border);
-    border-radius: 30px;
-    padding: 7px 12px;
-    color: var(--gold);
-    font-size: 12px;
-    margin-top: 10px;
+  display:inline-block;
+  border:1px solid var(--border);
+  border-radius:30px;
+  padding:7px 12px;
+  color:var(--gold);
+  font-size:12px;
+  margin-top:10px;
 }
 
 .stats {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
-    margin-bottom: 18px;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+  margin-bottom:18px;
 }
 
 .stat {
-    padding: 18px 12px;
-    text-align: center;
-    border-radius: 15px;
-    background: rgba(7,20,44,.75);
-    border: 1px solid var(--border);
-    min-width: 0;
+  padding:18px 12px;
+  text-align:center;
+  border-radius:15px;
+  background:rgba(7,20,44,.75);
+  border:1px solid var(--border);
+  min-width:0;
 }
 
 .stat .number {
-    color: var(--gold);
-    font-size: clamp(24px, 6vw, 34px);
-    font-weight: 800;
-    overflow-wrap: anywhere;
+  color:var(--gold);
+  font-size:clamp(24px,6vw,34px);
+  font-weight:800;
+  overflow-wrap:anywhere;
 }
 
 .stat .caption {
-    margin-top: 8px;
-    color: var(--muted);
-    font-size: 12px;
+  margin-top:8px;
+  color:var(--muted);
+  font-size:12px;
 }
 
 .profile-details {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
 }
 
 .detail {
-    padding: 13px;
-    border-radius: 10px;
-    background: rgba(4,15,35,.65);
-    overflow-wrap: anywhere;
+  padding:13px;
+  border-radius:10px;
+  background:rgba(4,15,35,.65);
+  overflow-wrap:anywhere;
 }
 
 .detail span {
-    display: block;
-    color: var(--muted);
-    font-size: 12px;
-    margin-bottom: 6px;
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  margin-bottom:6px;
 }
 
 .detail strong {
-    color: var(--white);
-    font-size: 14px;
-    overflow-wrap: anywhere;
+  color:var(--white);
+  font-size:14px;
+  overflow-wrap:anywhere;
 }
 
 .link-box {
-    overflow-wrap: anywhere;
-    word-break: break-word;
-    background: #041027;
-    border: 1px solid #30496f;
-    border-radius: 10px;
-    padding: 13px;
-    font-size: 13px;
-    line-height: 1.6;
-    margin: 12px 0;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+  background:#041027;
+  border:1px solid #30496f;
+  border-radius:10px;
+  padding:13px;
+  font-size:13px;
+  line-height:1.6;
+  margin:12px 0;
 }
 
 .table-wrap {
-    overflow-x: auto;
-    width: 100%;
+  overflow-x:auto;
+  width:100%;
 }
 
 table {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 480px;
+  width:100%;
+  border-collapse:collapse;
+  min-width:460px;
 }
 
-th,
-td {
-    text-align: left;
-    padding: 12px 10px;
-    border-bottom: 1px solid rgba(255,255,255,.09);
-    font-size: 12px;
-    vertical-align: top;
-    overflow-wrap: anywhere;
+th,td {
+  text-align:left;
+  padding:12px 10px;
+  border-bottom:1px solid rgba(255,255,255,.09);
+  font-size:12px;
+  vertical-align:top;
+  overflow-wrap:anywhere;
 }
 
 th {
-    color: var(--gold);
-    background: rgba(3,12,29,.45);
+  color:var(--gold);
+  background:rgba(3,12,29,.45);
 }
 
 td {
-    color: #e5ecf7;
+  color:#e5ecf7;
 }
 
 .status {
-    display: inline-block;
-    padding: 5px 8px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: bold;
-    background: rgba(245,197,66,.12);
-    color: var(--gold2);
+  display:inline-block;
+  padding:5px 8px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:bold;
+  background:rgba(245,197,66,.12);
+  color:var(--gold-light);
 }
 
 .status.approved {
-    color: #aaffdf;
-    background: rgba(38,214,154,.12);
+  color:#aaffdf;
+  background:rgba(38,214,154,.12);
 }
 
 .status.pending {
-    color: #ffe49a;
+  color:#ffe49a;
 }
 
-.status.failed,
-.status.rejected {
-    color: #ffc4c4;
-    background: rgba(255,119,119,.12);
+.status.failed,.status.rejected {
+  color:#ffc4c4;
+  background:rgba(255,119,119,.12);
 }
 
 .empty {
-    text-align: center;
-    color: var(--muted);
-    padding: 25px 10px;
-    font-size: 13px;
-    line-height: 1.6;
+  text-align:center;
+  color:var(--muted);
+  padding:25px 10px;
+  font-size:13px;
+  line-height:1.6;
 }
 
 .notice {
-    color: var(--muted);
-    font-size: 12px;
-    line-height: 1.7;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.7;
 }
 
 footer {
-    text-align: center;
-    padding: 24px 12px;
-    border-top: 1px solid var(--border);
-    color: var(--muted);
-    font-size: 12px;
+  text-align:center;
+  padding:24px 12px;
+  border-top:1px solid var(--border);
+  color:var(--muted);
+  font-size:12px;
 }
 
 footer strong {
-    color: var(--gold);
+  color:var(--gold);
 }
 
-@media (min-width: 700px) {
-    .stats {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
+@media(min-width:700px) {
+  .stats {
+    grid-template-columns:repeat(4,minmax(0,1fr));
+  }
 
-    .container {
-        padding-top: 28px;
-    }
+  .container {
+    padding-top:28px;
+  }
 
-    .card {
-        padding: 24px;
-    }
+  .card {
+    padding:24px;
+  }
 }
 
-@media (max-width: 400px) {
-    .profile-details {
-        grid-template-columns: 1fr;
-    }
+@media(max-width:400px) {
+  .profile-details {
+    grid-template-columns:1fr;
+  }
 
-    .welcome .btn {
-        width: 100%;
-    }
+  .welcome .btn {
+    width:100%;
+  }
 }
 </style>
 </head>
@@ -405,283 +406,277 @@ footer strong {
 <body>
 
 <header>
-    <div class="logo">👑</div>
-    <h1>FACE OF KULZZY RADIO 2026</h1>
-    <p>OFFICIAL CONTESTANT DASHBOARD</p>
+  <div class="logo">👑</div>
+  <h1>FACE OF KULZZY RADIO 2026</h1>
+  <p>OFFICIAL CONTESTANT DASHBOARD</p>
 </header>
 
 <main class="container">
 
-    <!-- LOGIN -->
-    <section id="loginSection" class="card login-card">
-        <h2>🔐 Contestant Login</h2>
+  <!-- LOGIN -->
+  <section id="loginSection" class="card login-card">
+    <h2>🔐 Contestant Login</h2>
 
-        <p class="notice">
-            Sign in using the email and password associated with your
-            contestant account. Your private dashboard is available only
-            after your account has been linked to your contestant profile.
-        </p>
+    <p class="notice">
+      Sign in using the email and password associated with your
+      contestant account. Your account must be linked to your
+      contestant profile by the administrator.
+    </p>
 
-        <form id="loginForm">
-            <label for="email">Email Address</label>
-            <input
-                id="email"
-                type="email"
-                autocomplete="username"
-                placeholder="Enter your registered email"
-                required
-            >
+    <form id="loginForm">
+      <label for="email">Email Address</label>
+      <input
+        id="email"
+        type="email"
+        autocomplete="username"
+        placeholder="Enter your registered email"
+        required
+      >
 
-            <label for="password">Password</label>
-            <input
-                id="password"
-                type="password"
-                autocomplete="current-password"
-                placeholder="Enter your password"
-                required
-            >
+      <label for="password">Password</label>
+      <input
+        id="password"
+        type="password"
+        autocomplete="current-password"
+        placeholder="Enter your password"
+        required
+      >
 
-            <button id="loginButton" class="btn btn-full" type="submit">
-                LOG IN TO MY DASHBOARD
-            </button>
-        </form>
+      <button id="loginButton" class="btn btn-full" type="submit">
+        LOG IN TO MY DASHBOARD
+      </button>
+    </form>
 
-        <button id="forgotButton" class="btn btn-secondary btn-full" type="button">
-            FORGOT PASSWORD?
+    <button id="forgotButton" class="btn btn-secondary btn-full" type="button">
+      FORGOT PASSWORD?
+    </button>
+
+    <div id="loginMessage" class="message"></div>
+
+    <p class="notice" style="margin-top:18px">
+      If you do not have a login, contact the official administrator.
+      Never share your password or payment PIN.
+    </p>
+  </section>
+
+
+  <!-- DASHBOARD -->
+  <section id="dashboardSection" class="hidden">
+
+    <div class="card">
+      <div class="welcome">
+        <div>
+          <h2 id="welcomeName">Welcome, Contestant!</h2>
+          <p id="accountEmail"></p>
+          <div class="badge">👑 OFFICIAL CONTESTANT ACCOUNT</div>
+        </div>
+
+        <button id="logoutButton" class="btn btn-secondary btn-small" type="button">
+          LOG OUT
         </button>
+      </div>
+    </div>
 
-        <div id="loginMessage" class="message"></div>
+    <div class="stats">
+      <div class="stat">
+        <div class="number" id="totalVotes">—</div>
+        <div class="caption">APPROVED VOTES</div>
+      </div>
 
-        <p class="notice" style="margin-top:18px">
-            Don't have an account, or cannot access your contestant profile?
-            Contact the Face of Kulzzy Radio administrator to have your
-            account created or linked.
-        </p>
-    </section>
+      <div class="stat">
+        <div class="number" id="rankNumber">—</div>
+        <div class="caption">LEADERBOARD POSITION</div>
+      </div>
 
+      <div class="stat">
+        <div class="number" id="pendingCount">—</div>
+        <div class="caption">PENDING RECORDS</div>
+      </div>
 
-    <!-- DASHBOARD -->
-    <section id="dashboardSection" class="hidden">
+      <div class="stat">
+        <div class="number" id="approvedCount">—</div>
+        <div class="caption">APPROVED ACTIVITY RECORDS</div>
+      </div>
+    </div>
 
-        <div class="card">
-            <div class="welcome">
-                <div>
-                    <h2 id="welcomeName">Welcome, Contestant!</h2>
-                    <p id="accountEmail"></p>
-                    <div class="badge">👑 OFFICIAL CONTESTANT ACCOUNT</div>
-                </div>
+    <div class="card">
+      <h2>👤 My Contestant Profile</h2>
 
-                <button id="logoutButton" class="btn btn-secondary btn-small" type="button">
-                    LOG OUT
-                </button>
-            </div>
+      <div class="profile-details">
+        <div class="detail">
+          <span>Contestant Name</span>
+          <strong id="profileName">Loading...</strong>
         </div>
 
-        <div class="stats">
-            <div class="stat">
-                <div class="number" id="totalVotes">—</div>
-                <div class="caption">APPROVED VOTES</div>
-            </div>
-
-            <div class="stat">
-                <div class="number" id="rankNumber">—</div>
-                <div class="caption">LEADERBOARD POSITION</div>
-            </div>
-
-            <div class="stat">
-                <div class="number" id="pendingCount">—</div>
-                <div class="caption">PENDING VOTE RECORDS</div>
-            </div>
-
-            <div class="stat">
-                <div class="number" id="approvedCount">—</div>
-                <div class="caption">APPROVED ACTIVITY RECORDS</div>
-            </div>
+        <div class="detail">
+          <span>Contestant ID</span>
+          <strong id="profileId">Loading...</strong>
         </div>
 
-        <div class="card">
-            <h2>👤 My Contestant Profile</h2>
-
-            <div class="profile-details">
-                <div class="detail">
-                    <span>Contestant Name</span>
-                    <strong id="profileName">Loading...</strong>
-                </div>
-
-                <div class="detail">
-                    <span>Contestant ID</span>
-                    <strong id="profileId">Loading...</strong>
-                </div>
-
-                <div class="detail">
-                    <span>Current Approved Votes</span>
-                    <strong id="profileVotes">—</strong>
-                </div>
-
-                <div class="detail">
-                    <span>Account Status</span>
-                    <strong id="profileStatus">Linked</strong>
-                </div>
-            </div>
+        <div class="detail">
+          <span>Current Approved Votes</span>
+          <strong id="profileVotes">—</strong>
         </div>
 
-        <div class="card">
-            <h2>🔗 My Personal Voting Link</h2>
-
-            <p class="notice">
-                Share your personal link with supporters so they can find
-                your contestant entry on the public voting page.
-            </p>
-
-            <div id="personalLink" class="link-box">Preparing your link...</div>
-
-            <button id="copyLinkButton" class="btn" type="button">
-                COPY MY VOTING LINK
-            </button>
-
-            <a
-                id="openVotingButton"
-                class="btn btn-secondary"
-                href="https://kulzzy.github.io/FACE-OF-KULZZY-RADIO-/"
-                target="_blank"
-                rel="noopener"
-            >
-                OPEN PUBLIC VOTING PAGE
-            </a>
-
-            <div id="linkMessage" class="message"></div>
+        <div class="detail">
+          <span>Account Status</span>
+          <strong id="profileStatus">Checking...</strong>
         </div>
+      </div>
+    </div>
 
-        <div class="card">
-            <h2>📊 My Voting Activity</h2>
+    <div class="card">
+      <h2>🔗 My Personal Voting Link</h2>
 
-            <p class="notice">
-                Activity displayed here depends on the records made available
-                to your linked contestant account. Pending payments are not
-                counted as approved votes.
-            </p>
+      <p class="notice">
+        Share your personal link with supporters so they can find
+        your contestant entry on the public voting page.
+      </p>
 
-            <div id="activityMessage" class="message"></div>
+      <div id="personalLink" class="link-box">Preparing your link...</div>
 
-            <div class="table-wrap">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Date / Time</th>
-                            <th>Activity</th>
-                            <th>Amount</th>
-                            <th>Votes</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
+      <button id="copyLinkButton" class="btn" type="button">
+        COPY MY VOTING LINK
+      </button>
 
-                    <tbody id="activityRows">
-                        <tr>
-                            <td colspan="5" class="empty">
-                                Loading your activity...
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+      <a
+        id="openVotingButton"
+        class="btn btn-secondary"
+        href="https://kulzzy.github.io/FACE-OF-KULZZY-RADIO-/"
+        target="_blank"
+        rel="noopener"
+      >
+        OPEN PUBLIC VOTING PAGE
+      </a>
 
-        <div class="card">
-            <h2>🏆 Leaderboard</h2>
+      <div id="linkMessage" class="message"></div>
+    </div>
 
-            <p class="notice">
-                Your position is calculated using approved vote totals,
-                not pending payments.
-            </p>
+    <div class="card">
+      <h2>📊 My Voting Activity</h2>
 
-            <div class="table-wrap">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Position</th>
-                            <th>Contestant</th>
-                            <th>Approved Votes</th>
-                        </tr>
-                    </thead>
+      <p class="notice">
+        Activity shown here depends on the records made available
+        to your linked contestant account. Pending payments do not
+        count as approved votes.
+      </p>
 
-                    <tbody id="leaderboardRows">
-                        <tr>
-                            <td colspan="3" class="empty">
-                                Loading leaderboard...
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+      <div id="activityMessage" class="message"></div>
 
-        <div class="card">
-            <h2>💳 Payment Information</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Date / Time</th>
+              <th>Activity</th>
+              <th>Amount</th>
+              <th>Votes</th>
+              <th>Status</th>
+            </tr>
+          </thead>
 
-            <p class="notice">
-                Payment processing and vote approval are separate steps.
-                A payment is not counted as an approved vote merely because
-                a checkout page was opened or a return page was visited.
-                Only verified and approved vote records count.
-            </p>
+          <tbody id="activityRows">
+            <tr>
+              <td colspan="5" class="empty">Loading your activity...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-            <div class="message info show">
-                If a payment is missing or remains pending, contact the
-                official administrator with your genuine payment receipt
-                or transaction reference. Never share your password.
-            </div>
-        </div>
+    <div class="card">
+      <h2>🏆 Leaderboard</h2>
 
-    </section>
+      <p class="notice">
+        Contestant positions are calculated using approved vote totals,
+        not pending payments.
+      </p>
 
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Position</th>
+              <th>Contestant</th>
+              <th>Approved Votes</th>
+            </tr>
+          </thead>
+
+          <tbody id="leaderboardRows">
+            <tr>
+              <td colspan="3" class="empty">Loading leaderboard...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>💳 Payment Information</h2>
+
+      <p class="notice">
+        Payments and vote approvals are separate steps. Opening
+        checkout or returning from a payment page does not prove
+        that a payment succeeded. Only payments verified by the
+        administrator and approved in the voting system count.
+      </p>
+
+      <div class="message info show">
+        If a payment is missing or remains pending, contact the
+        administrator using your genuine payment receipt or transaction
+        reference. Never share your password or payment PIN.
+      </div>
+    </div>
+
+  </section>
 </main>
 
 <footer>
-    <strong>KULZZY RADIO NETWORK</strong><br>
-    Celebrating Lives Everyday<br>
-    FACE OF KULZZY RADIO 2026
+  <strong>KULZZY RADIO NETWORK</strong><br>
+  Celebrating Lives Everyday<br>
+  FACE OF KULZZY RADIO 2026
 </footer>
 
 
 <script type="module">
 import { initializeApp } from
-    "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
-    getAuth,
-    onAuthStateChanged,
-    signInWithEmailAndPassword,
-    sendPasswordResetEmail,
-    signOut
+  getAuth,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  sendPasswordResetEmail,
+  signOut
 } from
-    "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 import {
-    getDatabase,
-    ref,
-    get,
-    onValue
+  getDatabase,
+  ref,
+  get,
+  onValue
 } from
-    "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+  "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 
-/* =========================================================
-   EXISTING FACE OF KULZZY RADIO FIREBASE PROJECT
-   ========================================================= */
+/* =====================================================
+   CORRECT FIREBASE CONFIGURATION PROVIDED BY YOU
+   ===================================================== */
 
 const firebaseConfig = {
-    apiKey: "AIzaSyD-Oqmq3P5bNoxcHBdkTA9O9W9HVsKDVc",
-    authDomain: "face-of-kulzzy-radio-2026.firebaseapp.com",
-    databaseURL: "https://face-of-kulzzy-radio-2026-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "face-of-kulzzy-radio-2026",
-    storageBucket: "face-of-kulzzy-radio-2026.firebasestorage.app",
-    messagingSenderId: "175657004245",
-    appId: "1:175657004245:web:022d50bc14ed86e036065c",
-    measurementId: "G-WQDFT2B0RH"
+  apiKey: "AIzaSyD-Oqmq3P5bNoxcHBdkTAw7O9W9HVsKDVc",
+  authDomain: "face-of-kulzzy-radio-2026.firebaseapp.com",
+  databaseURL: "https://face-of-kulzzy-radio-2026-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "face-of-kulzzy-radio-2026",
+  storageBucket: "face-of-kulzzy-radio-2026.firebasestorage.app",
+  messagingSenderId: "175657004245",
+  appId: "1:175657004245:web:022d50bc14ed86e036065c",
+  measurementId: "G-WQDFT2B0RH"
 };
 
 const PUBLIC_VOTING_URL =
-    "https://kulzzy.github.io/FACE-OF-KULZZY-RADIO-/";
+  "https://kulzzy.github.io/FACE-OF-KULZZY-RADIO-/";
 
 const ROOT = "faceOfKulzzy";
 
@@ -690,9 +685,9 @@ const auth = getAuth(app);
 const db = getDatabase(app);
 
 
-/* =========================================================
-   PAGE STATE
-   ========================================================= */
+/* =====================================================
+   APPLICATION STATE
+   ===================================================== */
 
 const $ = id => document.getElementById(id);
 
@@ -700,756 +695,768 @@ let currentUser = null;
 let contestantId = null;
 let contestantRecord = null;
 
-let stopVotesListener = null;
-let stopActivityListener = null;
-let stopContestantsListener = null;
-let stopOfficialVotesListener = null;
-
 let contestantRecords = {};
 let officialVoteRecords = {};
 let activityRecords = {};
 
+let stopActivityListener = null;
+let stopContestantsListener = null;
+let stopOfficialVotesListener = null;
+
 let loginBusy = false;
+let sessionNumber = 0;
 
 
-/* =========================================================
-   DISPLAY HELPERS
-   ========================================================= */
+/* =====================================================
+   GENERAL HELPERS
+   ===================================================== */
 
 function showMessage(id, message, type = "info") {
-    const element = $(id);
-
-    element.textContent = message;
-    element.className = "message show " + type;
+  const element = $(id);
+  element.textContent = message;
+  element.className = "message show " + type;
 }
 
 function clearMessage(id) {
-    const element = $(id);
-    element.textContent = "";
-    element.className = "message";
+  $(id).textContent = "";
+  $(id).className = "message";
 }
 
 function setText(id, value) {
-    $(id).textContent =
-        value === null || value === undefined || value === ""
-            ? "—"
-            : String(value);
-}
-
-function formatNumber(value) {
-    const number = Number(value || 0);
-
-    return Number.isFinite(number)
-        ? Math.floor(number).toLocaleString("en-NG")
-        : "0";
-}
-
-function formatMoney(value) {
-    const number = Number(value || 0);
-
-    if (!Number.isFinite(number)) {
-        return "—";
-    }
-
-    return "₦" + number.toLocaleString("en-NG", {
-        maximumFractionDigits: 2
-    });
+  $(id).textContent =
+    value === null || value === undefined || value === ""
+      ? "—"
+      : String(value);
 }
 
 function safeObject(value) {
-    return value && typeof value === "object" ? value : {};
+  return value && typeof value === "object" ? value : {};
 }
 
 function firstValue(object, names, fallback = "") {
-    for (const name of names) {
-        const value = object?.[name];
+  for (const name of names) {
+    const value = object?.[name];
 
-        if (
-            value !== undefined &&
-            value !== null &&
-            value !== ""
-        ) {
-            return value;
-        }
+    if (value !== undefined && value !== null && value !== "") {
+      return value;
     }
+  }
 
-    return fallback;
+  return fallback;
 }
 
-function normalizeStatus(value) {
-    const status = String(value || "recorded").toLowerCase();
+function formatNumber(value) {
+  const number = Number(value || 0);
 
-    if (status.includes("approv") || status === "success") {
-        return "approved";
-    }
+  return Number.isFinite(number)
+    ? Math.floor(number).toLocaleString("en-NG")
+    : "0";
+}
 
-    if (status.includes("pend") || status.includes("process")) {
-        return "pending";
-    }
+function formatMoney(value) {
+  const number = Number(value);
 
-    if (
-        status.includes("reject") ||
-        status.includes("fail") ||
-        status.includes("cancel")
-    ) {
-        return status.includes("reject") ? "rejected" : "failed";
-    }
+  if (!Number.isFinite(number)) return "—";
 
-    return status;
+  return "₦" + number.toLocaleString("en-NG", {
+    maximumFractionDigits: 2
+  });
 }
 
 function formatDate(value) {
-    if (value === undefined || value === null || value === "") {
-        return "—";
+  if (value === undefined || value === null || value === "") {
+    return "—";
+  }
+
+  let date;
+
+  if (typeof value === "number" || /^\d+$/.test(String(value))) {
+    let numeric = Number(value);
+
+    if (numeric > 0 && numeric < 100000000000) {
+      numeric *= 1000;
     }
 
-    let date;
+    date = new Date(numeric);
+  } else {
+    date = new Date(value);
+  }
 
-    if (typeof value === "number" || /^\d+$/.test(String(value))) {
-        let numeric = Number(value);
+  if (Number.isNaN(date.getTime())) return String(value);
 
-        // Support timestamps expressed in seconds or milliseconds.
-        if (numeric > 0 && numeric < 100000000000) {
-            numeric *= 1000;
-        }
-
-        date = new Date(numeric);
-    } else {
-        date = new Date(value);
-    }
-
-    if (Number.isNaN(date.getTime())) {
-        return String(value);
-    }
-
-    return date.toLocaleString();
+  return date.toLocaleString();
 }
 
-function clearListeners() {
-    [
-        stopVotesListener,
-        stopActivityListener,
-        stopContestantsListener,
-        stopOfficialVotesListener
-    ].forEach(stop => {
-        if (typeof stop === "function") {
-            stop();
-        }
-    });
+function normalizeStatus(value) {
+  const status = String(value || "recorded").toLowerCase();
 
-    stopVotesListener = null;
-    stopActivityListener = null;
-    stopContestantsListener = null;
-    stopOfficialVotesListener = null;
+  if (status.includes("approv") || status === "success") {
+    return "approved";
+  }
+
+  if (status.includes("pend") || status.includes("process")) {
+    return "pending";
+  }
+
+  if (status.includes("reject")) return "rejected";
+
+  if (
+    status.includes("fail") ||
+    status.includes("cancel")
+  ) {
+    return "failed";
+  }
+
+  return status;
+}
+
+function stopListeners() {
+  [
+    stopActivityListener,
+    stopContestantsListener,
+    stopOfficialVotesListener
+  ].forEach(stop => {
+    if (typeof stop === "function") stop();
+  });
+
+  stopActivityListener = null;
+  stopContestantsListener = null;
+  stopOfficialVotesListener = null;
 }
 
 
-/* =========================================================
-   LOGIN AND PASSWORD RESET
-   ========================================================= */
+/* =====================================================
+   AUTHENTICATION
+   ===================================================== */
 
 $("loginForm").addEventListener("submit", async event => {
-    event.preventDefault();
+  event.preventDefault();
 
-    if (loginBusy) return;
+  if (loginBusy) return;
 
-    loginBusy = true;
-    $("loginButton").disabled = true;
-    clearMessage("loginMessage");
+  loginBusy = true;
+  $("loginButton").disabled = true;
+  clearMessage("loginMessage");
 
-    const email = $("email").value.trim();
-    const password = $("password").value;
+  try {
+    await signInWithEmailAndPassword(
+      auth,
+      $("email").value.trim(),
+      $("password").value
+    );
+  } catch (error) {
+    console.error("Login error:", error);
 
-    try {
-        await signInWithEmailAndPassword(auth, email, password);
-    } catch (error) {
-        console.error("Login failed:", error);
-
-        showMessage(
-            "loginMessage",
-            getAuthErrorMessage(error),
-            "error"
-        );
-    } finally {
-        loginBusy = false;
-        $("loginButton").disabled = false;
-    }
+    showMessage(
+      "loginMessage",
+      authErrorMessage(error),
+      "error"
+    );
+  } finally {
+    loginBusy = false;
+    $("loginButton").disabled = false;
+  }
 });
 
 $("forgotButton").addEventListener("click", async () => {
-    const email = $("email").value.trim();
+  const email = $("email").value.trim();
 
-    if (!email) {
-        showMessage(
-            "loginMessage",
-            "Enter your registered email address first.",
-            "error"
-        );
-        return;
-    }
+  if (!email) {
+    showMessage(
+      "loginMessage",
+      "Enter your registered email address first.",
+      "error"
+    );
+    return;
+  }
 
-    try {
-        await sendPasswordResetEmail(auth, email);
+  try {
+    await sendPasswordResetEmail(auth, email);
 
-        showMessage(
-            "loginMessage",
-            "If the account is registered and password reset is permitted, Firebase will send a reset email. Check your inbox and spam folder.",
-            "success"
-        );
-    } catch (error) {
-        console.error("Password reset:", error);
+    showMessage(
+      "loginMessage",
+      "If password reset is enabled and the account qualifies, Firebase will send a reset email. Check your inbox and spam folder.",
+      "success"
+    );
+  } catch (error) {
+    console.error("Password reset error:", error);
 
-        showMessage(
-            "loginMessage",
-            getAuthErrorMessage(error),
-            "error"
-        );
-    }
+    showMessage(
+      "loginMessage",
+      authErrorMessage(error),
+      "error"
+    );
+  }
 });
 
 $("logoutButton").addEventListener("click", async () => {
-    clearListeners();
+  stopListeners();
 
-    try {
-        await signOut(auth);
-    } catch (error) {
-        console.error("Logout failed:", error);
-
-        showMessage(
-            "activityMessage",
-            "Could not complete logout. Please try again.",
-            "error"
-        );
-    }
-});
-
-function getAuthErrorMessage(error) {
-    const code = error?.code || "";
-
-    if (
-        code.includes("invalid-credential") ||
-        code.includes("wrong-password") ||
-        code.includes("user-not-found")
-    ) {
-        return "The email or password is incorrect. If you have never logged in before, ask the administrator to set up your contestant account.";
-    }
-
-    if (code.includes("invalid-email")) {
-        return "Please enter a valid email address.";
-    }
-
-    if (code.includes("too-many-requests")) {
-        return "Too many attempts. Wait a while and try again.";
-    }
-
-    if (code.includes("network-request-failed")) {
-        return "Network connection failed. Check your internet connection and try again.";
-    }
-
-    if (code.includes("operation-not-allowed")) {
-        return "Email and password login is not enabled for this Firebase project. The administrator must enable it in Firebase Authentication.";
-    }
-
-    return error?.message || "Unable to complete the request. Please try again.";
-}
-
-
-/* =========================================================
-   AUTHENTICATION STATE
-   ========================================================= */
-
-onAuthStateChanged(auth, async user => {
-    clearListeners();
-
-    currentUser = user || null;
-    contestantId = null;
-    contestantRecord = null;
-    contestantRecords = {};
-    officialVoteRecords = {};
-    activityRecords = {};
-
-    if (!user) {
-        $("loginSection").classList.remove("hidden");
-        $("dashboardSection").classList.add("hidden");
-
-        setText("totalVotes", "—");
-        setText("rankNumber", "—");
-        setText("pendingCount", "—");
-        setText("approvedCount", "—");
-
-        return;
-    }
-
-    $("loginSection").classList.add("hidden");
-    $("dashboardSection").classList.remove("hidden");
-
-    setText("accountEmail", user.email || "");
+  try {
+    await signOut(auth);
+  } catch (error) {
+    console.error("Logout error:", error);
 
     showMessage(
-        "activityMessage",
-        "Checking your contestant account...",
-        "info"
+      "activityMessage",
+      "Logout could not be completed. Please try again.",
+      "error"
     );
+  }
+});
 
-    try {
-        await loadContestantAccount(user);
-    } catch (error) {
-        console.error("Account loading failed:", error);
+function authErrorMessage(error) {
+  const code = error?.code || "";
 
-        showMessage(
-            "activityMessage",
-            "Your account could not be loaded. Check that the database permissions are configured for your contestant account.",
-            "error"
-        );
-    }
+  if (
+    code.includes("invalid-credential") ||
+    code.includes("wrong-password") ||
+    code.includes("user-not-found")
+  ) {
+    return "The email or password is incorrect. If you have never logged in before, ask the administrator to create your contestant login.";
+  }
+
+  if (code.includes("invalid-email")) {
+    return "Enter a valid email address.";
+  }
+
+  if (code.includes("too-many-requests")) {
+    return "Too many login attempts. Wait a while before trying again.";
+  }
+
+  if (code.includes("network-request-failed")) {
+    return "Network connection failed. Check your internet connection.";
+  }
+
+  if (code.includes("operation-not-allowed")) {
+    return "Email/password login is not enabled in Firebase Authentication. The administrator must enable this sign-in method.";
+  }
+
+  if (code.includes("api-key-not-valid")) {
+    return "Firebase rejected the API key. Confirm that this exact key is active in the Google Cloud project associated with face-of-kulzzy-radio-2026.";
+  }
+
+  return error?.message || "The request could not be completed.";
+}
+
+
+/* =====================================================
+   AUTHENTICATION STATE
+   ===================================================== */
+
+onAuthStateChanged(auth, async user => {
+  const thisSession = ++sessionNumber;
+
+  stopListeners();
+
+  currentUser = user || null;
+  contestantId = null;
+  contestantRecord = null;
+
+  contestantRecords = {};
+  officialVoteRecords = {};
+  activityRecords = {};
+
+  if (!user) {
+    $("loginSection").classList.remove("hidden");
+    $("dashboardSection").classList.add("hidden");
+
+    return;
+  }
+
+  $("loginSection").classList.add("hidden");
+  $("dashboardSection").classList.remove("hidden");
+
+  setText("accountEmail", user.email || "");
+
+  showMessage(
+    "activityMessage",
+    "Checking your contestant account...",
+    "info"
+  );
+
+  try {
+    await loadContestantAccount(user, thisSession);
+  } catch (error) {
+    console.error("Account loading error:", error);
+
+    if (thisSession !== sessionNumber) return;
+
+    showMessage(
+      "activityMessage",
+      "Your account could not be loaded. Check the contestant account link and Firebase database permissions.",
+      "error"
+    );
+  }
 });
 
 
-/* =========================================================
-   LOAD THE ADMIN-LINKED CONTESTANT ACCOUNT
-   Expected mapping:
-   faceOfKulzzy/contestantAccounts/{Firebase Auth UID}
-       contestantId: "contestant-record-key"
-   ========================================================= */
+/* =====================================================
+   CONTESTANT ACCOUNT MAPPING
+   Expected:
+   faceOfKulzzy/contestantAccounts/{AUTH_UID}
+   {
+     "contestantId": "ACTUAL_CONTESTANT_RECORD_ID"
+   }
+   ===================================================== */
 
-async function loadContestantAccount(user) {
-    const accountRef = ref(
-        db,
-        `${ROOT}/contestantAccounts/${user.uid}`
+async function loadContestantAccount(user, thisSession) {
+  const accountRef = ref(
+    db,
+    `${ROOT}/contestantAccounts/${user.uid}`
+  );
+
+  const snapshot = await get(accountRef);
+
+  if (thisSession !== sessionNumber) return;
+
+  if (!snapshot.exists()) {
+    setText("welcomeName", "Account Not Linked");
+    setText("profileStatus", "Awaiting administrator");
+    setText("profileId", "Not linked");
+
+    showMessage(
+      "activityMessage",
+      "Your login is valid, but it has not been linked to a contestant profile. Ask the administrator to link your Firebase Authentication UID to your actual contestant ID. Do not share your password.",
+      "error"
     );
 
-    const snapshot = await get(accountRef);
+    return;
+  }
 
-    if (!snapshot.exists()) {
-        $("dashboardSection").classList.remove("hidden");
+  const account = safeObject(snapshot.val());
 
-        showMessage(
-            "activityMessage",
-            "Your login is valid, but this account has not been linked to a contestant profile yet. Contact the administrator and provide the email address you used to log in. Do not share your password.",
-            "error"
-        );
+  const linkedId = firstValue(
+    account,
+    ["contestantId", "contestantID", "id", "contestantKey"],
+    ""
+  );
 
-        setText("welcomeName", "Account Not Linked");
-        setText("profileStatus", "Awaiting administrator");
-        setText("profileId", "Not linked");
-
-        return;
-    }
-
-    const account = safeObject(snapshot.val());
-
-    const linkedId = firstValue(
-        account,
-        ["contestantId", "contestantID", "id", "contestantKey"],
-        ""
+  if (!linkedId) {
+    showMessage(
+      "activityMessage",
+      "Your contestant account mapping does not contain a contestantId. The administrator must correct the account link.",
+      "error"
     );
 
-    if (!linkedId) {
-        showMessage(
-            "activityMessage",
-            "Your account mapping exists, but it does not contain a contestantId. The administrator must link the correct contestant record.",
-            "error"
-        );
-        return;
-    }
+    return;
+  }
 
-    contestantId = String(linkedId);
+  contestantId = String(linkedId);
 
-    await loadContestantProfile();
+  await loadContestantProfile(thisSession);
 
-    startContestantListeners();
+  if (
+    thisSession !== sessionNumber ||
+    !contestantRecord
+  ) {
+    return;
+  }
+
+  startContestantListeners(thisSession);
 }
 
 
-/* =========================================================
+/* =====================================================
    CONTESTANT PROFILE
-   ========================================================= */
+   ===================================================== */
 
-async function loadContestantProfile() {
-    const profileRef = ref(
-        db,
-        `${ROOT}/contestants/${contestantId}`
-    );
+async function loadContestantProfile(thisSession) {
+  const profileRef = ref(
+    db,
+    `${ROOT}/contestants/${contestantId}`
+  );
 
-    const snapshot = await get(profileRef);
+  const snapshot = await get(profileRef);
 
-    if (!snapshot.exists()) {
-        setText("welcomeName", "Contestant Profile Not Found");
-        setText("profileId", contestantId);
+  if (thisSession !== sessionNumber) return;
 
-        showMessage(
-            "activityMessage",
-            "Your account is linked to a contestant ID, but no matching record was found at faceOfKulzzy/contestants. Ask the administrator to check the contestant ID.",
-            "error"
-        );
-
-        return;
-    }
-
-    contestantRecord = safeObject(snapshot.val());
-
-    const name = firstValue(
-        contestantRecord,
-        ["name", "contestantName", "fullName", "title"],
-        "Contestant"
-    );
-
-    setText("welcomeName", "Welcome, " + name + "!");
-    setText("profileName", name);
+  if (!snapshot.exists()) {
+    setText("welcomeName", "Contestant Profile Not Found");
     setText("profileId", contestantId);
-    setText("profileStatus", "Linked");
 
-    const personalUrl = new URL(PUBLIC_VOTING_URL);
+    showMessage(
+      "activityMessage",
+      "No contestant record matches your linked ID. Ask the administrator to verify your contestant ID.",
+      "error"
+    );
 
-    personalUrl.searchParams.set("contestant", contestantId);
+    return;
+  }
 
-    $("personalLink").textContent = personalUrl.toString();
-    $("openVotingButton").href = personalUrl.toString();
+  contestantRecord = safeObject(snapshot.val());
+
+  const name = firstValue(
+    contestantRecord,
+    ["name", "contestantName", "fullName", "title"],
+    "Contestant"
+  );
+
+  setText("welcomeName", "Welcome, " + name + "!");
+  setText("profileName", name);
+  setText("profileId", contestantId);
+  setText("profileStatus", "Linked");
+
+  const personalUrl = new URL(PUBLIC_VOTING_URL);
+
+  personalUrl.searchParams.set("contestant", contestantId);
+
+  $("personalLink").textContent = personalUrl.toString();
+  $("openVotingButton").href = personalUrl.toString();
 }
 
 
-/* =========================================================
-   LIVE DATA LISTENERS
-   ========================================================= */
+/* =====================================================
+   LIVE DATABASE LISTENERS
+   ===================================================== */
 
-function startContestantListeners() {
-    if (!currentUser || !contestantId) return;
+function startContestantListeners(thisSession) {
+  if (!currentUser || !contestantId) return;
 
-    /*
-      The Firebase Realtime Database security rules must permit
-      authenticated contestants to read only the data belonging
-      to their own linked contestant profile.
-    */
+  const officialVotesRef = ref(
+    db,
+    `${ROOT}/officialVotes`
+  );
 
-    const officialVotesRef = ref(
-        db,
-        `${ROOT}/officialVotes`
-    );
+  stopOfficialVotesListener = onValue(
+    officialVotesRef,
+    snapshot => {
+      if (thisSession !== sessionNumber) return;
 
-    stopVotesListener = onValue(
-        officialVotesRef,
-        snapshot => {
-            officialVoteRecords = safeObject(snapshot.val());
-            refreshVoteDisplays();
-        },
-        error => {
-            console.error("Official vote listener:", error);
+      officialVoteRecords = safeObject(snapshot.val());
 
-            showMessage(
-                "activityMessage",
-                "Approved vote totals could not be loaded. The administrator must confirm the officialVotes read permissions.",
-                "error"
-            );
-        }
-    );
+      refreshVoteDisplays();
+    },
+    error => {
+      console.error("Official vote read error:", error);
 
-    const contestantsRef = ref(
-        db,
-        `${ROOT}/contestants`
-    );
+      if (thisSession !== sessionNumber) return;
 
-    stopContestantsListener = onValue(
-        contestantsRef,
-        snapshot => {
-            contestantRecords = safeObject(snapshot.val());
-            renderLeaderboard();
-        },
-        error => {
-            console.error("Contestants listener:", error);
-        }
-    );
+      showMessage(
+        "activityMessage",
+        "Approved vote totals could not be loaded. Check the officialVotes database read permissions.",
+        "error"
+      );
+    }
+  );
 
-    const activityRef = ref(
-        db,
-        `${ROOT}/contestantActivity/${contestantId}`
-    );
+  const contestantsRef = ref(
+    db,
+    `${ROOT}/contestants`
+  );
 
-    stopActivityListener = onValue(
-        activityRef,
-        snapshot => {
-            activityRecords = safeObject(snapshot.val());
-            renderActivity();
-        },
-        error => {
-            console.error("Activity listener:", error);
+  stopContestantsListener = onValue(
+    contestantsRef,
+    snapshot => {
+      if (thisSession !== sessionNumber) return;
 
-            $("activityRows").innerHTML = "";
+      contestantRecords = safeObject(snapshot.val());
 
-            const row = document.createElement("tr");
-            const cell = document.createElement("td");
+      renderLeaderboard();
+    },
+    error => {
+      console.error("Contestants read error:", error);
+    }
+  );
 
-            cell.colSpan = 5;
-            cell.className = "empty";
-            cell.textContent =
-                "Your activity records are not available to this account. The administrator must configure private activity permissions and confirm where your records are stored.";
+  const activityRef = ref(
+    db,
+    `${ROOT}/contestantActivity/${contestantId}`
+  );
 
-            row.appendChild(cell);
-            $("activityRows").appendChild(row);
-        }
-    );
+  stopActivityListener = onValue(
+    activityRef,
+    snapshot => {
+      if (thisSession !== sessionNumber) return;
+
+      activityRecords = safeObject(snapshot.val());
+
+      renderActivity();
+    },
+    error => {
+      console.error("Activity read error:", error);
+
+      $("activityRows").innerHTML = "";
+
+      const row = document.createElement("tr");
+      const cell = document.createElement("td");
+
+      cell.colSpan = 5;
+      cell.className = "empty";
+      cell.textContent =
+        "Activity records are unavailable to this account. The administrator must confirm the activity data path and private read permissions.";
+
+      row.appendChild(cell);
+      $("activityRows").appendChild(row);
+    }
+  );
 }
 
 
-/* =========================================================
-   APPROVED VOTE TOTALS
-   ========================================================= */
+/* =====================================================
+   OFFICIAL APPROVED VOTES
+   ===================================================== */
 
 function getContestantVotes(id) {
-    const record = safeObject(officialVoteRecords[id]);
+  const record = safeObject(officialVoteRecords[id]);
 
-    return Math.max(
-        0,
-        Number(firstValue(record, ["votes", "totalVotes"], 0)) || 0
-    );
+  const votes = Number(
+    firstValue(record, ["votes", "totalVotes"], 0)
+  );
+
+  return Number.isFinite(votes) ? Math.max(0, votes) : 0;
 }
 
 function refreshVoteDisplays() {
-    if (!contestantId) return;
+  if (!contestantId) return;
 
-    const votes = getContestantVotes(contestantId);
+  const votes = getContestantVotes(contestantId);
 
-    setText("totalVotes", formatNumber(votes));
-    setText("profileVotes", formatNumber(votes));
+  setText("totalVotes", formatNumber(votes));
+  setText("profileVotes", formatNumber(votes));
 
-    renderLeaderboard();
+  renderLeaderboard();
 }
 
 
-/* =========================================================
+/* =====================================================
    LEADERBOARD
-   ========================================================= */
+   ===================================================== */
 
 function renderLeaderboard() {
-    const tbody = $("leaderboardRows");
+  const tbody = $("leaderboardRows");
 
-    if (!contestantId) return;
+  if (!contestantId) return;
 
-    const entries = Object.entries(contestantRecords)
-        .map(([id, raw]) => {
-            const record = safeObject(raw);
+  const entries = Object.entries(contestantRecords)
+    .map(([id, raw]) => {
+      const record = safeObject(raw);
 
-            return {
-                id,
-                name: firstValue(
-                    record,
-                    ["name", "contestantName", "fullName", "title"],
-                    "Contestant"
-                ),
-                votes: getContestantVotes(id)
-            };
-        })
-        .sort((a, b) => {
-            if (b.votes !== a.votes) {
-                return b.votes - a.votes;
-            }
+      return {
+        id,
+        name: firstValue(
+          record,
+          ["name", "contestantName", "fullName", "title"],
+          "Contestant"
+        ),
+        votes: getContestantVotes(id)
+      };
+    })
+    .sort((a, b) => {
+      if (b.votes !== a.votes) {
+        return b.votes - a.votes;
+      }
 
-            return String(a.name).localeCompare(String(b.name));
-        });
-
-    tbody.innerHTML = "";
-
-    if (!entries.length) {
-        const row = document.createElement("tr");
-        const cell = document.createElement("td");
-
-        cell.colSpan = 3;
-        cell.className = "empty";
-        cell.textContent = "No contestants are available yet.";
-
-        row.appendChild(cell);
-        tbody.appendChild(row);
-
-        setText("rankNumber", "—");
-        return;
-    }
-
-    const myIndex = entries.findIndex(
-        entry => entry.id === contestantId
-    );
-
-    if (myIndex >= 0) {
-        setText("rankNumber", "#" + (myIndex + 1));
-    } else {
-        setText("rankNumber", "—");
-    }
-
-    entries.forEach((entry, index) => {
-        const row = document.createElement("tr");
-
-        const rankCell = document.createElement("td");
-        rankCell.textContent = "#" + (index + 1);
-
-        const nameCell = document.createElement("td");
-        nameCell.textContent =
-            entry.name +
-            (entry.id === contestantId ? " (YOU)" : "");
-
-        const votesCell = document.createElement("td");
-        votesCell.textContent = formatNumber(entry.votes);
-
-        if (entry.id === contestantId) {
-            row.style.background = "rgba(245,197,66,.09)";
-        }
-
-        row.append(rankCell, nameCell, votesCell);
-        tbody.appendChild(row);
+      return String(a.name).localeCompare(String(b.name));
     });
+
+  tbody.innerHTML = "";
+
+  if (!entries.length) {
+    const row = document.createElement("tr");
+    const cell = document.createElement("td");
+
+    cell.colSpan = 3;
+    cell.className = "empty";
+    cell.textContent = "No contestants are available yet.";
+
+    row.appendChild(cell);
+    tbody.appendChild(row);
+
+    setText("rankNumber", "—");
+    return;
+  }
+
+  const myIndex = entries.findIndex(
+    entry => entry.id === contestantId
+  );
+
+  setText(
+    "rankNumber",
+    myIndex >= 0 ? "#" + (myIndex + 1) : "—"
+  );
+
+  entries.forEach((entry, index) => {
+    const row = document.createElement("tr");
+
+    const rankCell = document.createElement("td");
+    rankCell.textContent = "#" + (index + 1);
+
+    const nameCell = document.createElement("td");
+    nameCell.textContent =
+      entry.name +
+      (entry.id === contestantId ? " (YOU)" : "");
+
+    const votesCell = document.createElement("td");
+    votesCell.textContent = formatNumber(entry.votes);
+
+    if (entry.id === contestantId) {
+      row.style.background = "rgba(245,197,66,.09)";
+    }
+
+    row.append(rankCell, nameCell, votesCell);
+    tbody.appendChild(row);
+  });
 }
 
 
-/* =========================================================
-   PRIVATE ACTIVITY TABLE
-   ========================================================= */
+/* =====================================================
+   CONTESTANT ACTIVITY
+   Expected location:
+   faceOfKulzzy/contestantActivity/{CONTESTANT_ID}
+   ===================================================== */
 
 function renderActivity() {
-    const tbody = $("activityRows");
-    tbody.innerHTML = "";
+  const tbody = $("activityRows");
+  tbody.innerHTML = "";
 
-    const records = Object.entries(activityRecords)
-        .map(([key, value]) => ({
-            key,
-            ...safeObject(value)
-        }))
-        .sort((a, b) => {
-            const dateA = Number(
-                firstValue(a, ["timestamp", "createdAt", "date"], 0)
-            ) || 0;
+  const records = Object.entries(activityRecords)
+    .map(([key, value]) => ({
+      key,
+      ...safeObject(value)
+    }))
+    .sort((a, b) => {
+      const timeA = Number(
+        firstValue(a, ["timestamp", "createdAt", "date"], 0)
+      ) || 0;
 
-            const dateB = Number(
-                firstValue(b, ["timestamp", "createdAt", "date"], 0)
-            ) || 0;
+      const timeB = Number(
+        firstValue(b, ["timestamp", "createdAt", "date"], 0)
+      ) || 0;
 
-            return dateB - dateA;
-        });
-
-    let pending = 0;
-    let approved = 0;
-
-    records.forEach(record => {
-        const status = normalizeStatus(
-            firstValue(record, ["status", "paymentStatus"], "recorded")
-        );
-
-        if (status === "pending") pending++;
-        if (status === "approved") approved++;
+      return timeB - timeA;
     });
 
-    setText("pendingCount", formatNumber(pending));
-    setText("approvedCount", formatNumber(approved));
+  let pending = 0;
+  let approved = 0;
 
-    if (!records.length) {
-        const row = document.createElement("tr");
-        const cell = document.createElement("td");
+  records.forEach(record => {
+    const status = normalizeStatus(
+      firstValue(record, ["status", "paymentStatus"], "recorded")
+    );
 
-        cell.colSpan = 5;
-        cell.className = "empty";
-        cell.textContent =
-            "No activity records are available yet. When activity records are saved under your contestant profile, they will appear here.";
+    if (status === "pending") pending++;
+    if (status === "approved") approved++;
+  });
 
-        row.appendChild(cell);
-        tbody.appendChild(row);
-        return;
-    }
+  setText("pendingCount", formatNumber(pending));
+  setText("approvedCount", formatNumber(approved));
 
-    records.forEach(record => {
-        const row = document.createElement("tr");
+  if (!records.length) {
+    const row = document.createElement("tr");
+    const cell = document.createElement("td");
 
-        const date = firstValue(
-            record,
-            ["timestamp", "createdAt", "date", "time"],
-            ""
-        );
+    cell.colSpan = 5;
+    cell.className = "empty";
+    cell.textContent =
+      "No activity records are available yet.";
 
-        const activity = firstValue(
-            record,
-            ["activity", "type", "description", "event"],
-            "Voting activity"
-        );
+    row.appendChild(cell);
+    tbody.appendChild(row);
 
-        const amount = firstValue(
-            record,
-            ["amount", "paidAmount", "paymentAmount"],
-            null
-        );
+    return;
+  }
 
-        const votes = firstValue(
-            record,
-            ["votes", "voteCount", "approvedVotes"],
-            null
-        );
+  records.forEach(record => {
+    const row = document.createElement("tr");
 
-        const status = normalizeStatus(
-            firstValue(record, ["status", "paymentStatus"], "recorded")
-        );
+    const date = firstValue(
+      record,
+      ["timestamp", "createdAt", "date", "time"],
+      ""
+    );
 
-        const dateCell = document.createElement("td");
-        dateCell.textContent = formatDate(date);
+    const activity = firstValue(
+      record,
+      ["activity", "type", "description", "event"],
+      "Voting activity"
+    );
 
-        const activityCell = document.createElement("td");
-        activityCell.textContent = String(activity);
+    const amount = firstValue(
+      record,
+      ["amount", "paidAmount", "paymentAmount"],
+      null
+    );
 
-        const amountCell = document.createElement("td");
-        amountCell.textContent =
-            amount === null ? "—" : formatMoney(amount);
+    const votes = firstValue(
+      record,
+      ["votes", "voteCount", "approvedVotes"],
+      null
+    );
 
-        const votesCell = document.createElement("td");
-        votesCell.textContent =
-            votes === null ? "—" : formatNumber(votes);
+    const status = normalizeStatus(
+      firstValue(record, ["status", "paymentStatus"], "recorded")
+    );
 
-        const statusCell = document.createElement("td");
-        const badge = document.createElement("span");
+    const dateCell = document.createElement("td");
+    dateCell.textContent = formatDate(date);
 
-        badge.className = "status " + status;
-        badge.textContent = status.toUpperCase();
+    const activityCell = document.createElement("td");
+    activityCell.textContent = String(activity);
 
-        statusCell.appendChild(badge);
+    const amountCell = document.createElement("td");
+    amountCell.textContent =
+      amount === null ? "—" : formatMoney(amount);
 
-        row.append(
-            dateCell,
-            activityCell,
-            amountCell,
-            votesCell,
-            statusCell
-        );
+    const votesCell = document.createElement("td");
+    votesCell.textContent =
+      votes === null ? "—" : formatNumber(votes);
 
-        tbody.appendChild(row);
-    });
+    const statusCell = document.createElement("td");
+    const badge = document.createElement("span");
+
+    badge.className = "status " + status;
+    badge.textContent = status.toUpperCase();
+
+    statusCell.appendChild(badge);
+
+    row.append(
+      dateCell,
+      activityCell,
+      amountCell,
+      votesCell,
+      statusCell
+    );
+
+    tbody.appendChild(row);
+  });
 }
 
 
-/* =========================================================
+/* =====================================================
    COPY PERSONAL VOTING LINK
-   ========================================================= */
+   ===================================================== */
 
 $("copyLinkButton").addEventListener("click", async () => {
-    const link = $("personalLink").textContent.trim();
+  const link = $("personalLink").textContent.trim();
 
-    if (!link || link === "Preparing your link...") {
-        showMessage(
-            "linkMessage",
-            "Your personal link is not ready yet.",
-            "error"
-        );
-        return;
-    }
+  if (!link || link === "Preparing your link...") {
+    showMessage(
+      "linkMessage",
+      "Your personal voting link is not ready yet.",
+      "error"
+    );
 
-    try {
-        await navigator.clipboard.writeText(link);
+    return;
+  }
 
-        showMessage(
-            "linkMessage",
-            "Your personal voting link has been copied. You can now share it with supporters.",
-            "success"
-        );
-    } catch (error) {
-        console.error("Clipboard error:", error);
+  try {
+    await navigator.clipboard.writeText(link);
 
-        showMessage(
-            "linkMessage",
-            "Automatic copying was blocked by your browser. Press and hold the displayed link to copy it manually.",
-            "info"
-        );
-    }
+    showMessage(
+      "linkMessage",
+      "Your personal voting link has been copied.",
+      "success"
+    );
+  } catch (error) {
+    console.error("Copy error:", error);
+
+    showMessage(
+      "linkMessage",
+      "Automatic copying was blocked. Press and hold the displayed link to copy it manually.",
+      "info"
+    );
+  }
 });
 
 </script>

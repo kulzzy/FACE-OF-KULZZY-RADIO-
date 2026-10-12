@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#06122a">
+<title>OFFICIAL PARTNER DASHBOARD | KULZZY RADIO</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:#06122a;
+  color:#fff;
+  font-family:Arial,Helvetica,sans-serif;
+}
+header{
+  text-align:center;
+  padding:28px 15px;
+  background:#0b1d3d;
+  border-bottom:3px solid #ffd700;
+}
+.crown{font-size:42px}
+h1{
+  color:#ffd700;
+  font-size:clamp(23px,6vw,36px);
+  margin:10px 0;
+}
+header p{color:#d3dced;margin:8px 0}
+main{max-width:950px;margin:auto;padding:16px}
+.panel{
+  background:#0b1d3d;
+  border:1px solid #30476b;
+  border-radius:15px;
+  padding:18px;
+  margin-bottom:18px;
+}
+h2{color:#ffd700;font-size:20px}
+.notice{
+  background:#14294b;
+  border-left:4px solid #ffd700;
+  padding:15px;
+  border-radius:8px;
+  line-height:1.7;
+  font-weight:bold;
+}
+.total-card{
+  text-align:center;
+  padding:24px 12px;
+  background:#06122a;
+  border:1px solid #ffd700;
+  border-radius:12px;
+}
+.total-label{color:#d3dced;font-size:14px}
+.total-amount{
+  color:#ffd700;
+  font-size:clamp(30px,8vw,46px);
+  font-weight:bold;
+  margin-top:12px;
+  overflow-wrap:anywhere;
+}
+input,select{
+  width:100%;
+  padding:13px;
+  margin:8px 0;
+  border:1px solid #30476b;
+  border-radius:8px;
+  background:#06122a;
+  color:#fff;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:540px;
+}
+th,td{
+  text-align:left;
+  padding:12px 10px;
+  border-bottom:1px solid #30476b;
+  font-size:13px;
+  line-height:1.5;
+}
+th{color:#ffd700}
+.table-wrap{overflow-x:auto}
+.entry{
+  padding:14px;
+  margin:12px 0;
+  background:#06122a;
+  border-radius:10px;
+  border:1px solid #30476b;
+  line-height:1.7;
+  overflow-wrap:anywhere;
+}
+.entry strong{color:#ffd700}
+.muted{color:#b9c6da;font-size:13px;line-height:1.7}
+.center{text-align:center}
+footer{
+  text-align:center;
+  padding:25px 15px;
+  color:#b9c6da;
+  border-top:1px solid #30476b;
+  line-height:1.8;
+}
+footer strong{color:#ffd700}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="crown">👑</div>
+  <h1>OFFICIAL PARTNER DASHBOARD</h1>
+  <p>KULZZY RADIO NETWORK</p>
+  <p>Sales • Tickets • Contestants • Partners • Activities</p>
+</header>
+
+<main>
+
+  <section class="panel">
+    <div class="notice">
+      ALWAYS CHECK KULZZY RADIO APP TO SEE YOUR VOTE COUNT AND DO YOUR CALCULATION.
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>💰 Total Amount</h2>
+    <div class="total-card">
+      <div class="total-label">TOTAL VERIFIED SALES</div>
+      <div class="total-amount" id="grandTotal">₦0</div>
+    </div>
+    <p class="muted">
+      Only sales published by the administrator will appear here.
+    </p>
+  </section>
+
+  <section class="panel">
+    <h2>🔎 Find Your Activity</h2>
+
+    <label for="activityFilter" class="muted">Activity</label>
+    <select id="activityFilter">
+      <option value="">All activities</option>
+    </select>
+
+    <label for="nameFilter" class="muted">Contestant or partner</label>
+    <input
+      id="nameFilter"
+      type="search"
+      placeholder="Search by name"
+      autocomplete="off"
+    >
+  </section>
+
+  <section class="panel">
+    <h2>📊 Sales by Contestant, Partner or Activity</h2>
+    <div id="salesSummary">
+      <p class="muted">Connecting to the sales records...</p>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>🧾 Sales Records</h2>
+    <div id="salesRecords">
+      <p class="muted">Loading records...</p>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>🔄 Dashboard Status</h2>
+    <p id="connectionStatus" class="muted">
+      Connecting...
+    </p>
+    <p class="muted">
+      This page is for viewing sales information only. Visitors cannot
+      edit records or approve payments.
+    </p>
+  </section>
+
+</main>
+
+<footer>
+  <strong>KULZZY RADIO NETWORK</strong><br>
+  Celebrating Lives Everyday<br>
+  OFFICIAL PARTNER DASHBOARD
+</footer>
+
+<script type="module">
+import { initializeApp } from
+  "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+  getDatabase,
+  ref,
+  onValue
+} from
+  "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD-Oqmq3P5bNoxcHBdkTAw7O9W9HVsKDVc",
+  authDomain: "face-of-kulzzy-radio-2026.firebaseapp.com",
+  databaseURL: "https://face-of-kulzzy-radio-2026-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "face-of-kulzzy-radio-2026",
+  storageBucket: "face-of-kulzzy-radio-2026.firebasestorage.app",
+  messagingSenderId: "175657004245",
+  appId: "1:175657004245:web:022d50bc14ed86e036065c",
+  measurementId: "G-WQDFT2B0RH"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+/*
+  The admin panel will publish approved sales to:
+  faceOfKulzzy/partnerSales
+
+  This dashboard only reads that public reporting path.
+*/
+
+const SALES_PATH = "faceOfKulzzy/partnerSales";
+
+const $ = id => document.getElementById(id);
+
+let sales = {};
+
+function safe(value) {
+  return String(value ?? "").replace(/[&<>"']/g, ch => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  }[ch]));
+}
+
+function money(value) {
+  return "₦" + Number(value || 0).toLocaleString("en-NG");
+}
+
+function dateTime(value) {
+  const timestamp = Number(value || 0);
+
+  if (!timestamp) return "Date not available";
+
+  return new Date(timestamp).toLocaleString("en-NG", {
+    dateStyle:"medium",
+    timeStyle:"short"
+  });
+}
+
+function getActivity(record) {
+  return record.activityName ||
+         record.activity ||
+         record.event ||
+         "Kulzzy Radio Activity";
+}
+
+function getName(record) {
+  return record.participantName ||
+         record.contestantName ||
+         record.partnerName ||
+         record.name ||
+         "Unspecified";
+}
+
+function getAmount(record) {
+  return Math.max(0, Number(record.amount || 0));
+}
+
+function getTime(record) {
+  return Number(
+    record.publishedAt ||
+    record.approvedAt ||
+    record.createdAt ||
+    record.timestamp ||
+    0
+  );
+}
+
+function isPublished(record) {
+  return record &&
+    record.status === "approved" &&
+    record.published !== false;
+}
+
+function filteredRecords() {
+  const activity = $("activityFilter").value;
+  const query = $("nameFilter").value.trim().toLowerCase();
+
+  return Object.entries(sales)
+    .filter(([, record]) => isPublished(record))
+    .filter(([, record]) => !activity || getActivity(record) === activity)
+    .filter(([, record]) => !query ||
+      getName(record).toLowerCase().includes(query) ||
+      getActivity(record).toLowerCase().includes(query))
+    .sort((a, b) => getTime(b[1]) - getTime(a[1]));
+}
+
+function renderActivityOptions() {
+  const select = $("activityFilter");
+  const previous = select.value;
+
+  const activities = [
+    ...new Set(
+      Object.values(sales)
+        .filter(isPublished)
+        .map(getActivity)
+    )
+  ].sort();
+
+  select.innerHTML =
+    '<option value="">All activities</option>' +
+    activities.map(activity =>
+      `<option value="${safe(activity)}">${safe(activity)}</option>`
+    ).join("");
+
+  if (activities.includes(previous)) select.value = previous;
+}
+
+function render() {
+  const records = filteredRecords();
+
+  const total = records.reduce(
+    (sum, [, record]) => sum + getAmount(record), 0
+  );
+
+  $("grandTotal").textContent = money(total);
+
+  if (!records.length) {
+    $("salesSummary").innerHTML =
+      '<p class="muted">No published sales records match your selection.</p>';
+
+    $("salesRecords").innerHTML =
+      '<p class="muted">Sales records will appear here after the admin publishes verified sales.</p>';
+
+    return;
+  }
+
+  const groups = {};
+
+  records.forEach(([, record]) => {
+    const key = getActivity(record) + "||" + getName(record);
+
+    if (!groups[key]) {
+      groups[key] = {
+        activity:getActivity(record),
+        name:getName(record),
+        total:0,
+        count:0
+      };
+    }
+
+    groups[key].total += getAmount(record);
+    groups[key].count += 1;
+  });
+
+  $("salesSummary").innerHTML = Object.values(groups)
+    .sort((a, b) => b.total - a.total)
+    .map(group => `
+      <div class="entry">
+        <strong>${safe(group.name)}</strong><br>
+        Activity: ${safe(group.activity)}<br>
+        Total Amount: <strong>${money(group.total)}</strong><br>
+        Recorded sales: ${group.count}
+      </div>
+    `).join("");
+
+  $("salesRecords").innerHTML = `
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Activity</th>
+            <th>Contestant / Partner</th>
+            <th>Total Amount</th>
+            <th>Date & Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${records.map(([, record]) => `
+            <tr>
+              <td>${safe(getActivity(record))}</td>
+              <td>${safe(getName(record))}</td>
+              <td>${money(getAmount(record))}</td>
+              <td>${safe(dateTime(getTime(record)))}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+$("activityFilter").addEventListener("change", render);
+$("nameFilter").addEventListener("input", render);
+
+onValue(
+  ref(db, SALES_PATH),
+  snapshot => {
+    sales = snapshot.val() || {};
+    renderActivityOptions();
+    render();
+
+    $("connectionStatus").textContent =
+      "Connected. Dashboard records are updating automatically.";
+  },
+  error => {
+    $("connectionStatus").textContent =
+      "Unable to load sales records. The database access rules or Firebase configuration need checking.";
+
+    $("salesSummary").innerHTML =
+      '<p class="muted">Sales data could not be loaded.</p>';
+
+    $("salesRecords").innerHTML =
+      '<p class="muted">Please contact the administrator.</p>';
+
+    console.error(error);
+  }
+);
+</script>
+
+</body>
+</html>

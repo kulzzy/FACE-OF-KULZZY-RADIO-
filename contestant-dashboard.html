@@ -469,6 +469,18 @@ footer strong {
           <h2 id="welcomeName">Welcome, Contestant!</h2>
           <p id="accountEmail"></p>
           <div class="badge">👑 OFFICIAL CONTESTANT ACCOUNT</div>
+
+          <!-- COPY FIREBASE UID BUTTON -->
+          <button
+            id="copyUidButton"
+            class="btn btn-secondary btn-small"
+            type="button"
+            style="margin-top:12px"
+          >
+            📋 COPY MY FIREBASE UID
+          </button>
+
+          <div id="uidMessage" class="message"></div>
         </div>
 
         <button id="logoutButton" class="btn btn-secondary btn-small" type="button">
@@ -660,12 +672,8 @@ import {
   "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 
-/* =====================================================
-   CORRECT FIREBASE CONFIGURATION PROVIDED BY YOU
-   ===================================================== */
-
 const firebaseConfig = {
-  apiKey: "AIzaSyD-Oqmq3P5bNoxcHBdkTAw7O9W9HVsKDVc",
+  apiKey: "AIzaSyD-Oqmq3P5bNoxcHBdkTAw7O9N9HVsKDVc",
   authDomain: "face-of-kulzzy-radio-2026.firebaseapp.com",
   databaseURL: "https://face-of-kulzzy-radio-2026-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "face-of-kulzzy-radio-2026",
@@ -683,11 +691,6 @@ const ROOT = "faceOfKulzzy";
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
-
-
-/* =====================================================
-   APPLICATION STATE
-   ===================================================== */
 
 const $ = id => document.getElementById(id);
 
@@ -707,9 +710,7 @@ let loginBusy = false;
 let sessionNumber = 0;
 
 
-/* =====================================================
-   GENERAL HELPERS
-   ===================================================== */
+/* GENERAL HELPERS */
 
 function showMessage(id, message, type = "info") {
   const element = $(id);
@@ -825,9 +826,7 @@ function stopListeners() {
 }
 
 
-/* =====================================================
-   AUTHENTICATION
-   ===================================================== */
+/* LOGIN */
 
 $("loginForm").addEventListener("submit", async event => {
   event.preventDefault();
@@ -940,9 +939,7 @@ function authErrorMessage(error) {
 }
 
 
-/* =====================================================
-   AUTHENTICATION STATE
-   ===================================================== */
+/* AUTHENTICATION STATE */
 
 onAuthStateChanged(auth, async user => {
   const thisSession = ++sessionNumber;
@@ -960,7 +957,6 @@ onAuthStateChanged(auth, async user => {
   if (!user) {
     $("loginSection").classList.remove("hidden");
     $("dashboardSection").classList.add("hidden");
-
     return;
   }
 
@@ -991,14 +987,7 @@ onAuthStateChanged(auth, async user => {
 });
 
 
-/* =====================================================
-   CONTESTANT ACCOUNT MAPPING
-   Expected:
-   faceOfKulzzy/contestantAccounts/{AUTH_UID}
-   {
-     "contestantId": "ACTUAL_CONTESTANT_RECORD_ID"
-   }
-   ===================================================== */
+/* CONTESTANT ACCOUNT MAPPING */
 
 async function loadContestantAccount(user, thisSession) {
   const accountRef = ref(
@@ -1057,9 +1046,7 @@ async function loadContestantAccount(user, thisSession) {
 }
 
 
-/* =====================================================
-   CONTESTANT PROFILE
-   ===================================================== */
+/* CONTESTANT PROFILE */
 
 async function loadContestantProfile(thisSession) {
   const profileRef = ref(
@@ -1106,9 +1093,7 @@ async function loadContestantProfile(thisSession) {
 }
 
 
-/* =====================================================
-   LIVE DATABASE LISTENERS
-   ===================================================== */
+/* LIVE DATABASE LISTENERS */
 
 function startContestantListeners(thisSession) {
   if (!currentUser || !contestantId) return;
@@ -1193,9 +1178,7 @@ function startContestantListeners(thisSession) {
 }
 
 
-/* =====================================================
-   OFFICIAL APPROVED VOTES
-   ===================================================== */
+/* APPROVED VOTES */
 
 function getContestantVotes(id) {
   const record = safeObject(officialVoteRecords[id]);
@@ -1219,9 +1202,7 @@ function refreshVoteDisplays() {
 }
 
 
-/* =====================================================
-   LEADERBOARD
-   ===================================================== */
+/* LEADERBOARD */
 
 function renderLeaderboard() {
   const tbody = $("leaderboardRows");
@@ -1300,11 +1281,7 @@ function renderLeaderboard() {
 }
 
 
-/* =====================================================
-   CONTESTANT ACTIVITY
-   Expected location:
-   faceOfKulzzy/contestantActivity/{CONTESTANT_ID}
-   ===================================================== */
+/* CONTESTANT ACTIVITY */
 
 function renderActivity() {
   const tbody = $("activityRows");
@@ -1423,9 +1400,7 @@ function renderActivity() {
 }
 
 
-/* =====================================================
-   COPY PERSONAL VOTING LINK
-   ===================================================== */
+/* COPY PERSONAL VOTING LINK */
 
 $("copyLinkButton").addEventListener("click", async () => {
   const link = $("personalLink").textContent.trim();
@@ -1454,6 +1429,39 @@ $("copyLinkButton").addEventListener("click", async () => {
     showMessage(
       "linkMessage",
       "Automatic copying was blocked. Press and hold the displayed link to copy it manually.",
+      "info"
+    );
+  }
+});
+
+
+/* COPY FIREBASE AUTHENTICATION UID */
+
+$("copyUidButton").addEventListener("click", async () => {
+  if (!currentUser || !currentUser.uid) {
+    showMessage(
+      "uidMessage",
+      "Please sign in first.",
+      "error"
+    );
+    return;
+  }
+
+  try {
+    await navigator.clipboard.writeText(currentUser.uid);
+
+    showMessage(
+      "uidMessage",
+      "UID COPIED! Return to the admin page and paste it into the contestant UID box.",
+      "success"
+    );
+  } catch (error) {
+    console.error("UID copy error:", error);
+
+    showMessage(
+      "uidMessage",
+      "Your Firebase UID is: " + currentUser.uid +
+      " — press and hold the UID text to copy it.",
       "info"
     );
   }

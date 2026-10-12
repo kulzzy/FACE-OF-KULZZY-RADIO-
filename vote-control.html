@@ -4,144 +4,252 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#06122a">
-<title>Kulzzy Radio — Vote Control</title>
+<title>KULZZY RADIO — VOTE CONTROL</title>
 
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#06122a;color:#fff;font-family:Arial,sans-serif}
-header{padding:25px 15px;text-align:center;background:#0b1d3d;border-bottom:2px solid #ffd700}
-h1,h2{color:#ffd700}
-h1{font-size:clamp(24px,6vw,38px)}
-main{max-width:950px;margin:auto;padding:15px}
-.panel{background:#0b1d3d;border:1px solid #30476b;border-radius:15px;padding:18px;margin:18px 0}
-input,select{display:block;width:100%;padding:13px;margin:8px 0 15px;border-radius:8px;border:1px solid #385174;background:#06122a;color:white}
-label{font-weight:bold}
-button{padding:12px 16px;border:0;border-radius:8px;font-weight:bold;cursor:pointer;margin:4px}
-button:disabled{opacity:.55;cursor:not-allowed}
-.primary{background:#ffd700;color:#06122a}
-.secondary{background:#29466f;color:white}
-.danger{background:#c92b3d;color:white}
-.hidden{display:none!important}
-.notice{padding:12px;background:#14294b;border-radius:8px;line-height:1.6}
-.status{white-space:pre-wrap;color:#ffd700;line-height:1.5}
-table{width:100%;border-collapse:collapse;min-width:650px}
-th,td{text-align:left;padding:10px;border-bottom:1px solid #30476b}
-th{color:#ffd700}
-.tablewrap{overflow-x:auto}
-.card{padding:12px;background:#06122a;border-radius:9px;margin:10px 0;overflow-wrap:anywhere}
-.small{color:#b9c6da;font-size:13px;line-height:1.6}
+:root {
+  --navy: #06122a;
+  --navy2: #0d2043;
+  --gold: #e8bd55;
+  --white: #ffffff;
+  --muted: #aebbd0;
+  --green: #19a974;
+  --red: #e34b55;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 16px;
+  background: var(--navy);
+  color: var(--white);
+  font-family: Arial, sans-serif;
+}
+header {
+  text-align: center;
+  padding: 20px 10px;
+  border-bottom: 1px solid #263c60;
+  margin-bottom: 18px;
+}
+h1 { color: var(--gold); font-size: 24px; margin: 0 0 8px; }
+h2 { color: var(--gold); font-size: 19px; }
+h3 { font-size: 16px; }
+p { line-height: 1.5; }
+.small { color: var(--muted); font-size: 13px; }
+.card {
+  background: var(--navy2);
+  border: 1px solid #263c60;
+  border-radius: 12px;
+  padding: 16px;
+  margin: 14px 0;
+  overflow-wrap: anywhere;
+}
+input, select, button {
+  width: 100%;
+  padding: 12px;
+  margin: 6px 0;
+  border-radius: 8px;
+  font-size: 15px;
+}
+input, select {
+  background: #fff;
+  color: #111;
+  border: 1px solid #9aa8bc;
+}
+button {
+  border: 0;
+  background: var(--gold);
+  color: var(--navy);
+  font-weight: bold;
+  cursor: pointer;
+}
+button:disabled { opacity: .5; cursor: wait; }
+button.secondary { background: #dbe5f5; }
+button.danger { background: var(--red); color: #fff; }
+button.success { background: var(--green); color: #fff; }
+.row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+.stat {
+  padding: 14px;
+  background: #07162f;
+  border-radius: 9px;
+  border: 1px solid #344968;
+}
+.stat strong {
+  display: block;
+  font-size: 23px;
+  color: var(--gold);
+  margin-top: 8px;
+}
+.payment {
+  background: #07162f;
+  border: 1px solid #344968;
+  padding: 13px;
+  border-radius: 9px;
+  margin: 10px 0;
+}
+.status { font-weight: bold; }
+.hidden { display: none !important; }
+.notice {
+  padding: 12px;
+  border-radius: 8px;
+  background: #07162f;
+  border: 1px solid #344968;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+footer {
+  text-align: center;
+  color: var(--muted);
+  padding: 22px 5px;
+  font-size: 12px;
+}
+img.contestant {
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #253954;
+}
+a { color: var(--gold); }
 </style>
 </head>
 
 <body>
 <header>
   <h1>👑 KULZZY RADIO</h1>
-  <p>FACE OF KULZZY RADIO 2026</p>
-  <strong>VOTE PAYMENT & ACTIVITY CONTROL</strong>
+  <h2>FACE OF KULZZY RADIO 2026</h2>
+  <p>Official Vote Control & Partner Sales Publishing</p>
 </header>
 
-<main>
-  <section class="panel" id="loginPanel">
-    <h2>🔐 Sign In</h2>
-    <p class="small">Administrators and registered contestants can sign in here.</p>
+<div id="message" class="notice">Connecting...</div>
 
-    <label>Email</label>
-    <input id="email" type="email" autocomplete="username" placeholder="Email address">
+<section id="loginSection" class="card">
+  <h2>Sign In</h2>
+  <form id="loginForm">
+    <input id="loginEmail" type="email" placeholder="Email address" required>
+    <input id="loginPassword" type="password" placeholder="Password" required>
+    <button id="loginButton" type="submit">SIGN IN</button>
+  </form>
+  <p class="small">
+    Sign in with your existing Firebase account. This page does not create
+    new accounts or reset passwords.
+  </p>
+</section>
 
-    <label>Password</label>
-    <input id="password" type="password" autocomplete="current-password" placeholder="Password">
+<section id="appSection" class="hidden">
+  <div class="card">
+    <div class="row">
+      <div>
+        <strong id="signedInEmail"></strong>
+        <p id="accountRole" class="small"></p>
+      </div>
+      <div>
+        <button id="refreshButton" class="secondary">REFRESH DATA</button>
+        <button id="logoutButton" class="danger">SIGN OUT</button>
+      </div>
+    </div>
+  </div>
 
-    <button class="primary" id="loginBtn">SIGN IN</button>
-    <p class="status" id="loginStatus"></p>
-  </section>
-
-  <section id="appPanel" class="hidden">
-    <div class="panel">
-      <p id="signedIn"></p>
-      <button class="secondary" id="refreshBtn">REFRESH</button>
-      <button class="danger" id="logoutBtn">SIGN OUT</button>
-      <p class="status" id="mainStatus"></p>
+  <section id="adminSection" class="hidden">
+    <div class="card">
+      <h2>Official Totals</h2>
+      <div class="row">
+        <div class="stat">Official votes<strong id="officialVoteTotal">0</strong></div>
+        <div class="stat">Approved vote sales<strong id="approvedSalesTotal">₦0</strong></div>
+        <div class="stat">Pending payments<strong id="pendingCount">0</strong></div>
+      </div>
     </div>
 
-    <section id="adminPanel" class="hidden">
-      <div class="panel">
-        <h2>📥 Record a Payment</h2>
-        <p class="notice">
-          First verify the successful payment in the Flutterwave dashboard.
-          Only record a payment after confirming its amount and reference.
-          A checkout success message alone is not proof of payment.
-        </p>
+    <div class="card">
+      <h2>Record a Payment for Verification</h2>
+      <p class="small">
+        Record the payment after receiving the customer's details.
+        Recording a payment does not approve it or add votes.
+      </p>
 
+      <form id="recordForm">
         <label>Contestant</label>
-        <select id="contestantSelect">
+        <select id="contestantSelect" required>
           <option value="">Loading contestants...</option>
         </select>
 
-        <label>Amount received (₦)</label>
-        <input id="amount" type="number" min="100" step="100" placeholder="e.g. 1000">
+        <label>Amount received in naira</label>
+        <input id="paymentAmount" type="number" min="100" step="100"
+               placeholder="e.g. 1000" required>
 
         <label>Flutterwave transaction reference</label>
-        <input id="paymentRef" maxlength="180" placeholder="Enter verified transaction reference">
+        <input id="paymentReference" type="text"
+               placeholder="Enter actual transaction reference" required>
 
-        <label>Payer name (optional)</label>
-        <input id="payerName" maxlength="150" placeholder="Payer name">
+        <label>Payer name</label>
+        <input id="payerName" type="text" placeholder="Payer's name" required>
 
-        <label>Payer email (optional)</label>
-        <input id="payerEmail" type="email" maxlength="180" placeholder="Payer email">
+        <label>Payer email (private)</label>
+        <input id="payerEmail" type="email" placeholder="Payer's email">
 
-        <button class="primary" id="recordBtn">RECORD AS PENDING</button>
-        <p class="status" id="recordStatus"></p>
-        <p class="small">₦100 = 1 vote. Pending records do not increase official votes.</p>
-      </div>
+        <button id="recordButton" type="submit">RECORD AS PENDING</button>
+      </form>
+    </div>
 
-      <div class="panel">
-        <h2>🧾 Pending Payments</h2>
-        <p class="small">Review each record against the Flutterwave dashboard before approving it.</p>
-        <div id="pendingList">Loading...</div>
-      </div>
+    <div class="card">
+      <h2>Pending Payments</h2>
+      <p class="small">
+        Check the transaction in your Flutterwave dashboard before approving.
+        Approval adds votes and publishes the verified sale.
+      </p>
+      <div id="pendingList">Loading pending payments...</div>
+    </div>
 
-      <div class="panel">
-        <h2>📊 Official Vote Totals</h2>
-        <div id="totalsList">Loading...</div>
-      </div>
+    <div class="card">
+      <h2>Official Contestant Vote Totals</h2>
+      <div id="totalsList">Loading totals...</div>
+    </div>
 
-      <div class="panel">
-        <h2>🔗 Link a Contestant Account</h2>
-        <p class="notice">
-          The contestant must first create an account and sign in at least once.
-          Enter the exact Firebase Authentication UID for that contestant.
-        </p>
-
+    <div class="card">
+      <h2>Link a Contestant Account</h2>
+      <p class="small">
+        Enter the Firebase user UID of the contestant and select their
+        contestant record. Only link accounts after verifying the UID.
+      </p>
+      <form id="linkForm">
         <label>Contestant</label>
-        <select id="accountContestant">
+        <select id="linkContestant" required>
           <option value="">Select contestant</option>
         </select>
-
-        <label>Contestant Firebase Authentication UID</label>
-        <input id="accountUid" maxlength="150" placeholder="Paste the contestant's Auth UID">
-
-        <button class="primary" id="linkAccountBtn">SAVE CONTESTANT ACCOUNT</button>
-        <p class="status" id="accountStatus"></p>
-      </div>
-    </section>
-
-    <section id="contestantPanel" class="hidden">
-      <div class="panel">
-        <h2>👑 My Voting Activity</h2>
-        <p class="notice">
-          ALWAYS CHECK KULZZY RADIO APP TO SEE YOUR OFFICIAL VOTE COUNT
-          AND DO YOUR OWN CALCULATIONS.
-        </p>
-        <h3 id="myVoteTotal">Official votes: Loading...</h3>
-        <div id="myActivity">Loading your activity...</div>
-      </div>
-    </section>
+        <label>Contestant Firebase UID</label>
+        <input id="contestantUid" type="text" required
+               placeholder="Firebase user UID">
+        <button type="submit">LINK ACCOUNT</button>
+      </form>
+    </div>
   </section>
-</main>
+
+  <section id="contestantSection" class="hidden">
+    <div class="card">
+      <h2>My Contestant Dashboard</h2>
+      <div id="contestantDetails">Loading your account...</div>
+      <p class="small">
+        ALWAYS CHECK KULZZY RADIO APP TO SEE YOUR VOTE COUNT AND DO YOUR CALCULATION.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>Published Sales Information</h2>
+      <div id="contestantSales">Loading published records...</div>
+    </div>
+  </section>
+</section>
+
+<footer>
+  KULZZY RADIO NETWORK · CELEBRATING LIVES EVERYDAY
+</footer>
 
 <script type="module">
-import {initializeApp}
-  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { initializeApp } from
+  "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
   getAuth,
@@ -155,8 +263,9 @@ import {
   ref,
   get,
   set,
-  push,
-  runTransaction
+  update,
+  runTransaction,
+  increment
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 const firebaseConfig = {
@@ -171,575 +280,587 @@ const firebaseConfig = {
 };
 
 const ADMIN_EMAIL = "dstnewz.ng@gmail.com";
-const PRICE_PER_VOTE = 100;
+const VOTE_RATE = 100;
+const ROOT = "faceOfKulzzy";
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
+
 const $ = id => document.getElementById(id);
 
 let currentUser = null;
+let isAdmin = false;
 let contestants = {};
-let busy = false;
-let contestantsListenerStarted = false;
+let working = false;
 
-const base = "faceOfKulzzy";
-
-/*
- * Public dashboard data:
- * faceOfKulzzy/partnerSales/{paymentId}
- *
- * IMPORTANT:
- * Only safe, administrator-approved display information is copied here.
- * Payer email and payment reference are never copied to this public path.
- */
-
-function safe(value) {
-  return String(value ?? "").replace(/[&<>"']/g, ch => ({
-    "&":"&amp;", "<":"&lt;", ">":"&gt;",
-    '"':"&quot;", "'":"&#39;"
-  }[ch]));
+function showMessage(message) {
+  $("message").textContent = String(message);
 }
 
-function money(value) {
+function errorText(error) {
+  console.error(error);
+  return error?.message || "An unexpected error occurred.";
+}
+
+function naira(value) {
   return "₦" + Number(value || 0).toLocaleString("en-NG");
 }
 
+function dateText(value) {
+  if (!value) return "Not recorded";
+  const d = new Date(Number(value));
+  if (Number.isNaN(d.getTime())) return "Not recorded";
+  return d.toLocaleString("en-NG", {
+    dateStyle: "medium",
+    timeStyle: "short"
+  });
+}
+
+function safeText(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  }[char]));
+}
+
+function setBusy(button, busy, label) {
+  button.disabled = busy;
+  if (label) button.textContent = busy ? "PLEASE WAIT..." : label;
+}
+
 function contestantName(id) {
-  const c = contestants[id] || {};
-  return c.name || c.contestantName || c.fullName || c.title || id;
+  return contestants[id]?.name || "Unknown contestant";
 }
 
 function contestantPhoto(id) {
-  const c = contestants[id] || {};
-  return c.imageUrl || c.photoUrl || "";
+  return contestants[id]?.imageUrl || "";
 }
 
-function isAdmin(user = currentUser) {
-  return !!user && user.email?.toLowerCase() === ADMIN_EMAIL;
+async function loadContestants() {
+  const snapshot = await get(ref(db, `${ROOT}/contestants`));
+  contestants = snapshot.val() || {};
+
+  const options = Object.entries(contestants)
+    .filter(([, c]) => c && c.active !== false)
+    .map(([id, c]) =>
+      `<option value="${safeText(id)}">${safeText(c.number || "")} ${safeText(c.name || "Unnamed contestant")}</option>`
+    ).join("");
+
+  $("contestantSelect").innerHTML =
+    '<option value="">Select contestant</option>' + options;
+
+  $("linkContestant").innerHTML =
+    '<option value="">Select contestant</option>' + options;
 }
-
-function status(id, message) {
-  $(id).textContent = message;
-}
-
-$("loginBtn").onclick = async () => {
-  status("loginStatus", "");
-  try {
-    await signInWithEmailAndPassword(
-      auth,
-      $("email").value.trim(),
-      $("password").value
-    );
-  } catch (e) {
-    status("loginStatus", "Sign-in failed: " + e.message);
-  }
-};
-
-$("logoutBtn").onclick = () => signOut(auth);
-$("refreshBtn").onclick = () => loadDashboard();
-
-onAuthStateChanged(auth, async user => {
-  currentUser = user;
-  $("loginPanel").classList.toggle("hidden", !!user);
-  $("appPanel").classList.toggle("hidden", !user);
-
-  if (!user) {
-    contestantsListenerStarted = false;
-    return;
-  }
-
-  $("signedIn").textContent = "Signed in: " + (user.email || user.uid);
-  $("adminPanel").classList.toggle("hidden", !isAdmin(user));
-  $("contestantPanel").classList.toggle("hidden", isAdmin(user));
-
-  await loadDashboard();
-});
 
 async function loadDashboard() {
   if (!currentUser) return;
 
-  status("mainStatus", "Loading...");
+  showMessage("Loading dashboard...");
 
-  try {
-    const snap = await get(ref(db, base + "/contestants"));
-    contestants = snap.val() || {};
-
-    fillContestantSelects();
-
-    if (isAdmin()) {
-      await loadPending();
-      await loadTotals();
-    } else {
-      await loadContestantActivity();
-    }
-
-    status("mainStatus", "Updated successfully.");
-  } catch (e) {
-    status(
-      "mainStatus",
-      "Could not load data. Check your Firebase Database Rules. " + e.message
-    );
+  if (isAdmin) {
+    $("adminSection").classList.remove("hidden");
+    $("contestantSection").classList.add("hidden");
+    await loadContestants();
+    await Promise.all([loadPending(), loadTotals()]);
+  } else {
+    $("adminSection").classList.add("hidden");
+    $("contestantSection").classList.remove("hidden");
+    await loadContestantDashboard();
   }
+
+  showMessage("Dashboard loaded.");
 }
 
-function fillContestantSelects() {
-  for (const id of ["contestantSelect", "accountContestant"]) {
-    const select = $(id);
-    const old = select.value;
-    select.innerHTML = '<option value="">Select contestant</option>';
+async function loadPending() {
+  const snapshot = await get(ref(db, `${ROOT}/votePayments`));
+  const payments = snapshot.val() || {};
 
-    Object.entries(contestants).forEach(([key, c]) => {
-      const opt = document.createElement("option");
-      opt.value = key;
-      opt.textContent = contestantName(key);
-      select.appendChild(opt);
-    });
+  const pending = Object.entries(payments)
+    .filter(([, p]) => p && p.status === "pending")
+    .sort((a, b) => Number(b[1].createdAt || 0) -
+                    Number(a[1].createdAt || 0));
 
-    if (old && contestants[old]) select.value = old;
+  $("pendingCount").textContent = pending.length;
+
+  if (!pending.length) {
+    $("pendingList").innerHTML =
+      '<p class="small">There are no pending payments.</p>';
+    return;
   }
+
+  $("pendingList").innerHTML = pending.map(([id, p]) => `
+    <div class="payment">
+      <h3>${safeText(p.contestantName || contestantName(p.contestantId))}</h3>
+      <p>Amount: <strong>${naira(p.amount)}</strong></p>
+      <p>Votes to add: <strong>${Number(p.votes || 0).toLocaleString()}</strong></p>
+      <p>Reference: ${safeText(p.paymentRef || "")}</p>
+      <p>Payer: ${safeText(p.payerName || "")}</p>
+      <p>Email: ${safeText(p.payerEmail || "Not supplied")}</p>
+      <p>Recorded: ${dateText(p.createdAt)}</p>
+      <p class="small">Status: ${safeText(p.status)}</p>
+      <button class="success" data-approve="${safeText(id)}">
+        APPROVE VERIFIED PAYMENT
+      </button>
+      <button class="danger" data-reject="${safeText(id)}">
+        REJECT PAYMENT
+      </button>
+    </div>
+  `).join("");
+
+  $("pendingList").querySelectorAll("[data-approve]").forEach(button => {
+    button.addEventListener("click", () =>
+      decidePayment(button.dataset.approve, true, button));
+  });
+
+  $("pendingList").querySelectorAll("[data-reject]").forEach(button => {
+    button.addEventListener("click", () =>
+      decidePayment(button.dataset.reject, false, button));
+  });
 }
 
-/* RECORD PAYMENT AS PENDING */
+async function loadTotals() {
+  const [voteSnap, paymentSnap] = await Promise.all([
+    get(ref(db, `${ROOT}/officialVotes`)),
+    get(ref(db, `${ROOT}/votePayments`))
+  ]);
 
-$("recordBtn").onclick = async () => {
-  if (!isAdmin() || busy) return;
+  const officialVotes = voteSnap.val() || {};
+  const payments = paymentSnap.val() || {};
 
+  let allVotes = 0;
+  let allSales = 0;
+
+  for (const record of Object.values(officialVotes)) {
+    allVotes += Number(record?.votes || 0);
+  }
+
+  for (const p of Object.values(payments)) {
+    if (p?.status === "approved") allSales += Number(p.amount || 0);
+  }
+
+  $("officialVoteTotal").textContent = allVotes.toLocaleString();
+  $("approvedSalesTotal").textContent = naira(allSales);
+
+  const ids = new Set([
+    ...Object.keys(contestants),
+    ...Object.keys(officialVotes)
+  ]);
+
+  $("totalsList").innerHTML = [...ids].map(id => {
+    const votes = Number(officialVotes[id]?.votes || 0);
+    return `
+      <div class="payment">
+        <strong>${safeText(contestantName(id))}</strong>
+        <p>Official votes: ${votes.toLocaleString()}</p>
+      </div>
+    `;
+  }).join("") || '<p class="small">No contestant records found.</p>';
+}
+
+async function loadContestantDashboard() {
+  $("contestantDetails").textContent = "Finding your linked contestant account...";
+  $("contestantSales").textContent = "Loading public sales records...";
+
+  const accountSnap = await get(
+    ref(db, `${ROOT}/contestantAccounts/${currentUser.uid}`)
+  );
+  const account = accountSnap.val();
+
+  if (!account?.contestantId) {
+    $("contestantDetails").textContent =
+      "Your account has not been linked by the administrator yet.";
+    $("contestantSales").textContent =
+      "Published sales will appear here after your account is linked.";
+    return;
+  }
+
+  const id = account.contestantId;
+
+  const [salesSnap, votesSnap] = await Promise.all([
+    get(ref(db, `${ROOT}/partnerSales`)),
+    get(ref(db, `${ROOT}/officialVotes/${id}`))
+  ]);
+
+  const publicSales = salesSnap.val() || {};
+  const officialVotes = Number(votesSnap.val()?.votes || 0);
+
+  const mine = Object.values(publicSales).filter(record =>
+    record &&
+    record.published === true &&
+    record.status === "approved" &&
+    String(record.contestantId || record.participantId || "") === String(id)
+  );
+
+  const totalSales = mine.reduce((sum, record) =>
+    sum + Number(record.amount || 0), 0);
+
+  $("contestantDetails").innerHTML = `
+    <p><strong>${safeText(contestantName(id))}</strong></p>
+    ${contestantPhoto(id) ?
+      `<img class="contestant" src="${safeText(contestantPhoto(id))}" alt="Contestant photo">` : ""}
+    <p>Official votes: <strong>${officialVotes.toLocaleString()}</strong></p>
+    <p>Published verified sales: <strong>${naira(totalSales)}</strong></p>
+    <p class="small">ALWAYS CHECK KULZZY RADIO APP TO SEE YOUR VOTE COUNT AND DO YOUR CALCULATION.</p>
+  `;
+
+  $("contestantSales").innerHTML = mine.length ? mine
+    .sort((a, b) => Number(b.approvedAt || b.publishedAt || 0) -
+                    Number(a.approvedAt || a.publishedAt || 0))
+    .map(record => `
+      <div class="payment">
+        <strong>${safeText(record.activityName || record.event || "Published activity")}</strong>
+        <p>Amount: ${naira(record.amount)}</p>
+        <p>Votes recorded on this sale: ${Number(record.votes || 0).toLocaleString()}</p>
+        <p>Payment date: ${dateText(record.approvedAt || record.publishedAt)}</p>
+        <p>Status: VERIFIED</p>
+      </div>
+    `).join("")
+    : '<p class="small">No published sales records yet.</p>';
+}
+
+async function recordPayment(event) {
+  event.preventDefault();
+  if (!isAdmin || working) return;
+
+  const button = $("recordButton");
   const contestantId = $("contestantSelect").value;
-  const amount = Number($("amount").value);
-  const paymentRef = $("paymentRef").value.trim();
+  const amount = Number($("paymentAmount").value);
+  const paymentRef = $("paymentReference").value.trim();
   const payerName = $("payerName").value.trim();
-  const payerEmail = $("payerEmail").value.trim().toLowerCase();
+  const payerEmail = $("payerEmail").value.trim();
 
   if (!contestantId || !contestants[contestantId]) {
-    return status("recordStatus", "Select a valid contestant.");
+    showMessage("Select a valid contestant.");
+    return;
   }
 
-  if (
-    !Number.isSafeInteger(amount) ||
-    amount < PRICE_PER_VOTE ||
-    amount % PRICE_PER_VOTE !== 0
-  ) {
-    return status(
-      "recordStatus",
-      "Amount must be at least ₦100 and divisible by ₦100."
-    );
+  if (!Number.isFinite(amount) || amount < VOTE_RATE ||
+      amount % VOTE_RATE !== 0) {
+    showMessage("Enter an amount of at least ₦100 in multiples of ₦100.");
+    return;
   }
 
-  if (!paymentRef) {
-    return status("recordStatus", "Enter the verified Flutterwave reference.");
+  if (!paymentRef || !payerName) {
+    showMessage("Enter the real payment reference and payer name.");
+    return;
   }
 
-  busy = true;
-  $("recordBtn").disabled = true;
+  working = true;
+  setBusy(button, true, "RECORD AS PENDING");
 
   try {
-    const existing = await get(ref(db, base + "/votePayments"));
-    const all = existing.val() || {};
+    const existingSnap = await get(ref(db, `${ROOT}/votePayments`));
+    const existing = existingSnap.val() || {};
 
-    const duplicate = Object.values(all).some(
-      p => String(p.paymentRef || "").trim() === paymentRef
+    const duplicate = Object.values(existing).some(p =>
+      String(p?.paymentRef || "").trim().toLowerCase() ===
+      paymentRef.toLowerCase()
     );
 
     if (duplicate) {
-      throw new Error("This transaction reference has already been recorded.");
+      throw new Error("This payment reference has already been recorded.");
     }
 
-    const recordRef = push(ref(db, base + "/votePayments"));
-    const paymentId = recordRef.key;
-
-    await set(recordRef, {
+    const paymentRefNode = ref(db, `${ROOT}/votePayments`);
+    const newPayment = {
       event: "FACE OF KULZZY RADIO 2026",
+      activityName: "FACE OF KULZZY RADIO 2026 — VOTE SALES",
+      activityType: "vote-sales",
       contestantId,
       contestantName: contestantName(contestantId),
       amount,
-      votes: amount / PRICE_PER_VOTE,
+      votes: amount / VOTE_RATE,
       paymentRef,
       payerName,
       payerEmail,
       status: "pending",
       createdAt: Date.now(),
       recordedBy: currentUser.uid
-    });
+    };
 
-    $("amount").value = "";
-    $("paymentRef").value = "";
-    $("payerName").value = "";
-    $("payerEmail").value = "";
-
-    status(
-      "recordStatus",
-      "Payment recorded as PENDING. No votes have been added yet."
+    const { push } = await import(
+      "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js"
     );
+    const { key } = push(paymentRefNode);
+    await set(ref(db, `${ROOT}/votePayments/${key}`), newPayment);
 
+    $("recordForm").reset();
+    showMessage("Payment recorded as pending. No votes have been added.");
     await loadPending();
-  } catch (e) {
-    status("recordStatus", "Could not record payment: " + e.message);
+    await loadTotals();
+  } catch (error) {
+    showMessage("Could not record payment: " + errorText(error));
   } finally {
-    busy = false;
-    $("recordBtn").disabled = false;
+    working = false;
+    setBusy(button, false, "RECORD AS PENDING");
   }
-};
-
-/* SHOW PENDING PAYMENTS */
-
-async function loadPending() {
-  const snap = await get(ref(db, base + "/votePayments"));
-  const payments = snap.val() || {};
-
-  const rows = Object.entries(payments)
-    .filter(([, p]) => p.status === "pending")
-    .sort((a, b) =>
-      Number(b[1].createdAt || 0) - Number(a[1].createdAt || 0)
-    );
-
-  if (!rows.length) {
-    $("pendingList").innerHTML = "<p>No pending payments.</p>";
-    return;
-  }
-
-  $("pendingList").innerHTML = `
-    <div class="tablewrap"><table>
-      <thead><tr>
-        <th>Contestant</th>
-        <th>Amount</th>
-        <th>Votes</th>
-        <th>Reference</th>
-        <th>Recorded</th>
-        <th>Decision</th>
-      </tr></thead>
-      <tbody>
-        ${rows.map(([id,p]) => `<tr>
-          <td>${safe(p.contestantName || contestantName(p.contestantId))}</td>
-          <td>${money(p.amount)}</td>
-          <td>${Number(p.votes || 0)}</td>
-          <td>${safe(p.paymentRef)}</td>
-          <td>${p.createdAt ? new Date(p.createdAt).toLocaleString() : "—"}</td>
-          <td>
-            <button class="primary" data-approve="${safe(id)}">APPROVE</button>
-            <button class="danger" data-reject="${safe(id)}">REJECT</button>
-          </td>
-        </tr>`).join("")}
-      </tbody>
-    </table></div>`;
-
-  $("pendingList").querySelectorAll("[data-approve]").forEach(btn => {
-    btn.onclick = () => decidePayment(btn.dataset.approve, true);
-  });
-
-  $("pendingList").querySelectorAll("[data-reject]").forEach(btn => {
-    btn.onclick = () => decidePayment(btn.dataset.reject, false);
-  });
 }
 
 /*
- * Build a public record using only information intended for public display.
- * This function never copies payer email or payment reference.
+ * The payment's pending status is claimed first.
+ * The vote increment and processed marker are then written together
+ * using one atomic multi-location update. Repeated approval attempts
+ * are blocked by the status/marker checks.
+ *
+ * If the browser or connection fails during processing, do not manually
+ * change the payment status or re-record the payment. Check the payment
+ * and official totals before taking further action.
  */
-async function publishApprovedSale(paymentId, payment) {
-  const contestantId = payment.contestantId;
-  const contestant = contestants[contestantId] || {};
+async function decidePayment(paymentId, approve, button) {
+  if (!isAdmin || working) return;
 
-  const approvedAt = Number(payment.approvedAt || Date.now());
+  if (approve && !confirm(
+    "Have you verified this payment in Flutterwave?\n\n" +
+    "Only continue if the money was actually received."
+  )) return;
 
-  const [totalsSnap, paymentsSnap] = await Promise.all([
-    get(ref(db, `${base}/officialVotes/${contestantId}`)),
-    get(ref(db, `${base}/votePayments`))
-  ]);
+  if (!approve && !confirm("Reject this pending payment?")) return;
 
-  const officialVotes = Number(
-    (totalsSnap.val() || {}).votes || 0
-  );
-
-  const allPayments = paymentsSnap.val() || {};
-
-  const totalVerifiedSales = Object.values(allPayments)
-    .filter(p =>
-      p &&
-      p.status === "approved" &&
-      p.contestantId === contestantId
-    )
-    .reduce((sum, p) => sum + Number(p.amount || 0), 0);
-
-  const publicRecord = {
-    activityName: "FACE OF KULZZY RADIO 2026 — VOTE SALES",
-    event: "FACE OF KULZZY RADIO 2026",
-    activityType: "vote-sales",
-
-    contestantId,
-    participantId: contestantId,
-
-    contestantName:
-      payment.contestantName ||
-      contestant.name ||
-      contestantName(contestantId),
-
-    participantName:
-      payment.contestantName ||
-      contestant.name ||
-      contestantName(contestantId),
-
-    partnerName:
-      payment.contestantName ||
-      contestant.name ||
-      contestantName(contestantId),
-
-    name:
-      payment.contestantName ||
-      contestant.name ||
-      contestantName(contestantId),
-
-    photoUrl: contestant.imageUrl || contestant.photoUrl || "",
-    imageUrl: contestant.imageUrl || contestant.photoUrl || "",
-
-    amount: Number(payment.amount || 0),
-    votes: Number(payment.votes || 0),
-    officialVotes,
-    totalVerifiedSales,
-
-    status: "approved",
-    published: true,
-    publishedAt: approvedAt,
-    approvedAt,
-    createdAt: Number(payment.createdAt || approvedAt)
-  };
-
-  await set(
-    ref(db, `${base}/partnerSales/${paymentId}`),
-    publicRecord
-  );
-}
-
-/* APPROVE OR REJECT PAYMENT */
-
-async function decidePayment(paymentId, approve) {
-  if (!isAdmin() || busy) return;
-
-  const action = approve ? "APPROVE" : "REJECT";
-
-  if (!confirm(`${action} this payment record? Verify the transaction first.`)) {
-    return;
-  }
-
-  busy = true;
-  status("mainStatus", "Processing decision...");
+  working = true;
+  setBusy(button, true);
 
   try {
-    const paymentRef = ref(db, `${base}/votePayments/${paymentId}`);
+    const paymentRef = ref(db, `${ROOT}/votePayments/${paymentId}`);
+    const paymentSnap = await get(paymentRef);
+    const payment = paymentSnap.val();
 
-    // Claim a pending record so it cannot be approved twice.
-    const result = await runTransaction(paymentRef, current => {
-      if (!current || current.status !== "pending") return;
-
-      current.status = approve ? "approved_processing" : "rejected";
-      current.reviewedAt = Date.now();
-      current.reviewedBy = currentUser.uid;
-
-      return current;
-    });
-
-    if (!result.committed) {
-      throw new Error("This payment has already been processed or changed.");
+    if (!payment) throw new Error("Payment record not found.");
+    if (payment.status !== "pending") {
+      throw new Error("This payment is no longer pending. Refresh the page.");
     }
 
-    const p = result.snapshot.val();
-    const contestantId = p.contestantId;
-
     if (!approve) {
-      // Rejected records are never published to the public sales dashboard.
+      const rejected = await runTransaction(paymentRef, current => {
+        if (!current || current.status !== "pending") return;
+        return {
+          ...current,
+          status: "rejected",
+          reviewedAt: Date.now(),
+          reviewedBy: currentUser.uid
+        };
+      });
+
+      if (!rejected.committed) {
+        throw new Error("Payment status changed. Refresh and check it.");
+      }
+
+      showMessage("Payment rejected. No votes were added.");
       await loadPending();
       await loadTotals();
-
-      status("mainStatus", "Payment rejected. No votes were added.");
       return;
     }
 
-    const votes = Number(p.votes || 0);
+    const contestantId = payment.contestantId;
+    const votes = Number(payment.votes);
+    const amount = Number(payment.amount);
 
-    if (
-      !contestantId ||
-      !Number.isSafeInteger(votes) ||
-      votes < 1
-    ) {
+    if (!contestantId || !Number.isFinite(votes) || votes <= 0 ||
+        !Number.isFinite(amount) || amount <= 0) {
+      throw new Error("Payment record has invalid contestant, amount or vote data.");
+    }
+
+    const markerRef = ref(db, `${ROOT}/processedVotePayments/${paymentId}`);
+    const markerSnap = await get(markerRef);
+
+    if (markerSnap.exists()) {
       throw new Error(
-        "Payment record is missing a valid contestant or vote quantity."
+        "A vote-processing marker already exists. Do not approve again. " +
+        "Check the official vote totals first."
       );
     }
 
-    // Add official votes.
-    const totalRef = ref(
-      db,
-      `${base}/officialVotes/${contestantId}/votes`
-    );
+    const claim = await runTransaction(paymentRef, current => {
+      if (!current || current.status !== "pending") return;
+      return {
+        ...current,
+        status: "approved_processing",
+        reviewedAt: Date.now(),
+        reviewedBy: currentUser.uid
+      };
+    });
 
-    const totalResult = await runTransaction(totalRef, current =>
-      Number(current || 0) + votes
-    );
-
-    if (!totalResult.committed) {
-      throw new Error(
-        "Vote total update did not complete. Check the payment before retrying."
-      );
+    if (!claim.committed) {
+      throw new Error("Payment could not be claimed for approval. Refresh and check status.");
     }
 
     const approvedAt = Date.now();
+    const marker = {
+      paymentId,
+      contestantId,
+      amount,
+      votes,
+      processedAt: approvedAt
+    };
 
-    // Save private contestant activity. This retains the original behaviour.
-    await set(
-      ref(db, `${base}/contestantActivity/${contestantId}/${paymentId}`),
-      {
-        paymentId,
-        contestantId,
-        contestantName: p.contestantName || contestantName(contestantId),
-        amount: p.amount,
-        votes,
-        paymentRef: p.paymentRef,
-        status: "approved",
-        approvedAt
-      }
-    );
+    const officialVotesRef = ref(db, `${ROOT}/officialVotes/${contestantId}`);
+    const officialVotesSnap = await get(officialVotesRef);
+    const currentOfficialVotes = Number(officialVotesSnap.val()?.votes || 0);
 
-    // Mark the original admin payment as approved.
-    await set(
-      ref(db, `${base}/votePayments/${paymentId}/status`),
-      "approved"
-    );
-
-    await set(
-      ref(db, `${base}/votePayments/${paymentId}/approvedAt`),
-      approvedAt
-    );
-
-    /*
-     * Publish only after approval.
-     * The public copy excludes payer details and payment reference.
-     */
-    await publishApprovedSale(paymentId, {
-      ...p,
+    const activity = {
+      event: payment.event || "FACE OF KULZZY RADIO 2026",
+      amount,
+      votes,
       status: "approved",
       approvedAt
-    });
+    };
 
-    status(
-      "mainStatus",
-      `Approved ${money(p.amount)} for ${
-        p.contestantName || contestantName(contestantId)
-      }. Added ${votes} official votes and published the verified sale.`
+    const publicSale = {
+      activityName: "FACE OF KULZZY RADIO 2026 — VOTE SALES",
+      event: payment.event || "FACE OF KULZZY RADIO 2026",
+      activityType: "vote-sales",
+      contestantId,
+      participantId: contestantId,
+      contestantName: payment.contestantName || contestantName(contestantId),
+      photoUrl: contestantPhoto(contestantId),
+      imageUrl: contestantPhoto(contestantId),
+      amount,
+      votes,
+      officialVotes: currentOfficialVotes + votes,
+      status: "approved",
+      published: true,
+      approvedAt,
+      publishedAt: approvedAt,
+      createdAt: payment.createdAt || approvedAt
+    };
+
+    /*
+     * One atomic multi-location update increments votes and creates
+     * the marker in the same database operation. Private payment
+     * reference and payer email are not included in publicSale.
+     */
+    const changes = {};
+    changes[`${ROOT}/officialVotes/${contestantId}/votes`] = increment(votes);
+    changes[`${ROOT}/officialVotes/${contestantId}/updatedAt`] = approvedAt;
+    changes[`${ROOT}/processedVotePayments/${paymentId}`] = marker;
+    changes[`${ROOT}/contestantActivity/${contestantId}/${paymentId}`] = activity;
+    changes[`${ROOT}/votePayments/${paymentId}/status`] = "approved";
+    changes[`${ROOT}/votePayments/${paymentId}/approvedAt`] = approvedAt;
+    changes[`${ROOT}/votePayments/${paymentId}/published`] = true;
+    changes[`${ROOT}/partnerSales/${paymentId}`] = publicSale;
+
+    await update(ref(db), changes);
+
+    showMessage(
+      "Payment approved and published.\n" +
+      "Official votes were incremented once by this approval operation."
     );
 
     await loadPending();
     await loadTotals();
-
-  } catch (e) {
-    status(
-      "mainStatus",
-      "IMPORTANT: " + e.message +
-      "\nCheck the payment status and official vote total before trying again."
+  } catch (error) {
+    showMessage(
+      "Approval did not finish normally:\n" + errorText(error) +
+      "\n\nDo not approve this payment again or manually reset its status. " +
+      "Check its status and the official vote totals first."
     );
   } finally {
-    busy = false;
+    working = false;
+    button.disabled = false;
+    button.textContent = approve
+      ? "APPROVE VERIFIED PAYMENT"
+      : "REJECT PAYMENT";
   }
 }
 
-/* OFFICIAL VOTE TOTALS */
+async function linkContestant(event) {
+  event.preventDefault();
+  if (!isAdmin || working) return;
 
-async function loadTotals() {
-  const snap = await get(ref(db, base + "/officialVotes"));
-  const totals = snap.val() || {};
-  const entries = Object.entries(contestants);
-
-  $("totalsList").innerHTML = entries.map(([id]) => {
-    const data = totals[id] || {};
-
-    return `<div class="card">
-      <strong>${safe(contestantName(id))}</strong><br>
-      Official votes:
-      <strong>${Number(data.votes || 0).toLocaleString()}</strong>
-    </div>`;
-  }).join("") || "<p>No contestants found.</p>";
-}
-
-/* LINK CONTESTANT ACCOUNT */
-
-$("linkAccountBtn").onclick = async () => {
-  if (!isAdmin()) return;
-
-  const contestantId = $("accountContestant").value;
-  const uid = $("accountUid").value.trim();
+  const button = event.submitter || $("linkForm").querySelector("button");
+  const contestantId = $("linkContestant").value;
+  const uid = $("contestantUid").value.trim();
 
   if (!contestantId || !contestants[contestantId] || !uid) {
-    return status(
-      "accountStatus",
-      "Select a contestant and enter their Firebase Auth UID."
-    );
+    showMessage("Select a contestant and enter the correct Firebase UID.");
+    return;
   }
 
+  if (!confirm(
+    "Link this Firebase UID to " + contestantName(contestantId) + "?"
+  )) return;
+
+  working = true;
+  setBusy(button, true, "LINK ACCOUNT");
+
   try {
-    await set(ref(db, `${base}/contestantAccounts/${uid}`), {
+    await set(ref(db, `${ROOT}/contestantAccounts/${uid}`), {
       contestantId,
+      contestantName: contestantName(contestantId),
       linkedAt: Date.now(),
       linkedBy: currentUser.uid
     });
 
-    $("accountUid").value = "";
-    status("accountStatus", "Contestant account linked successfully.");
-  } catch (e) {
-    status("accountStatus", "Could not link account: " + e.message);
+    $("linkForm").reset();
+    showMessage("Contestant account linked successfully.");
+  } catch (error) {
+    showMessage("Could not link account: " + errorText(error));
+  } finally {
+    working = false;
+    setBusy(button, false, "LINK ACCOUNT");
   }
-};
+}
 
-/* CONTESTANT ACTIVITY */
+$("loginForm").addEventListener("submit", async event => {
+  event.preventDefault();
 
-async function loadContestantActivity() {
-  const mappingSnap = await get(
-    ref(db, `${base}/contestantAccounts/${currentUser.uid}`)
+  const button = $("loginButton");
+  setBusy(button, true, "SIGN IN");
+
+  try {
+    await signInWithEmailAndPassword(
+      auth,
+      $("loginEmail").value.trim(),
+      $("loginPassword").value
+    );
+  } catch (error) {
+    showMessage("Sign-in failed: " + errorText(error));
+  } finally {
+    setBusy(button, false, "SIGN IN");
+  }
+});
+
+$("logoutButton").addEventListener("click", () => signOut(auth));
+$("refreshButton").addEventListener("click", async () => {
+  try {
+    await loadDashboard();
+  } catch (error) {
+    showMessage("Refresh failed: " + errorText(error));
+  }
+});
+$("recordForm").addEventListener("submit", recordPayment);
+$("linkForm").addEventListener("submit", linkContestant);
+
+onAuthStateChanged(auth, async user => {
+  currentUser = user;
+  isAdmin = Boolean(
+    user && user.email &&
+    user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()
   );
 
-  const mapping = mappingSnap.val();
+  $("loginSection").classList.toggle("hidden", Boolean(user));
+  $("appSection").classList.toggle("hidden", !user);
 
-  if (!mapping || !mapping.contestantId) {
-    $("myVoteTotal").textContent =
-      "Your contestant account is not linked yet.";
-
-    $("myActivity").textContent =
-      "Contact Kulzzy Radio administration to link your account.";
-
+  if (!user) {
+    showMessage("Please sign in.");
     return;
   }
 
-  const contestantId = mapping.contestantId;
+  $("signedInEmail").textContent = user.email || "";
+  $("accountRole").textContent = isAdmin
+    ? "Administrator"
+    : "Contestant account";
 
-  const [totalSnap, activitySnap] = await Promise.all([
-    get(ref(db, `${base}/officialVotes/${contestantId}`)),
-    get(ref(db, `${base}/contestantActivity/${contestantId}`))
-  ]);
-
-  const total = totalSnap.val() || {};
-
-  $("myVoteTotal").textContent =
-    "Official votes: " +
-    Number(total.votes || 0).toLocaleString();
-
-  const activity = activitySnap.val() || {};
-
-  const rows = Object.values(activity).sort(
-    (a, b) => Number(b.approvedAt || 0) - Number(a.approvedAt || 0)
-  );
-
-  $("myActivity").innerHTML = rows.length
-    ? rows.map(p => `
-      <div class="card">
-        <strong>${safe(p.status || "approved").toUpperCase()}</strong><br>
-        Amount: ${money(p.amount)}<br>
-        Votes credited: ${Number(p.votes || 0)}<br>
-        Reference: ${safe(p.paymentRef || "—")}<br>
-        Date: ${p.approvedAt
-          ? new Date(p.approvedAt).toLocaleString()
-          : "—"}
-      </div>
-    `).join("")
-    : "<p>No approved payments have been published to your activity yet.</p>";
-}
+  try {
+    await loadDashboard();
+  } catch (error) {
+    showMessage("Could not load dashboard: " + errorText(error));
+  }
+});
 </script>
 </body>
 </html>

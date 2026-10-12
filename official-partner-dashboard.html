@@ -135,8 +135,7 @@ const db = getDatabase(app);
 const $ = id => document.getElementById(id);
 
 let sales = {};
-let contestants = {};
-let dataLoaded = {sales:false, contestants:false};
+let dataLoaded = false;
 let loadError = "";
 
 function money(value) {
@@ -233,7 +232,7 @@ function renderActivityOptions() {
 }
 
 function render() {
-  if (!dataLoaded.sales) return;
+  if (!dataLoaded) return;
 
   renderActivityOptions();
 
@@ -245,7 +244,11 @@ function render() {
   );
 
   const people = new Set(
-    rows.map(([id, record]) => record.contestantId || record.participantId || getName(record, id))
+    rows.map(([id, record]) =>
+      record.contestantId ||
+      record.participantId ||
+      getName(record, id)
+    )
   );
 
   $("grandTotal").textContent = money(total);
@@ -255,7 +258,7 @@ function render() {
   renderParticipants(rows);
   renderRecords(rows);
 
-  if (!loadError && dataLoaded.contestants) {
+  if (!loadError) {
     $("dashboardStatus").textContent =
       "Connected. Published sales records update automatically.";
   }
@@ -277,14 +280,19 @@ function renderParticipants(rows) {
         total: 0,
         transactions: 0,
         votes: Number(record.officialVotes || 0),
-        latest: Number(record.approvedAt || record.publishedAt || record.createdAt || 0)
+        latest: Number(
+          record.approvedAt ||
+          record.publishedAt ||
+          record.createdAt ||
+          0
+        )
       };
     }
 
     groups[key].total += Number(record.amount || 0);
     groups[key].transactions++;
 
-    if (record.photoUrl || record.imageUrl) {
+    if (getPhoto(record)) {
       groups[key].photo = getPhoto(record);
     }
 
@@ -295,7 +303,12 @@ function renderParticipants(rows) {
 
     groups[key].latest = Math.max(
       groups[key].latest,
-      Number(record.approvedAt || record.publishedAt || record.createdAt || 0)
+      Number(
+        record.approvedAt ||
+        record.publishedAt ||
+        record.createdAt ||
+        0
+      )
     );
   });
 
@@ -322,7 +335,9 @@ function renderParticipants(rows) {
           ? `<p>🗳️ Official votes: <strong>${person.votes.toLocaleString()}</strong></p>`
           : ""}
         <p class="muted">Latest published sale: ${
-          person.latest ? safe(new Date(person.latest).toLocaleString()) : "Date not provided"
+          person.latest
+            ? safe(new Date(person.latest).toLocaleString())
+            : "Date not provided"
         }</p>
         <span class="badge">VERIFIED / PUBLISHED</span>
       </div>
@@ -356,40 +371,15 @@ onValue(
   ref(db, "faceOfKulzzy/partnerSales"),
   snapshot => {
     sales = snapshot.val() || {};
-    dataLoaded.sales = true;
+    dataLoaded = true;
     loadError = "";
     render();
   },
   error => {
     loadError = error.message;
     $("dashboardStatus").textContent =
-      "Unable to load public sales records. Firebase Database Rules must permit public reading of faceOfKulzzy/partnerSales. Details: " + error.message;
-  }
-);
-
-onValue(
-  ref(db, "faceOfKulzzy/contestants"),
-  snapshot => {
-    contestants = snapshot.val() || {};
-    dataLoaded.contestants = true;
-
-    // Use the official contestant profile image when available.
-    Object.values(sales).forEach(record => {
-      const id = record.contestantId;
-      const contestant = contestants[id];
-
-      if (contestant) {
-        record.photoUrl = record.photoUrl || contestant.imageUrl || "";
-        record.officialName = contestant.name || record.contestantName || "";
-      }
-    });
-
-    render();
-  },
-  error => {
-    loadError = error.message;
-    $("dashboardStatus").textContent =
-      "Sales may be available, but contestant profile information could not be loaded. Firebase Database Rules need checking. Details: " + error.message;
+      "Unable to load published sales records. Check Firebase rules for faceOfKulzzy/partnerSales. Details: " +
+      error.message;
   }
 );
 </script>

@@ -4,177 +4,103 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#06122a">
-<title>OFFICIAL PARTNER DASHBOARD | KULZZY RADIO</title>
+<title>Official Partner Dashboard — Kulzzy Radio</title>
 
 <style>
 *{box-sizing:border-box}
-body{
-  margin:0;
-  background:#06122a;
-  color:#fff;
-  font-family:Arial,Helvetica,sans-serif;
-}
-header{
-  text-align:center;
-  padding:28px 15px;
-  background:#0b1d3d;
-  border-bottom:3px solid #ffd700;
-}
-.crown{font-size:42px}
-h1{
-  color:#ffd700;
-  font-size:clamp(23px,6vw,36px);
-  margin:10px 0;
-}
-header p{color:#d3dced;margin:8px 0}
-main{max-width:950px;margin:auto;padding:16px}
-.panel{
-  background:#0b1d3d;
-  border:1px solid #30476b;
-  border-radius:15px;
-  padding:18px;
-  margin-bottom:18px;
-}
-h2{color:#ffd700;font-size:20px}
-.notice{
-  background:#14294b;
-  border-left:4px solid #ffd700;
-  padding:15px;
-  border-radius:8px;
-  line-height:1.7;
-  font-weight:bold;
-}
-.total-card{
-  text-align:center;
-  padding:24px 12px;
-  background:#06122a;
-  border:1px solid #ffd700;
-  border-radius:12px;
-}
-.total-label{color:#d3dced;font-size:14px}
-.total-amount{
-  color:#ffd700;
-  font-size:clamp(30px,8vw,46px);
-  font-weight:bold;
-  margin-top:12px;
-  overflow-wrap:anywhere;
-}
-input,select{
-  width:100%;
-  padding:13px;
-  margin:8px 0;
-  border:1px solid #30476b;
-  border-radius:8px;
-  background:#06122a;
-  color:#fff;
-}
-table{
-  width:100%;
-  border-collapse:collapse;
-  min-width:540px;
-}
-th,td{
-  text-align:left;
-  padding:12px 10px;
-  border-bottom:1px solid #30476b;
-  font-size:13px;
-  line-height:1.5;
-}
-th{color:#ffd700}
-.table-wrap{overflow-x:auto}
-.entry{
-  padding:14px;
-  margin:12px 0;
-  background:#06122a;
-  border-radius:10px;
-  border:1px solid #30476b;
-  line-height:1.7;
-  overflow-wrap:anywhere;
-}
-.entry strong{color:#ffd700}
-.muted{color:#b9c6da;font-size:13px;line-height:1.7}
-.center{text-align:center}
-footer{
-  text-align:center;
-  padding:25px 15px;
-  color:#b9c6da;
-  border-top:1px solid #30476b;
-  line-height:1.8;
-}
-footer strong{color:#ffd700}
+body{margin:0;background:#06122a;color:#fff;font-family:Arial,Helvetica,sans-serif}
+header{padding:25px 15px;text-align:center;background:linear-gradient(135deg,#020817,#0b2044);border-bottom:2px solid #ffd700}
+header h1{margin:0;color:#ffd700;font-size:clamp(24px,6vw,38px)}
+header p{color:#c4d0e5;line-height:1.6}
+.notice{max-width:850px;margin:18px auto;padding:14px;border:1px solid #ffd700;border-radius:12px;background:#14294b;color:#ffd700;font-weight:bold;line-height:1.7}
+main{max-width:1100px;margin:auto;padding:14px}
+.panel{background:#0b1d3d;border:1px solid #30476b;border-radius:15px;padding:17px;margin:16px 0}
+h2{color:#ffd700;margin-top:0}
+label{display:block;font-weight:bold;margin:12px 0 6px}
+input,select{width:100%;padding:13px;border:1px solid #385174;border-radius:9px;background:#06122a;color:white}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.stat{padding:17px;background:#06122a;border:1px solid #29466f;border-radius:12px}
+.stat small{display:block;color:#b9c6da;margin-bottom:9px}
+.stat strong{font-size:clamp(22px,5vw,32px);color:#ffd700;overflow-wrap:anywhere}
+.contestant{display:flex;gap:13px;align-items:center;background:#06122a;border:1px solid #29466f;border-radius:12px;padding:13px;margin:12px 0}
+.photo{width:85px;height:105px;object-fit:cover;border-radius:9px;background:#14294b;flex-shrink:0}
+.details{min-width:0;overflow-wrap:anywhere}
+.details h3{color:#ffd700;margin:0 0 8px}
+.details p{margin:5px 0;color:#e0e8f6}
+.badge{display:inline-block;background:#164c38;color:#b8ffda;padding:5px 8px;border-radius:6px;font-size:12px;font-weight:bold}
+.record{padding:13px;background:#06122a;border-left:3px solid #ffd700;border-radius:8px;margin:10px 0;overflow-wrap:anywhere}
+.record h3{margin:0 0 8px;color:#ffd700}
+.muted{color:#b9c6da;line-height:1.6}
+.status{padding:12px;background:#14294b;border-radius:8px;line-height:1.6;overflow-wrap:anywhere}
+.empty{padding:15px;text-align:center;color:#b9c6da}
+footer{text-align:center;padding:25px 12px;color:#b9c6da;line-height:1.8}
+button{padding:12px 16px;border:0;border-radius:8px;background:#ffd700;color:#06122a;font-weight:bold;cursor:pointer}
+@media(max-width:420px){.contestant{align-items:flex-start}.photo{width:68px;height:85px}}
 </style>
 </head>
 
 <body>
-
 <header>
-  <div class="crown">👑</div>
-  <h1>OFFICIAL PARTNER DASHBOARD</h1>
-  <p>KULZZY RADIO NETWORK</p>
-  <p>Sales • Tickets • Contestants • Partners • Activities</p>
+  <h1>👑 OFFICIAL PARTNER DASHBOARD</h1>
+  <p>KULZZY RADIO NETWORK<br>
+  Sales • Tickets • Contestants • Partners • Activities</p>
 </header>
 
+<div class="notice">
+  ALWAYS CHECK KULZZY RADIO APP TO SEE YOUR VOTE COUNT AND DO YOUR CALCULATION.
+</div>
+
 <main>
-
   <section class="panel">
-    <div class="notice">
-      ALWAYS CHECK KULZZY RADIO APP TO SEE YOUR VOTE COUNT AND DO YOUR CALCULATION.
+    <h2>💰 Total Verified Sales</h2>
+    <div class="grid">
+      <div class="stat">
+        <small>TOTAL PUBLISHED SALES</small>
+        <strong id="grandTotal">₦0</strong>
+      </div>
+      <div class="stat">
+        <small>VERIFIED TRANSACTIONS</small>
+        <strong id="transactionCount">0</strong>
+      </div>
+      <div class="stat">
+        <small>CONTESTANTS / PARTNERS</small>
+        <strong id="participantCount">0</strong>
+      </div>
     </div>
-  </section>
-
-  <section class="panel">
-    <h2>💰 Total Amount</h2>
-    <div class="total-card">
-      <div class="total-label">TOTAL VERIFIED SALES</div>
-      <div class="total-amount" id="grandTotal">₦0</div>
-    </div>
-    <p class="muted">
-      Only sales published by the administrator will appear here.
-    </p>
   </section>
 
   <section class="panel">
     <h2>🔎 Find Your Activity</h2>
-
-    <label for="activityFilter" class="muted">Activity</label>
+    <label for="activityFilter">Activity</label>
     <select id="activityFilter">
       <option value="">All activities</option>
     </select>
 
-    <label for="nameFilter" class="muted">Contestant or partner</label>
-    <input
-      id="nameFilter"
-      type="search"
-      placeholder="Search by name"
-      autocomplete="off"
-    >
+    <label for="personFilter">Contestant or partner</label>
+    <input id="personFilter" placeholder="Enter a name to search">
+
+    <p class="muted">Only records published by the administrator are displayed.</p>
   </section>
 
   <section class="panel">
-    <h2>📊 Sales by Contestant, Partner or Activity</h2>
-    <div id="salesSummary">
-      <p class="muted">Connecting to the sales records...</p>
+    <h2>👑 Contestants, Partners & Activities</h2>
+    <div id="participants">
+      <p class="empty">Connecting to published records...</p>
     </div>
   </section>
 
   <section class="panel">
-    <h2>🧾 Sales Records</h2>
+    <h2>🧾 Verified Sales Records</h2>
     <div id="salesRecords">
-      <p class="muted">Loading records...</p>
+      <p class="empty">Loading published sales...</p>
     </div>
   </section>
 
   <section class="panel">
     <h2>🔄 Dashboard Status</h2>
-    <p id="connectionStatus" class="muted">
-      Connecting...
-    </p>
-    <p class="muted">
-      This page is for viewing sales information only. Visitors cannot
-      edit records or approve payments.
-    </p>
+    <p class="status" id="dashboardStatus">Connecting...</p>
+    <button id="refreshBtn">REFRESH DASHBOARD</button>
   </section>
-
 </main>
 
 <footer>
@@ -184,15 +110,14 @@ footer strong{color:#ffd700}
 </footer>
 
 <script type="module">
-import { initializeApp } from
-  "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {initializeApp}
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
   getDatabase,
   ref,
   onValue
-} from
-  "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD-Oqmq3P5bNoxcHBdkTAw7O9W9HVsKDVc",
@@ -207,19 +132,16 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-
-/*
-  The admin panel will publish approved sales to:
-  faceOfKulzzy/partnerSales
-
-  This dashboard only reads that public reporting path.
-*/
-
-const SALES_PATH = "faceOfKulzzy/partnerSales";
-
 const $ = id => document.getElementById(id);
 
 let sales = {};
+let contestants = {};
+let dataLoaded = {sales:false, contestants:false};
+let loadError = "";
+
+function money(value) {
+  return "₦" + Number(value || 0).toLocaleString("en-NG");
+}
 
 function safe(value) {
   return String(value ?? "").replace(/[&<>"']/g, ch => ({
@@ -231,80 +153,75 @@ function safe(value) {
   }[ch]));
 }
 
-function money(value) {
-  return "₦" + Number(value || 0).toLocaleString("en-NG");
-}
-
-function dateTime(value) {
-  const timestamp = Number(value || 0);
-
-  if (!timestamp) return "Date not available";
-
-  return new Date(timestamp).toLocaleString("en-NG", {
-    dateStyle:"medium",
-    timeStyle:"short"
-  });
+function getName(record, id) {
+  return record.participantName ||
+    record.contestantName ||
+    record.partnerName ||
+    record.name ||
+    record.activityName ||
+    id;
 }
 
 function getActivity(record) {
   return record.activityName ||
-         record.activity ||
-         record.event ||
-         "Kulzzy Radio Activity";
+    record.event ||
+    record.activityType ||
+    "Kulzzy Radio Activity";
 }
 
-function getName(record) {
-  return record.participantName ||
-         record.contestantName ||
-         record.partnerName ||
-         record.name ||
-         "Unspecified";
-}
-
-function getAmount(record) {
-  return Math.max(0, Number(record.amount || 0));
+function getPhoto(record) {
+  return record.photoUrl ||
+    record.imageUrl ||
+    record.contestantPhoto ||
+    "";
 }
 
 function getTime(record) {
-  return Number(
-    record.publishedAt ||
+  const value = Number(
     record.approvedAt ||
+    record.publishedAt ||
     record.createdAt ||
-    record.timestamp ||
     0
   );
+
+  return value ? new Date(value).toLocaleString() : "Date not provided";
 }
 
 function isPublished(record) {
-  return record &&
+  return !!record &&
     record.status === "approved" &&
-    record.published !== false;
+    record.published === true &&
+    Number.isFinite(Number(record.amount)) &&
+    Number(record.amount) >= 0;
 }
 
-function filteredRecords() {
+function getVisibleSales() {
   const activity = $("activityFilter").value;
-  const query = $("nameFilter").value.trim().toLowerCase();
+  const search = $("personFilter").value.trim().toLowerCase();
 
   return Object.entries(sales)
     .filter(([, record]) => isPublished(record))
-    .filter(([, record]) => !activity || getActivity(record) === activity)
-    .filter(([, record]) => !query ||
-      getName(record).toLowerCase().includes(query) ||
-      getActivity(record).toLowerCase().includes(query))
-    .sort((a, b) => getTime(b[1]) - getTime(a[1]));
+    .filter(([, record]) =>
+      !activity || getActivity(record) === activity
+    )
+    .filter(([, record]) =>
+      !search || getName(record, "").toLowerCase().includes(search)
+    )
+    .sort((a, b) =>
+      Number(b[1].approvedAt || b[1].publishedAt || b[1].createdAt || 0) -
+      Number(a[1].approvedAt || a[1].publishedAt || a[1].createdAt || 0)
+    );
 }
 
 function renderActivityOptions() {
   const select = $("activityFilter");
-  const previous = select.value;
+  const oldValue = select.value;
 
-  const activities = [
-    ...new Set(
-      Object.values(sales)
-        .filter(isPublished)
-        .map(getActivity)
-    )
-  ].sort();
+  const activities = [...new Set(
+    Object.values(sales)
+      .filter(isPublished)
+      .map(getActivity)
+  )].sort();
 
   select.innerHTML =
     '<option value="">All activities</option>' +
@@ -312,110 +229,169 @@ function renderActivityOptions() {
       `<option value="${safe(activity)}">${safe(activity)}</option>`
     ).join("");
 
-  if (activities.includes(previous)) select.value = previous;
+  if (activities.includes(oldValue)) select.value = oldValue;
 }
 
 function render() {
-  const records = filteredRecords();
+  if (!dataLoaded.sales) return;
 
-  const total = records.reduce(
-    (sum, [, record]) => sum + getAmount(record), 0
+  renderActivityOptions();
+
+  const rows = getVisibleSales();
+
+  const total = rows.reduce(
+    (sum, [, record]) => sum + Number(record.amount || 0),
+    0
+  );
+
+  const people = new Set(
+    rows.map(([id, record]) => record.contestantId || record.participantId || getName(record, id))
   );
 
   $("grandTotal").textContent = money(total);
+  $("transactionCount").textContent = rows.length.toLocaleString();
+  $("participantCount").textContent = people.size.toLocaleString();
 
-  if (!records.length) {
-    $("salesSummary").innerHTML =
-      '<p class="muted">No published sales records match your selection.</p>';
+  renderParticipants(rows);
+  renderRecords(rows);
 
-    $("salesRecords").innerHTML =
-      '<p class="muted">Sales records will appear here after the admin publishes verified sales.</p>';
-
-    return;
+  if (!loadError && dataLoaded.contestants) {
+    $("dashboardStatus").textContent =
+      "Connected. Published sales records update automatically.";
   }
+}
 
+function renderParticipants(rows) {
   const groups = {};
 
-  records.forEach(([, record]) => {
-    const key = getActivity(record) + "||" + getName(record);
+  rows.forEach(([id, record]) => {
+    const key = record.contestantId ||
+      record.participantId ||
+      getName(record, id);
 
     if (!groups[key]) {
       groups[key] = {
-        activity:getActivity(record),
-        name:getName(record),
-        total:0,
-        count:0
+        name: getName(record, id),
+        photo: getPhoto(record),
+        activity: getActivity(record),
+        total: 0,
+        transactions: 0,
+        votes: Number(record.officialVotes || 0),
+        latest: Number(record.approvedAt || record.publishedAt || record.createdAt || 0)
       };
     }
 
-    groups[key].total += getAmount(record);
-    groups[key].count += 1;
+    groups[key].total += Number(record.amount || 0);
+    groups[key].transactions++;
+
+    if (record.photoUrl || record.imageUrl) {
+      groups[key].photo = getPhoto(record);
+    }
+
+    groups[key].votes = Math.max(
+      groups[key].votes,
+      Number(record.officialVotes || 0)
+    );
+
+    groups[key].latest = Math.max(
+      groups[key].latest,
+      Number(record.approvedAt || record.publishedAt || record.createdAt || 0)
+    );
   });
 
-  $("salesSummary").innerHTML = Object.values(groups)
-    .sort((a, b) => b.total - a.total)
-    .map(group => `
-      <div class="entry">
-        <strong>${safe(group.name)}</strong><br>
-        Activity: ${safe(group.activity)}<br>
-        Total Amount: <strong>${money(group.total)}</strong><br>
-        Recorded sales: ${group.count}
-      </div>
-    `).join("");
+  const list = Object.entries(groups)
+    .sort((a, b) => b[1].total - a[1].total);
 
-  $("salesRecords").innerHTML = `
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Activity</th>
-            <th>Contestant / Partner</th>
-            <th>Total Amount</th>
-            <th>Date & Time</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${records.map(([, record]) => `
-            <tr>
-              <td>${safe(getActivity(record))}</td>
-              <td>${safe(getName(record))}</td>
-              <td>${money(getAmount(record))}</td>
-              <td>${safe(dateTime(getTime(record)))}</td>
-            </tr>
-          `).join("")}
-        </tbody>
-      </table>
-    </div>
-  `;
+  if (!list.length) {
+    $("participants").innerHTML =
+      '<p class="empty">No published sales records match your selection.</p>';
+    return;
+  }
+
+  $("participants").innerHTML = list.map(([, person]) => `
+    <article class="contestant">
+      ${person.photo
+        ? `<img class="photo" src="${safe(person.photo)}" alt="Contestant or partner photo" loading="lazy" onerror="this.style.display='none'">`
+        : `<div class="photo" aria-label="No photo available"></div>`}
+      <div class="details">
+        <h3>${safe(person.name)}</h3>
+        <p>${safe(person.activity)}</p>
+        <p>💰 Verified sales: <strong>${money(person.total)}</strong></p>
+        <p>🧾 Verified transactions: ${person.transactions}</p>
+        ${person.activity.toLowerCase().includes("vote")
+          ? `<p>🗳️ Official votes: <strong>${person.votes.toLocaleString()}</strong></p>`
+          : ""}
+        <p class="muted">Latest published sale: ${
+          person.latest ? safe(new Date(person.latest).toLocaleString()) : "Date not provided"
+        }</p>
+        <span class="badge">VERIFIED / PUBLISHED</span>
+      </div>
+    </article>
+  `).join("");
+}
+
+function renderRecords(rows) {
+  if (!rows.length) {
+    $("salesRecords").innerHTML =
+      '<p class="empty">Sales records will appear here after the administrator publishes verified sales.</p>';
+    return;
+  }
+
+  $("salesRecords").innerHTML = rows.map(([id, record]) => `
+    <article class="record">
+      <h3>${safe(getName(record, id))}</h3>
+      <p><strong>Activity:</strong> ${safe(getActivity(record))}</p>
+      <p><strong>Verified amount:</strong> ${money(record.amount)}</p>
+      <p><strong>Date and time:</strong> ${safe(getTime(record))}</p>
+      <p><strong>Status:</strong> <span class="badge">APPROVED</span></p>
+    </article>
+  `).join("");
 }
 
 $("activityFilter").addEventListener("change", render);
-$("nameFilter").addEventListener("input", render);
+$("personFilter").addEventListener("input", render);
+$("refreshBtn").addEventListener("click", () => location.reload());
 
 onValue(
-  ref(db, SALES_PATH),
+  ref(db, "faceOfKulzzy/partnerSales"),
   snapshot => {
     sales = snapshot.val() || {};
-    renderActivityOptions();
+    dataLoaded.sales = true;
+    loadError = "";
     render();
-
-    $("connectionStatus").textContent =
-      "Connected. Dashboard records are updating automatically.";
   },
   error => {
-    $("connectionStatus").textContent =
-      "Unable to load sales records. The database access rules or Firebase configuration need checking.";
+    loadError = error.message;
+    $("dashboardStatus").textContent =
+      "Unable to load public sales records. Firebase Database Rules must permit public reading of faceOfKulzzy/partnerSales. Details: " + error.message;
+  }
+);
 
-    $("salesSummary").innerHTML =
-      '<p class="muted">Sales data could not be loaded.</p>';
+onValue(
+  ref(db, "faceOfKulzzy/contestants"),
+  snapshot => {
+    contestants = snapshot.val() || {};
+    dataLoaded.contestants = true;
 
-    $("salesRecords").innerHTML =
-      '<p class="muted">Please contact the administrator.</p>';
+    // Use the official contestant profile image when available.
+    Object.values(sales).forEach(record => {
+      const id = record.contestantId;
+      const contestant = contestants[id];
 
-    console.error(error);
+      if (contestant) {
+        record.photoUrl = record.photoUrl || contestant.imageUrl || "";
+        record.officialName = contestant.name || record.contestantName || "";
+      }
+    });
+
+    render();
+  },
+  error => {
+    loadError = error.message;
+    $("dashboardStatus").textContent =
+      "Sales may be available, but contestant profile information could not be loaded. Firebase Database Rules need checking. Details: " + error.message;
   }
 );
 </script>
-
 </body>
 </html>

@@ -8,7 +8,7 @@
    ===================================================== */
 
 const firebaseConfig = {
-    apiKey: apiKey: "AIzaSyD-Oqmq3P5bNoxcHBdkTAw7O9W9HVsKDVc",
+    apiKey: "AIzaSyD-Oqmq3P5bNoxcHBdkTAw7O9W9HVsKDVc",
     authDomain: "face-of-kulzzy-radio-2026.firebaseapp.com",
     databaseURL: "https://face-of-kulzzy-radio-2026-default-rtdb.europe-west1.firebasedatabase.app",
     projectId: "face-of-kulzzy-radio-2026",
@@ -133,12 +133,11 @@ let contestantsUnsubscribe = null;
 function friendlyError(error) {
     const code = error?.code || "";
 
-    if (code.includes("invalid-credential")) {
+    if (
+        code.includes("invalid-credential") ||
+        code.includes("wrong-password")
+    ) {
         return "Incorrect admin email or password.";
-    }
-
-    if (code.includes("wrong-password")) {
-        return "Incorrect password.";
     }
 
     if (code.includes("user-not-found")) {
@@ -166,7 +165,7 @@ function friendlyError(error) {
     }
 
     if (code.includes("storage/unauthorized")) {
-        return "Cloudinary or image upload permission failed. Check the upload preset.";
+        return "Image upload permission failed. Check the upload configuration.";
     }
 
     return error?.message || "An unexpected error occurred.";
@@ -220,8 +219,10 @@ async function login() {
         return;
     }
 
-    if ($("loginBtn")) {
-        $("loginBtn").disabled = true;
+    const loginButton = $("loginBtn");
+
+    if (loginButton) {
+        loginButton.disabled = true;
     }
 
     setStatus("loginStatus", "Logging in...");
@@ -255,8 +256,8 @@ async function login() {
         );
 
     } finally {
-        if ($("loginBtn")) {
-            $("loginBtn").disabled = false;
+        if (loginButton) {
+            loginButton.disabled = false;
         }
     }
 }
@@ -286,7 +287,10 @@ onAuthStateChanged(auth, async user => {
         try {
             await signOut(auth);
         } catch (error) {
-            console.error("Unauthorized logout error:", error);
+            console.error(
+                "Unauthorized logout error:",
+                error
+            );
         }
 
         setStatus(
@@ -324,7 +328,11 @@ if ($("photoFile")) {
         }
 
         if (!file.type.startsWith("image/")) {
-            setStatus("formStatus", "Please select an image file.");
+            setStatus(
+                "formStatus",
+                "Please select an image file."
+            );
+
             $("photoFile").value = "";
             return;
         }
@@ -372,7 +380,9 @@ async function uploadImage(file) {
     try {
         data = await response.json();
     } catch {
-        throw new Error("Image upload returned an invalid response.");
+        throw new Error(
+            "Image upload returned an invalid response."
+        );
     }
 
     if (!response.ok) {
@@ -382,7 +392,9 @@ async function uploadImage(file) {
     }
 
     if (!data?.secure_url) {
-        throw new Error("Image upload did not return an image URL.");
+        throw new Error(
+            "Image upload did not return an image URL."
+        );
     }
 
     return data.secure_url;
@@ -414,12 +426,18 @@ async function saveContestant() {
     const editId = $("editId").value.trim();
 
     if (!number) {
-        setStatus("formStatus", "Enter contestant number.");
+        setStatus(
+            "formStatus",
+            "Enter contestant number."
+        );
         return;
     }
 
     if (!name) {
-        setStatus("formStatus", "Enter contestant name.");
+        setStatus(
+            "formStatus",
+            "Enter contestant name."
+        );
         return;
     }
 
@@ -443,7 +461,9 @@ async function saveContestant() {
         }
     }
 
-    $("saveBtn").disabled = true;
+    const saveButton = $("saveBtn");
+
+    saveButton.disabled = true;
 
     try {
         let imageUrl = url;
@@ -466,6 +486,7 @@ async function saveContestant() {
             );
 
             imageUrl = await uploadImage(file);
+
         } else if (editId && !imageUrl) {
             imageUrl = oldData?.imageUrl || "";
         }
@@ -535,7 +556,7 @@ async function saveContestant() {
         );
 
     } finally {
-        $("saveBtn").disabled = false;
+        saveButton.disabled = false;
     }
 }
 
@@ -553,7 +574,10 @@ function loadContestants() {
     }
 
     if (contestantsListenerStarted && contestantsUnsubscribe) {
-        setStatus("listStatus", "Refreshing contestant list...");
+        setStatus(
+            "listStatus",
+            "Contestant list is already connected."
+        );
         return;
     }
 
@@ -608,7 +632,9 @@ function renderContestants() {
     const rows = $("contestantRows");
 
     if (!rows) {
-        console.error("Missing contestantRows element.");
+        console.error(
+            "Missing contestantRows element."
+        );
         return;
     }
 
@@ -659,6 +685,7 @@ function renderContestants() {
             ).toLocaleString();
 
         const statusCell = document.createElement("td");
+
         statusCell.textContent =
             contestant.active === false
                 ? "HIDDEN"
@@ -675,10 +702,12 @@ function renderContestants() {
         const toggleButton = document.createElement("button");
         toggleButton.type = "button";
         toggleButton.className = "secondary";
+
         toggleButton.textContent =
             contestant.active === false
                 ? "PUBLISH"
                 : "HIDE";
+
         toggleButton.dataset.toggle = id;
 
         const deleteButton = document.createElement("button");
@@ -739,7 +768,10 @@ function editContestant(id) {
     const contestant = contestants[id];
 
     if (!contestant) {
-        setStatus("formStatus", "Contestant not found.");
+        setStatus(
+            "formStatus",
+            "Contestant not found."
+        );
         return;
     }
 
@@ -776,7 +808,9 @@ function editContestant(id) {
 
 async function toggleContestant(id) {
     if (!isAuthorizedAdmin(auth.currentUser)) {
-        alert("Please log in with the authorized admin account.");
+        alert(
+            "Please log in with the authorized admin account."
+        );
         return;
     }
 
@@ -809,7 +843,10 @@ async function toggleContestant(id) {
         );
 
     } catch (error) {
-        console.error("Toggle contestant error:", error);
+        console.error(
+            "Toggle contestant error:",
+            error
+        );
 
         alert(
             "Could not update contestant: " +
@@ -824,7 +861,9 @@ async function toggleContestant(id) {
 
 async function deleteContestant(id) {
     if (!isAuthorizedAdmin(auth.currentUser)) {
-        alert("Please log in with the authorized admin account.");
+        alert(
+            "Please log in with the authorized admin account."
+        );
         return;
     }
 
@@ -865,7 +904,10 @@ async function deleteContestant(id) {
         }
 
     } catch (error) {
-        console.error("Delete contestant error:", error);
+        console.error(
+            "Delete contestant error:",
+            error
+        );
 
         alert(
             "Could not delete contestant: " +

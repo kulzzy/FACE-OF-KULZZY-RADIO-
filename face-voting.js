@@ -89,6 +89,22 @@ function formatDate(value) {
 }
 
 
+/*
+  Accept pending requests whose status is explicitly
+  "pending", empty, or missing.
+
+  Requests with another status are not approved again.
+*/
+
+function isPendingRequest(request) {
+  return !!request && (
+    request.status === "pending" ||
+    request.status === undefined ||
+    request.status === ""
+  );
+}
+
+
 function setStatus(message, error = false) {
   const element = $("pendingQueueStatus");
 
@@ -258,14 +274,7 @@ function renderPendingRequests() {
   if (!container) return;
 
   const entries = Object.entries(pendingRequests)
-    .filter(([, request]) =>
-      request &&
-      (
-        request.status === "pending" ||
-        request.status === undefined ||
-        request.status === ""
-      )
-    )
+    .filter(([, request]) => isPendingRequest(request))
     .sort((a, b) =>
       Number(a[1].createdAt || 0) -
       Number(b[1].createdAt || 0)
@@ -535,7 +544,7 @@ async function approvePendingRequest(requestId) {
 
   const request = pendingRequests[requestId];
 
-  if (!request || request.status !== "pending") {
+  if (!isPendingRequest(request)) {
     setStatus(
       "This request is not pending or could not be found. Refresh the page.",
       true
@@ -616,6 +625,8 @@ async function approvePendingRequest(requestId) {
   approvingRequests.add(requestId);
   renderPendingRequests();
 
+  let finalApprovalStatus = null;
+
   setStatus("Saving approved votes to Firebase...");
 
   try {
@@ -639,10 +650,7 @@ async function approvePendingRequest(requestId) {
 
     const latestRequest = requestSnapshot.val();
 
-    if (
-      !latestRequest ||
-      latestRequest.status !== "pending"
-    ) {
+    if (!isPendingRequest(latestRequest)) {
       throw new Error(
         "This request has already changed status. Refresh the page before continuing."
       );
@@ -676,10 +684,6 @@ async function approvePendingRequest(requestId) {
 
     const changes = {};
 
-    /*
-      Update the public contestant total.
-    */
-
     changes[
       `${ROOT}/contestants/${contestantId}/votes`
     ] = newTotal;
@@ -688,20 +692,12 @@ async function approvePendingRequest(requestId) {
       `${ROOT}/contestants/${contestantId}/money`
     ] = newMoney;
 
-    /*
-      Update the official vote total used by the public page.
-    */
-
     changes[
       `${ROOT}/officialVotes/${contestantId}`
     ] = {
       votes: newTotal,
       updatedAt: now
     };
-
-    /*
-      Mark the request as approved.
-    */
 
     changes[
       `${ROOT}/pendingVoteRequests/${requestId}/status`
@@ -724,21 +720,23 @@ async function approvePendingRequest(requestId) {
     ] = user.email;
 
     /*
-      Save all required paths together.
+      Save the changes together.
       Firebase must permit writes to every listed path.
     */
 
     await update(ref(db), changes);
 
-    setStatus(
-      "SUCCESS! " +
-      votes.toLocaleString() +
-      " votes approved for " +
-      (contestant.name || "the contestant") +
-      ". New official total: " +
-      newTotal.toLocaleString() +
-      "."
-    );
+    finalApprovalStatus = {
+      message:
+        "SUCCESS! " +
+        votes.toLocaleString() +
+        " votes approved for " +
+        (contestant.name || "the contestant") +
+        ". New official total: " +
+        newTotal.toLocaleString() +
+        ".",
+      error: false
+    };
 
   } catch (error) {
     console.error(
@@ -746,16 +744,31 @@ async function approvePendingRequest(requestId) {
       error
     );
 
-    setStatus(
-      "APPROVAL FAILED: " +
-      (error?.message || String(error)) +
-      ". Check Firebase permissions. Do not assume the votes were approved.",
-      true
-    );
+    finalApprovalStatus = {
+      message:
+        "APPROVAL FAILED: " +
+        (error?.message || String(error)) +
+        ". Check Firebase permissions. Do not assume the votes were approved.",
+      error: true
+    };
 
   } finally {
     approvingRequests.delete(requestId);
+
     renderPendingRequests();
+
+    /*
+      IMPORTANT FIX:
+      Rendering the queue resets its status text.
+      Restore the real approval result after rendering.
+    */
+
+    if (finalApprovalStatus) {
+      setStatus(
+        finalApprovalStatus.message,
+        finalApprovalStatus.error
+      );
+    }
   }
 }
 
@@ -763,11 +776,6 @@ async function approvePendingRequest(requestId) {
 /* =====================================================
    PUBLIC VOTING MODAL — PAYMENT LINK
    ===================================================== */
-
-/*
-  Adds a visible link area to the existing voting modal.
-  No changes to index.html are required for this area.
-*/
 
 function setupPaymentLinkArea() {
   const message = $("voteMessage");
@@ -952,9 +960,8 @@ function resetPaymentLink() {
   The public page already creates a request ID and sends
   supporters to payment.html with that ID in the URL.
 
-  The code above restores the admin approval queue and
-  provides the reusable display functions for a generated
-  link when called by the public page.
+  The code above preserves the existing voting page flow
+  and provides the payment-link display functions.
 */
 
 

@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<meta name="theme-color" content="#06122a">
+
+<title>Contestant Votes | FACE OF KULZZY RADIO 2026</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #06122a;
+    color: #fff;
+    min-height: 100vh;
+}
+
+header {
+    text-align: center;
+    padding: 35px 16px;
+    background: linear-gradient(135deg, #020817, #0d2146);
+    border-bottom: 2px solid #ffd700;
+}
+
+.crown {
+    font-size: 45px;
+}
+
+h1 {
+    color: #ffd700;
+    font-size: clamp(25px, 6vw, 42px);
+    margin: 10px 0;
+}
+
+header p {
+    color: #c8d3e5;
+    line-height: 1.7;
+}
+
+main {
+    max-width: 850px;
+    margin: auto;
+    padding: 22px 14px;
+}
+
+.panel {
+    background: #0b1d3d;
+    border: 1px solid rgba(255, 215, 0, .3);
+    border-radius: 18px;
+    padding: 20px;
+    margin-bottom: 18px;
+}
+
+.profile {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.photo {
+    width: 120px;
+    height: 145px;
+    object-fit: cover;
+    border-radius: 12px;
+    background: #14294b;
+}
+
+.name {
+    font-size: 25px;
+    font-weight: 900;
+}
+
+.number {
+    color: #c8d3e5;
+    margin-top: 8px;
+}
+
+.total {
+    color: #ffd700;
+    font-size: 29px;
+    font-weight: 900;
+    margin-top: 15px;
+}
+
+h2 {
+    color: #ffd700;
+    margin-bottom: 14px;
+}
+
+.record {
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,.12);
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+.record:last-child {
+    border-bottom: 0;
+}
+
+.record strong {
+    color: #ffd700;
+}
+
+.muted {
+    color: #aebbd0;
+    line-height: 1.7;
+}
+
+.error {
+    color: #ffb3b3;
+}
+
+footer {
+    text-align: center;
+    color: #8290a8;
+    padding: 25px 15px;
+    line-height: 1.7;
+}
+
+@media(max-width:480px) {
+    .panel {
+        padding: 15px;
+    }
+
+    .photo {
+        width: 90px;
+        height: 110px;
+    }
+
+    .total {
+        font-size: 24px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="crown">👑</div>
+
+    <h1>FACE OF KULZZY RADIO 2026</h1>
+
+    <p>Official Contestant Vote Record</p>
+</header>
+
+<main>
+
+    <section class="panel" id="profile">
+        <p class="muted">Loading contestant details...</p>
+    </section>
+
+    <section class="panel">
+
+        <h2>🗳️ APPROVED VOTER RECORDS</h2>
+
+        <p class="muted" style="margin-bottom:12px">
+            View approved voter names, vote counts and the
+            date and time their votes were recorded.
+            Private payment details are not displayed here.
+        </p>
+
+        <div id="records">
+            <p class="muted">Loading voter records...</p>
+        </div>
+
+    </section>
+
+</main>
+
+<footer>
+    <strong>FACE OF KULZZY RADIO 2026</strong>
+    <br>
+    Kulzzy Radio Network — Celebrating Lives Everyday
+</footer>
+
+
+<script type="module">
+
+import {
+    initializeApp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+    getDatabase,
+    ref,
+    onValue
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+
+/* ================= FIREBASE CONFIG ================= */
+
+const firebaseConfig = {
+    apiKey: "AIzaSyD-Oqmq3P5bNoxcHBdkTA7O9W9H9HVsKDVc",
+    authDomain: "face-of-kulzzy-radio-2026.firebaseapp.com",
+    databaseURL: "https://face-of-kulzzy-radio-2026-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "face-of-kulzzy-radio-2026",
+    storageBucket: "face-of-kulzzy-radio-2026.firebasestorage.app",
+    messagingSenderId: "175657004245",
+    appId: "1:175657004245:web:022d50bc14ed86e036065c",
+    measurementId: "G-WQDFT2B0RH"
+};
+
+
+/* ================= INITIALIZE FIREBASE ================= */
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+
+/* ================= PAGE ELEMENTS ================= */
+
+const profile = document.getElementById("profile");
+const records = document.getElementById("records");
+
+const contestantId =
+    new URLSearchParams(window.location.search).get("id");
+
+
+/* ================= SAFE TEXT ================= */
+
+function escapeHTML(value) {
+    return String(value ?? "").replace(
+        /[&<>"']/g,
+        character => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#039;"
+        }[character])
+    );
+}
+
+
+/* ================= VALIDATE CONTESTANT ID ================= */
+
+if (!contestantId) {
+
+    profile.innerHTML = `
+        <p class="error">
+            No contestant was selected.
+            Please open the unique share link provided by the administrator.
+        </p>
+    `;
+
+    records.innerHTML = "";
+
+} else {
+
+    /* ================= CONTESTANT DETAILS ================= */
+
+    onValue(
+        ref(db, "faceOfKulzzy/contestants/" + contestantId),
+
+        snapshot => {
+            const contestant = snapshot.val();
+
+            if (!contestant) {
+                profile.innerHTML = `
+                    <p class="error">
+                        Contestant not found.
+                    </p>
+                `;
+                return;
+            }
+
+            profile.innerHTML = `
+                <div class="profile">
+
+                    <img
+                        class="photo"
+                        src="${escapeHTML(contestant.imageUrl || "")}"
+                        alt="Contestant photo"
+                        onerror="this.style.display='none'"
+                    >
+
+                    <div>
+
+                        <div class="name">
+                            ${escapeHTML(contestant.name || "Contestant")}
+                        </div>
+
+                        <div class="number">
+                            Contestant #${escapeHTML(contestant.number || "")}
+                        </div>
+
+                        <div class="total" id="officialTotal">
+                            Official votes: loading...
+                        </div>
+
+                    </div>
+
+                </div>
+            `;
+
+            /* ================= OFFICIAL VOTE TOTAL ================= */
+
+            onValue(
+                ref(
+                    db,
+                    "faceOfKulzzy/officialVotes/" + contestantId
+                ),
+
+                voteSnapshot => {
+                    const entry = voteSnapshot.val();
+
+                    const rawTotal =
+                        entry && typeof entry === "object"
+                            ? entry.votes || 0
+                            : entry || 0;
+
+                    const total = Number(rawTotal);
+
+                    const totalElement =
+                        document.getElementById("officialTotal");
+
+                    if (totalElement) {
+                        totalElement.textContent =
+                            "Official votes: " +
+                            (
+                                Number.isFinite(total) && total >= 0
+                                    ? total
+                                    : 0
+                            ).toLocaleString();
+                    }
+                },
+
+                error => {
+                    console.error(error);
+
+                    const totalElement =
+                        document.getElementById("officialTotal");
+
+                    if (totalElement) {
+                        totalElement.textContent =
+                            "Vote total temporarily unavailable";
+                    }
+                }
+            );
+        },
+
+        error => {
+            console.error(error);
+
+            profile.innerHTML = `
+                <p class="error">
+                    Unable to load contestant details.
+                    Please try again later.
+                </p>
+            `;
+        }
+    );
+
+
+    /* ================= PUBLIC VOTER RECORDS ================= */
+
+    onValue(
+        ref(
+            db,
+            "faceOfKulzzy/publicVoterRecords/" + contestantId
+        ),
+
+        snapshot => {
+            const data = snapshot.val() || {};
+
+            const voterList = Object.values(data)
+                .filter(record => record && record.approved !== false)
+                .sort(
+                    (a, b) =>
+                        Number(b.createdAt || 0) -
+                        Number(a.createdAt || 0)
+                );
+
+            if (!voterList.length) {
+                records.innerHTML = `
+                    <p class="muted">
+                        No approved voter records have been published yet.
+                    </p>
+                `;
+
+                return;
+            }
+
+            records.innerHTML = voterList.map(record => {
+                const voterName =
+                    escapeHTML(record.voterName || "Voter");
+
+                const votes = Number(record.votes || 0);
+
+                const dateTime = record.createdAt
+                    ? new Date(
+                        Number(record.createdAt)
+                    ).toLocaleString()
+                    : "Not available";
+
+                return `
+                    <div class="record">
+
+                        <strong>${voterName}</strong>
+
+                        <br>
+
+                        Votes recorded:
+                        ${Number.isFinite(votes) && votes >= 0
+                            ? votes.toLocaleString()
+                            : "0"}
+
+                        <br>
+
+                        <span class="muted">
+                            Date/time: ${escapeHTML(dateTime)}
+                        </span>
+
+                    </div>
+                `;
+            }).join("");
+        },
+
+        error => {
+            console.error(error);
+
+            records.innerHTML = `
+                <p class="error">
+                    Unable to load voter records.
+                    Please try again later.
+                </p>
+            `;
+        }
+    );
+}
+
+</script>
+
+</body>
+</html>

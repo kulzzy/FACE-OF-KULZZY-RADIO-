@@ -1036,11 +1036,28 @@ async function startPayment() {
     payNow.disabled = false;
     payNow.textContent = "CONTINUE TO PAYMENT";
 
-    voteMessage.textContent =
-      "Unable to save your request or open payment.html. " +
-      "Please check your internet connection and try again.";
+    const errorCode = error?.code || "unknown";
+
+    if (
+      errorCode === "PERMISSION_DENIED" ||
+      errorCode.includes("permission-denied")
+    ) {
+      voteMessage.textContent =
+        "Firebase denied the request. The database rules " +
+        "must allow public submissions to pendingVoteRequests.";
+    } else if (
+      errorCode.includes("network") ||
+      errorCode.includes("unavailable")
+    ) {
+      voteMessage.textContent =
+        "Network error connecting to Firebase. Check your " +
+        "internet connection and try again.";
+    } else {
+      voteMessage.textContent =
+        "Request failed: " + errorCode +
+        ". Please try again.";
+    }
   }
-}
 
 
 /* =====================================================

@@ -1,3 +1,8 @@
+/* =====================================================
+   FACE OF KULZZY RADIO 2026
+   PENDING PAYMENT QUEUE & VOTE APPROVAL
+   ===================================================== */
+
 import {
   getApp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -11,9 +16,13 @@ import {
   getDatabase,
   ref,
   onValue,
-  push,
   update
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+
+/* =====================================================
+   CONFIGURATION
+   ===================================================== */
 
 const app = getApp();
 const auth = getAuth(app);
@@ -21,392 +30,754 @@ const db = getDatabase(app);
 
 const ADMIN_EMAIL = "dstnewz.ng@gmail.com";
 const ROOT = "faceOfKulzzy";
+const VOTE_UNIT = 100;
+
+
+/* =====================================================
+   DATA
+   ===================================================== */
 
 let contestants = {};
 let officialVotes = {};
-let selectedId = "";
-let submitting = false;
+let pendingRequests = {};
+
+let queueStarted = false;
+let approvingRequests = new Set();
+
+
+/* =====================================================
+   HELPERS
+   ===================================================== */
 
 const $ = id => document.getElementById(id);
 
-function safe(value) {
-  return String(value ?? "").replace(/[&<>"']/g, c => ({
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, character => ({
     "&": "&amp;",
     "<": "&lt;",
     ">": "&gt;",
     '"': "&quot;",
     "'": "&#039;"
-  })[c]);
+  })[character]);
 }
 
-function showMessage(message, error = false) {
-  const element = $("voteAdminStatus");
+
+function money(value) {
+  return "₦" + Number(value || 0).toLocaleString("en-NG");
+}
+
+
+function formatDate(value) {
+  const timestamp = Number(value);
+
+  if (!Number.isFinite(timestamp) || timestamp <= 0) {
+    return "Date unavailable";
+  }
+
+  return new Date(timestamp).toLocaleString("en-NG");
+}
+
+
+function setStatus(message, error = false) {
+  const element = $("pendingQueueStatus");
+
   if (!element) return;
+
   element.textContent = message;
-  element.style.color = error ? "#ff9999" : "#ffd700";
+
+  element.style.color = error
+    ? "#ff9999"
+    : "#ffd700";
 }
 
-function createPanel() {
-  if ($("manualVotePanel")) return;
+
+/* =====================================================
+   CREATE ADMIN QUEUE
+   ===================================================== */
+
+function createQueuePanel() {
+  if ($("pendingVotePanel")) return;
 
   const panel = document.createElement("section");
-  panel.id = "manualVotePanel";
+
+  panel.id = "pendingVotePanel";
   panel.className = "panel";
 
   panel.innerHTML = `
-    <h2>🗳️ MANUAL VOTE APPROVAL</h2>
+    <h2>💳 PENDING PAYMENT APPROVALS</h2>
 
-    <p style="color:#c8d3e5;line-height:1.6;margin-bottom:16px">
-      Only approve votes after independently confirming payment.
-      ₦100 = 1 vote. Payment is not verified automatically.
+    <p style="
+      color:#c8d3e5;
+      line-height:1.7;
+      margin-bottom:18px
+    ">
+      Review supporter requests below. Independently verify
+      the payment in your payment account before approving.
+      Only the amount actually received should be approved.
+      Every ₦100 equals one vote.
     </p>
 
-    <label for="voteContestant">Select contestant</label>
-    <select id="voteContestant"
-      style="width:100%;padding:14px;border-radius:10px;
-      background:#06122a;color:white;border:1px solid #29466f">
-    </select>
-
-    <br><br>
-
-    <label for="voteVoterName">Voter's public name</label>
-    <input id="voteVoterName" type="text"
-      placeholder="Name to display publicly">
-
-    <br><br>
-
-    <label for="voteVoterEmail">Voter's private email</label>
-    <input id="voteVoterEmail" type="email"
-      placeholder="Private email address">
-
-    <br><br>
-
-    <label for="votePaymentAmount">Confirmed payment amount (₦)</label>
-    <input id="votePaymentAmount" type="number"
-      min="100" step="100" inputmode="numeric"
-      placeholder="e.g. 1000">
-
-    <br><br>
-
-    <label for="voteQuantity">Votes to approve</label>
-    <input id="voteQuantity" type="number"
-      min="1" step="1" inputmode="numeric"
-      placeholder="Number of votes">
-
-    <br><br>
-
-    <label for="votePaymentReference">
-      Payment reference (optional)
-    </label>
-    <input id="votePaymentReference" type="text"
-      placeholder="Transaction reference">
-
-    <br><br>
-
-    <label style="display:flex;gap:10px;align-items:flex-start">
-      <input id="votePaymentConfirmed" type="checkbox"
-        style="width:20px;height:20px;flex-shrink:0">
-      I have independently confirmed that this payment was received.
-    </label>
-
-    <div class="actions">
-      <button id="approveVotesBtn" class="primary" type="button">
-        APPROVE AND RECORD VOTES
-      </button>
-      <button id="shareVoteLinkBtn" class="secondary" type="button">
-        GET CONTESTANT SHARE LINK
-      </button>
+    <div id="pendingQueueStatus"
+      class="status"
+      aria-live="polite">
+      Loading pending requests...
     </div>
 
-    <div id="voteAdminStatus" class="status" aria-live="polite"></div>
-
-    <div id="voteShareLinkBox"
-      style="display:none;margin-top:12px;overflow-wrap:anywhere">
-      <label>Contestant voter-record link</label>
-      <input id="voteShareLink" type="text" readonly>
-      <button id="copyVoteLinkBtn" class="secondary"
-        type="button" style="margin-top:10px">
-        COPY LINK
-      </button>
-    </div>
+    <div id="pendingRequestList"></div>
   `;
 
   $("adminPanel").prepend(panel);
-
-  $("voteContestant").addEventListener("change", event => {
-    selectedId = event.target.value;
-    showMessage("");
-  });
-
-  $("votePaymentAmount").addEventListener("input", () => {
-    const amount = Number($("votePaymentAmount").value);
-
-    if (Number.isSafeInteger(amount) && amount >= 100 && amount % 100 === 0) {
-      $("voteQuantity").value = amount / 100;
-    } else {
-      $("voteQuantity").value = "";
-    }
-  });
-
-  $("voteQuantity").addEventListener("input", () => {
-    const votes = Number($("voteQuantity").value);
-
-    if (Number.isSafeInteger(votes) && votes >= 1) {
-      $("votePaymentAmount").value = votes * 100;
-    }
-  });
-
-  $("approveVotesBtn").addEventListener("click", approveVotes);
-  $("shareVoteLinkBtn").addEventListener("click", createShareLink);
-  $("copyVoteLinkBtn").addEventListener("click", copyShareLink);
 }
 
-function loadVoteContestants() {
+
+/* =====================================================
+   WAIT FOR EXISTING ADMIN PANEL
+   ===================================================== */
+
+function startQueueWhenReady() {
+  if (queueStarted) return;
+
+  const adminPanel = $("adminPanel");
+
+  if (!adminPanel || adminPanel.classList.contains("hidden")) {
+    return;
+  }
+
+  queueStarted = true;
+
+  createQueuePanel();
+  listenForContestants();
+  listenForOfficialVotes();
+  listenForPendingRequests();
+}
+
+
+/* =====================================================
+   LOAD CONTESTANTS
+   ===================================================== */
+
+function listenForContestants() {
   onValue(
     ref(db, `${ROOT}/contestants`),
+
     snapshot => {
       contestants = snapshot.val() || {};
-      renderVoteContestants();
+      renderPendingRequests();
     },
+
     error => {
-      console.error(error);
-      showMessage("Unable to load contestants: " + error.message, true);
+      console.error("Contestant loading error:", error);
+
+      setStatus(
+        "Unable to load contestants: " + error.message,
+        true
+      );
     }
   );
+}
 
+
+/* =====================================================
+   LOAD OFFICIAL VOTES
+   ===================================================== */
+
+function listenForOfficialVotes() {
   onValue(
     ref(db, `${ROOT}/officialVotes`),
+
     snapshot => {
       officialVotes = snapshot.val() || {};
+      renderPendingRequests();
     },
+
     error => {
-      console.error(error);
-      showMessage("Unable to load official vote totals.", true);
+      console.error("Official vote loading error:", error);
+
+      setStatus(
+        "Unable to load official vote totals.",
+        true
+      );
     }
   );
 }
 
-function renderVoteContestants() {
-  const select = $("voteContestant");
-  if (!select) return;
 
-  const previous = selectedId || select.value;
+/* =====================================================
+   LOAD PENDING REQUESTS
+   ===================================================== */
 
-  const list = Object.entries(contestants)
-    .filter(([, contestant]) => contestant && contestant.active !== false)
-    .sort((a, b) =>
-      String(a[1].number || "").localeCompare(
-        String(b[1].number || ""),
-        undefined,
-        { numeric: true }
-      )
-    );
+function listenForPendingRequests() {
+  onValue(
+    ref(db, `${ROOT}/pendingVoteRequests`),
 
-  select.innerHTML = '<option value="">Choose a contestant</option>';
+    snapshot => {
+      pendingRequests = snapshot.val() || {};
+      renderPendingRequests();
+    },
 
-  list.forEach(([id, contestant]) => {
-    const option = document.createElement("option");
-    option.value = id;
-    option.textContent =
-      `#${contestant.number || ""} — ${contestant.name || "Contestant"}`;
-    select.appendChild(option);
-  });
+    error => {
+      console.error("Pending request loading error:", error);
 
-  if (list.some(([id]) => id === previous)) {
-    select.value = previous;
-    selectedId = previous;
-  } else {
-    selectedId = "";
-  }
+      setStatus(
+        "Unable to load requests. Check Firebase database permissions.",
+        true
+      );
+    }
+  );
 }
 
-async function approveVotes() {
-  if (submitting) return;
+
+/* =====================================================
+   DISPLAY PENDING REQUESTS
+   ===================================================== */
+
+function renderPendingRequests() {
+  const container = $("pendingRequestList");
+
+  if (!container) return;
+
+  const entries = Object.entries(pendingRequests)
+    .filter(([, request]) =>
+      request &&
+      (
+        request.status === "pending" ||
+        request.status === undefined ||
+        request.status === ""
+      )
+    )
+    .sort((a, b) =>
+      Number(a[1].createdAt || 0) -
+      Number(b[1].createdAt || 0)
+    );
+
+  if (!entries.length) {
+    container.innerHTML = `
+      <div style="
+        margin-top:18px;
+        padding:20px;
+        border:1px solid #29466f;
+        border-radius:12px;
+        color:#b9c6da;
+        line-height:1.7
+      ">
+        No pending requests found.
+
+        <br><br>
+
+        When the public page successfully saves a support
+        request, it will appear here automatically.
+      </div>
+    `;
+
+    setStatus("Pending requests: 0");
+
+    return;
+  }
+
+  setStatus(
+    "Pending requests: " + entries.length
+  );
+
+  container.innerHTML = entries.map(
+    ([requestId, request]) => {
+      const contestant =
+        contestants[request.contestantId];
+
+      const requestedAmount =
+        Number(request.requestedAmount || 0);
+
+      const requestedVotes =
+        Number(
+          request.requestedVotes ||
+          (
+            requestedAmount >= VOTE_UNIT
+              ? requestedAmount / VOTE_UNIT
+              : 0
+          )
+        );
+
+      const contestantName =
+        request.contestantName ||
+        contestant?.name ||
+        "Unknown contestant";
+
+      const contestantNumber =
+        request.contestantNumber ||
+        contestant?.number ||
+        "";
+
+      const isApproving =
+        approvingRequests.has(requestId);
+
+      return `
+        <article style="
+          margin-top:18px;
+          padding:18px;
+          border:1px solid rgba(255,215,0,.35);
+          border-radius:14px;
+          background:#06122a;
+          overflow-wrap:anywhere
+        ">
+
+          <h3 style="
+            color:#ffd700;
+            margin:0 0 14px
+          ">
+            ${escapeHTML(contestantName)}
+          </h3>
+
+          <div style="
+            line-height:1.9;
+            color:#dce5f5;
+            font-size:14px
+          ">
+
+            <div>
+              <strong>Contestant number:</strong>
+              ${escapeHTML(contestantNumber || "Not provided")}
+            </div>
+
+            <div>
+              <strong>Supporter:</strong>
+              ${escapeHTML(request.voterName || "Not provided")}
+            </div>
+
+            <div>
+              <strong>Supporter email:</strong>
+              ${escapeHTML(request.voterEmail || "Not provided")}
+            </div>
+
+            <div>
+              <strong>Requested payment:</strong>
+              ${money(requestedAmount)}
+            </div>
+
+            <div>
+              <strong>Requested votes:</strong>
+              ${requestedVotes.toLocaleString()}
+            </div>
+
+            <div>
+              <strong>Submitted:</strong>
+              ${escapeHTML(formatDate(request.createdAt))}
+            </div>
+
+            <div>
+              <strong>Request ID:</strong>
+              ${escapeHTML(requestId)}
+            </div>
+
+          </div>
+
+          <hr style="
+            border:0;
+            border-top:1px solid #29466f;
+            margin:18px 0
+          ">
+
+          <label
+            for="confirmedAmount-${escapeHTML(requestId)}"
+            style="
+              display:block;
+              color:#ffd700;
+              font-weight:bold;
+              margin-bottom:9px
+            "
+          >
+            Amount actually received (₦)
+          </label>
+
+          <input
+            data-confirmed-amount="${escapeHTML(requestId)}"
+            id="confirmedAmount-${escapeHTML(requestId)}"
+            type="number"
+            min="100"
+            step="100"
+            inputmode="numeric"
+            value="${requestedAmount >= 100 ? requestedAmount : ""}"
+            placeholder="Enter confirmed amount"
+            ${isApproving ? "disabled" : ""}
+          >
+
+          <div style="
+            margin-top:10px;
+            color:#ffd700;
+            font-weight:bold
+          "
+          data-calculated-votes="${escapeHTML(requestId)}">
+            ${requestedAmount >= 100 &&
+              requestedAmount % VOTE_UNIT === 0
+              ? requestedVotes.toLocaleString() +
+                " votes if this amount is verified"
+              : "Enter the amount actually received"}
+          </div>
+
+          <button
+            type="button"
+            class="primary"
+            data-approve-request="${escapeHTML(requestId)}"
+            style="
+              width:100%;
+              margin-top:16px;
+              line-height:1.5
+            "
+            ${isApproving ? "disabled" : ""}
+          >
+            ${isApproving
+              ? "PROCESSING..."
+              : "VERIFY PAYMENT & APPROVE VOTES"}
+          </button>
+
+        </article>
+      `;
+    }
+  ).join("");
+
+
+  /* Update vote preview when amount changes */
+
+  container.querySelectorAll(
+    "[data-confirmed-amount]"
+  ).forEach(input => {
+    input.addEventListener("input", () => {
+      const requestId = input.dataset.confirmedAmount;
+
+      const amount = Number(input.value);
+
+      const preview = container.querySelector(
+        `[data-calculated-votes="${requestId}"]`
+      );
+
+      if (!preview) return;
+
+      if (
+        Number.isSafeInteger(amount) &&
+        amount >= VOTE_UNIT &&
+        amount % VOTE_UNIT === 0
+      ) {
+        preview.textContent =
+          (amount / VOTE_UNIT).toLocaleString() +
+          " votes if this amount is verified";
+      } else {
+        preview.textContent =
+          "Enter a valid amount in multiples of ₦100";
+      }
+    });
+  });
+
+
+  /* Approve selected request */
+
+  container.querySelectorAll(
+    "[data-approve-request]"
+  ).forEach(button => {
+    button.addEventListener("click", () => {
+      approvePendingRequest(
+        button.dataset.approveRequest
+      );
+    });
+  });
+}
+
+
+/* =====================================================
+   VERIFY AND APPROVE REQUEST
+   ===================================================== */
+
+async function approvePendingRequest(requestId) {
+  if (approvingRequests.has(requestId)) return;
 
   const user = auth.currentUser;
 
-  if (!user || user.email?.toLowerCase() !== ADMIN_EMAIL) {
-    showMessage("Administrator login required.", true);
+  if (
+    !user ||
+    user.email?.toLowerCase() !== ADMIN_EMAIL.toLowerCase()
+  ) {
+    setStatus(
+      "The authorized administrator must be logged in.",
+      true
+    );
+
     return;
   }
 
-  const contestantId = $("voteContestant").value;
+  const request = pendingRequests[requestId];
+
+  if (!request) {
+    setStatus(
+      "This request no longer exists. Refresh the page.",
+      true
+    );
+
+    return;
+  }
+
+  if (request.status !== "pending") {
+    setStatus(
+      "This request is not pending and cannot be approved again.",
+      true
+    );
+
+    return;
+  }
+
+  const contestantId = request.contestantId;
   const contestant = contestants[contestantId];
-  const voterName = $("voteVoterName").value.trim();
-  const voterEmail = $("voteVoterEmail").value.trim();
-  const amount = Number($("votePaymentAmount").value);
-  const votes = Number($("voteQuantity").value);
-  const paymentReference = $("votePaymentReference").value.trim();
-  const confirmed = $("votePaymentConfirmed").checked;
 
   if (!contestant || !contestantId) {
-    showMessage("Select a contestant.", true);
+    setStatus(
+      "The contestant for this request could not be found.",
+      true
+    );
+
     return;
   }
 
-  if (!voterName) {
-    showMessage("Enter the voter's name.", true);
-    return;
-  }
+  const amountInput = document.querySelector(
+    `[data-confirmed-amount="${requestId}"]`
+  );
 
-  if (!voterEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(voterEmail)) {
-    showMessage("Enter a valid private email address.", true);
-    return;
-  }
+  const amount = Number(amountInput?.value);
 
   if (
     !Number.isSafeInteger(amount) ||
-    amount < 100 ||
-    amount % 100 !== 0
+    amount < VOTE_UNIT ||
+    amount % VOTE_UNIT !== 0
   ) {
-    showMessage("Payment amount must be at least ₦100 in multiples of ₦100.", true);
+    setStatus(
+      "Enter the actual amount received, in multiples of ₦100.",
+      true
+    );
+
+    amountInput?.focus();
+
     return;
   }
+
+  const votes = amount / VOTE_UNIT;
+
+  if (!Number.isSafeInteger(votes) || votes < 1) {
+    setStatus("The calculated vote quantity is invalid.", true);
+    return;
+  }
+
+  const requestedAmount =
+    Number(request.requestedAmount || 0);
 
   if (
-    !Number.isSafeInteger(votes) ||
-    votes < 1 ||
-    votes * 100 !== amount
+    requestedAmount > 0 &&
+    amount > requestedAmount
   ) {
-    showMessage("Vote quantity must match the payment amount.", true);
+    setStatus(
+      "The confirmed amount cannot exceed the requested amount. " +
+      "Check the request before proceeding.",
+      true
+    );
+
     return;
   }
 
-  if (!confirmed) {
-    showMessage("Confirm that you have received the payment first.", true);
-    return;
-  }
+  const confirmed = confirm(
+    "Have you independently verified that this payment " +
+    "was actually received?\n\n" +
+    "Contestant: " + (contestant.name || "") + "\n" +
+    "Supporter: " + (request.voterName || "") + "\n" +
+    "Confirmed amount: " + money(amount) + "\n" +
+    "Votes to approve: " + votes.toLocaleString() + "\n\n" +
+    "Only continue if payment has been verified."
+  );
 
-  const currentOfficial = Number(
-    officialVotes[contestantId]?.votes ??
+  if (!confirmed) return;
+
+  const officialEntry = officialVotes[contestantId];
+
+  const currentTotal = Number(
+    officialEntry?.votes ??
     contestant.votes ??
     0
   );
 
   if (
-    !Number.isSafeInteger(currentOfficial) ||
-    currentOfficial < 0 ||
-    !Number.isSafeInteger(currentOfficial + votes)
+    !Number.isSafeInteger(currentTotal) ||
+    currentTotal < 0 ||
+    !Number.isSafeInteger(currentTotal + votes)
   ) {
-    showMessage("The existing vote total is invalid.", true);
+    setStatus(
+      "The existing official vote total is invalid.",
+      true
+    );
+
     return;
   }
 
-  const newTotal = currentOfficial + votes;
+  const newTotal = currentTotal + votes;
   const now = Date.now();
-  const recordId = push(ref(db, `${ROOT}/publicVoterRecords/${contestantId}`)).key;
 
-  if (!recordId) {
-    showMessage("Unable to create the voter record.", true);
-    return;
-  }
+  /*
+    Create a unique record ID.
+    The request ID itself identifies the approval operation.
+  */
+
+  const recordId = requestId;
 
   const publicRecord = {
-    voterName,
-    votes,
+    voterName: request.voterName || "Supporter",
+    votes: votes,
+    paymentAmount: amount,
     createdAt: now,
     approved: true
   };
 
   const privateRecord = {
-    voterName,
-    voterEmail,
+    requestId: requestId,
+    contestantId: contestantId,
+    voterName: request.voterName || "",
+    voterEmail: request.voterEmail || "",
     paymentAmount: amount,
-    paymentReference,
-    votes,
-    contestantId,
-    createdAt: now,
-    approvedBy: user.email,
-    approved: true
+    requestedAmount: requestedAmount,
+    votes: votes,
+    approved: true,
+    approvedAt: now,
+    approvedBy: user.email
   };
+
+  /*
+    Keep the official totals and request status in one
+    Firebase multi-location update.
+  */
 
   const changes = {};
 
-  changes[`${ROOT}/contestants/${contestantId}/votes`] = newTotal;
-  changes[`${ROOT}/officialVotes/${contestantId}`] = {
+  changes[
+    `${ROOT}/contestants/${contestantId}/votes`
+  ] = newTotal;
+
+  changes[
+    `${ROOT}/contestants/${contestantId}/money`
+  ] = Number(contestant.money || 0) + amount;
+
+  changes[
+    `${ROOT}/officialVotes/${contestantId}`
+  ] = {
     votes: newTotal,
     updatedAt: now
   };
 
-  changes[`${ROOT}/publicVoterRecords/${contestantId}/${recordId}`] =
-    publicRecord;
+  changes[
+    `${ROOT}/publicVoterRecords/${contestantId}/${recordId}`
+  ] = publicRecord;
 
-  changes[`${ROOT}/voterRecordPrivateDetails/${contestantId}/${recordId}`] =
-    privateRecord;
+  changes[
+    `${ROOT}/voterRecordPrivateDetails/${contestantId}/${recordId}`
+  ] = privateRecord;
 
-  submitting = true;
-  $("approveVotesBtn").disabled = true;
-  showMessage("Recording approved votes...");
+  changes[
+    `${ROOT}/pendingVoteRequests/${requestId}/status`
+  ] = "approved";
+
+  changes[
+    `${ROOT}/pendingVoteRequests/${requestId}/confirmedAmount`
+  ] = amount;
+
+  changes[
+    `${ROOT}/pendingVoteRequests/${requestId}/approvedVotes`
+  ] = votes;
+
+  changes[
+    `${ROOT}/pendingVoteRequests/${requestId}/approvedAt`
+  ] = now;
+
+  changes[
+    `${ROOT}/pendingVoteRequests/${requestId}/approvedBy`
+  ] = user.email;
+
+  changes[
+    `${ROOT}/pendingVoteRequests/${requestId}/publicRecordId`
+  ] = recordId;
+
+
+  approvingRequests.add(requestId);
+  renderPendingRequests();
+
+  setStatus("Saving the approved vote record...");
 
   try {
     await update(ref(db), changes);
 
-    showMessage(
-      `SUCCESS: ${votes.toLocaleString()} votes approved for ` +
-      `${contestant.name}. New official total: ${newTotal.toLocaleString()}.`
-    );
+    /*
+      The realtime listener will remove the approved request
+      from the pending list.
+    */
 
-    $("voteVoterName").value = "";
-    $("voteVoterEmail").value = "";
-    $("votePaymentAmount").value = "";
-    $("voteQuantity").value = "";
-    $("votePaymentReference").value = "";
-    $("votePaymentConfirmed").checked = false;
+    setStatus(
+      "SUCCESS: " +
+      votes.toLocaleString() +
+      " votes approved for " +
+      (contestant.name || "the contestant") +
+      ". New official total: " +
+      newTotal.toLocaleString() + "."
+    );
 
   } catch (error) {
-    console.error(error);
-    showMessage(
-      "Could not record votes: " + error.message +
-      ". Check your Firebase database rules.",
+    console.error("Vote approval error:", error);
+
+    setStatus(
+      "Could not save the approval: " +
+      error.message +
+      ". No success should be assumed; check Firebase.",
       true
     );
+
   } finally {
-    submitting = false;
-    $("approveVotesBtn").disabled = false;
+    approvingRequests.delete(requestId);
+    renderPendingRequests();
   }
 }
 
-function createShareLink() {
-  const contestantId = $("voteContestant").value;
 
-  if (!contestantId) {
-    showMessage("Select a contestant first.", true);
-    return;
-  }
-
-  const link = new URL("contestant-voters.html", window.location.href);
-  link.searchParams.set("id", contestantId);
-
-  $("voteShareLink").value = link.href;
-  $("voteShareLinkBox").style.display = "block";
-  showMessage("Contestant voter-record link created.");
-}
-
-async function copyShareLink() {
-  const input = $("voteShareLink");
-
-  if (!input.value) return;
-
-  try {
-    await navigator.clipboard.writeText(input.value);
-    showMessage("Share link copied.");
-  } catch {
-    input.focus();
-    input.select();
-    showMessage("Select the link above and copy it manually.");
-  }
-}
+/* =====================================================
+   ADMIN LOGIN STATE
+   ===================================================== */
 
 onAuthStateChanged(auth, user => {
-  if (!user || user.email?.toLowerCase() !== ADMIN_EMAIL) {
-    $("manualVotePanel")?.remove();
+  if (
+    !user ||
+    user.email?.toLowerCase() !== ADMIN_EMAIL.toLowerCase()
+  ) {
+    $("pendingVotePanel")?.remove();
+    queueStarted = false;
     return;
   }
 
-  if (!$("adminPanel") || $("adminPanel").classList.contains("hidden")) {
-    return;
-  }
+  /*
+    The existing face-admin.js controls visibility of adminPanel.
+    Wait briefly for its login handler to reveal that panel.
+  */
 
-  createPanel();
-  loadVoteContestants();
+  let attempts = 0;
+
+  const wait = setInterval(() => {
+    attempts++;
+
+    const adminPanel = $("adminPanel");
+
+    if (
+      adminPanel &&
+      !adminPanel.classList.contains("hidden")
+    ) {
+      clearInterval(wait);
+      startQueueWhenReady();
+      return;
+    }
+
+    if (attempts >= 50) {
+      clearInterval(wait);
+
+      console.warn(
+        "Admin panel did not become visible. " +
+        "Please log in again."
+      );
+    }
+  }, 100);
 });

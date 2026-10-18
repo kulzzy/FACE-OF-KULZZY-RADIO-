@@ -10,39 +10,25 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{font-family:Arial,Helvetica,sans-serif;background:#06122a;color:#fff;min-height:100vh}
-
-.hero{
-min-height:430px;display:flex;align-items:center;justify-content:center;
-text-align:center;padding:55px 20px 45px;
-background:radial-gradient(circle at top,rgba(255,215,0,.18),transparent 45%),linear-gradient(135deg,#020817,#07152f 55%,#0d2146);
-border-bottom:2px solid #ffd700
-}
+.hero{min-height:430px;display:flex;align-items:center;justify-content:center;text-align:center;padding:55px 20px 45px;background:radial-gradient(circle at top,rgba(255,215,0,.18),transparent 45%),linear-gradient(135deg,#020817,#07152f 55%,#0d2146);border-bottom:2px solid #ffd700}
 .crown{font-size:60px;margin-bottom:10px}
 .hero h1{font-size:clamp(38px,8vw,75px);line-height:.95;color:#ffd700;font-weight:1000;text-shadow:0 5px 20px rgba(0,0,0,.5)}
 .hero h2{margin-top:20px;font-size:clamp(20px,4vw,32px);letter-spacing:4px}
 .hero p{max-width:700px;margin:20px auto 0;color:#c8d3e5;line-height:1.7}
-
 .prize-wrapper{width:100%;background:#ffd700;color:#06122a;border-bottom:2px solid #fff}
 .prize-track{display:flex;width:100%;flex-wrap:wrap;justify-content:center}
 .prize{padding:17px 20px;font-size:15px;font-weight:1000;text-align:center}
-
 .container{width:100%;max-width:1200px;margin:auto;padding:50px 15px}
 .section-title{text-align:center;margin-bottom:30px}
 .section-title h2{color:#ffd700;font-size:clamp(28px,5vw,42px);font-weight:1000}
 .section-title p{margin-top:10px;color:#aebbd0}
-
-.leaderboard{
-background:linear-gradient(145deg,#0b1d3d,#061127);
-border:1px solid rgba(255,215,0,.3);border-radius:20px;
-padding:20px;margin-bottom:55px
-}
+.leaderboard{background:linear-gradient(145deg,#0b1d3d,#061127);border:1px solid rgba(255,215,0,.3);border-radius:20px;padding:20px;margin-bottom:55px}
 .leaderboard h3{text-align:center;color:#ffd700;margin-bottom:15px;font-size:20px}
 .rank{display:flex;align-items:center;gap:12px;padding:14px 8px;border-bottom:1px solid rgba(255,255,255,.08)}
 .rank:last-child{border-bottom:0}
 .rank-number{width:40px;min-width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:#ffd700;color:#06122a;font-weight:1000}
 .rank-name{flex:1;font-weight:bold;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rank-votes{color:#ffd700;font-weight:1000;white-space:nowrap}
-
 .contestants{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:25px}
 .card{overflow:hidden;background:linear-gradient(145deg,#0c2043,#061126);border:1px solid rgba(255,215,0,.25);border-radius:22px;box-shadow:0 15px 40px rgba(0,0,0,.3);transition:transform .3s,border-color .3s}
 .card:hover{transform:translateY(-6px);border-color:#ffd700}
@@ -56,7 +42,6 @@ padding:20px;margin-bottom:55px
 .vote-button:hover{background:#fff}
 .vote-button:disabled{opacity:.6;cursor:not-allowed}
 .empty{text-align:center;padding:30px 20px;color:#9baac0;grid-column:1/-1}
-
 .vote-modal{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.78);backdrop-filter:blur(8px)}
 .vote-modal.active{display:flex}
 .vote-box{width:100%;max-width:450px;max-height:calc(100vh - 40px);overflow:auto;background:linear-gradient(145deg,#0c2145,#061127);border:1px solid rgba(255,215,0,.4);border-radius:22px;padding:25px;box-shadow:0 30px 80px rgba(0,0,0,.6)}
@@ -71,13 +56,9 @@ padding:20px;margin-bottom:55px
 .pay-now{background:#ffd700;color:#06122a}
 .cancel-vote{background:#294568;color:#fff}
 .vote-message{margin-top:15px;text-align:center;min-height:20px;color:#c8d3e5;line-height:1.5;word-break:break-word}
-
 footer{text-align:center;padding:35px 20px;border-top:1px solid rgba(255,215,0,.2);color:#8290a8;line-height:1.7}
 footer strong{color:#ffd700}
-
-@media(max-width:850px){
-.contestants{grid-template-columns:repeat(2,minmax(0,1fr))}
-}
+@media(max-width:850px){.contestants{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){
 .contestants{grid-template-columns:1fr}
 .hero{min-height:390px;padding:45px 15px 35px}
@@ -115,18 +96,14 @@ footer strong{color:#ffd700}
 </div>
 
 <main class="container">
-
 <section>
 <div class="section-title">
 <h2>🏆 LIVE LEADERBOARD</h2>
 <p>Contestants are ranked by verified votes.</p>
 </div>
-
 <div class="leaderboard">
 <h3>CURRENT RANKING</h3>
-<div id="leaderboard">
-<div class="empty">Loading leaderboard...</div>
-</div>
+<div id="leaderboard"><div class="empty">Loading leaderboard...</div></div>
 </div>
 </section>
 
@@ -135,24 +112,19 @@ footer strong{color:#ffd700}
 <h2>👑 MEET THE CONTESTANTS</h2>
 <p>Choose your favourite contestant and support her journey.</p>
 </div>
-
 <div id="contestants" class="contestants">
 <div class="empty">Loading contestants...</div>
 </div>
 </section>
-
 </main>
 
 <div id="voteModal" class="vote-modal">
 <div class="vote-box">
-
 <h2>❤️ SUPPORT CONTESTANT</h2>
 <p id="selectedContestant">Contestant</p>
 
 <input id="voterName" class="vote-name" type="text" placeholder="Your name" autocomplete="name">
-
 <input id="voterEmail" class="vote-email" type="email" placeholder="Your email" autocomplete="email">
-
 <input id="voteAmount" class="vote-input" type="number" min="100" step="100" inputmode="numeric" placeholder="Enter amount e.g. 1000">
 
 <div id="votePreview" class="vote-preview">₦100 = 1 vote</div>
@@ -162,8 +134,7 @@ footer strong{color:#ffd700}
 <button id="payNow" class="pay-now" type="button">CONTINUE TO PAYMENT</button>
 </div>
 
-<div id="voteMessage" class="vote-message"></div>
-
+<div id="voteMessage" class="vote-message" aria-live="polite"></div>
 </div>
 </div>
 
@@ -178,7 +149,9 @@ import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase
 import {
   getDatabase,
   ref,
-  onValue
+  onValue,
+  push,
+  set
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 const firebaseConfig = {
@@ -194,14 +167,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-
-/*
-  PAYMENT PAGE:
-  payment.html is in the same GitHub repository as index.html.
-  Change the payment link inside payment.html when needed.
-*/
 const PAYMENT_PAGE = new URL("payment.html", window.location.href).href;
-
 const FACE_EVENT_NAME = "FACE OF KULZZY RADIO 2026";
 const VOTE_UNIT = 100;
 
@@ -221,78 +187,43 @@ let contestants = [];
 let selectedContestant = null;
 let officialVoteTotals = {};
 
-/*
-  CONTESTANTS:
-  Loaded from Firebase in real time.
-*/
-const contestantsReference = ref(db, "faceOfKulzzy/contestants");
+onValue(ref(db, "faceOfKulzzy/contestants"), snapshot => {
+  const data = snapshot.val() || {};
+  contestants = Object.entries(data)
+    .map(([id, contestant]) => ({id, ...contestant}))
+    .filter(contestant => contestant.active !== false);
+  refreshVoteDisplays();
+}, error => {
+  console.error("Firebase contestant error:", error);
+  contestantsElement.innerHTML = '<div class="empty">Unable to load contestants. Please try again later.</div>';
+  leaderboardElement.innerHTML = '<div class="empty">Unable to load leaderboard.</div>';
+});
 
-onValue(
-  contestantsReference,
-  snapshot => {
-    const data = snapshot.val() || {};
-
-    contestants = Object.entries(data)
-      .map(([id, contestant]) => ({
-        id,
-        ...contestant
-      }))
-      .filter(contestant => contestant.active !== false);
-
-    refreshVoteDisplays();
-  },
-  error => {
-    console.error("Firebase contestant error:", error);
-
-    contestantsElement.innerHTML =
-      '<div class="empty">Unable to load contestants. Please try again later.</div>';
-
-    leaderboardElement.innerHTML =
-      '<div class="empty">Unable to load leaderboard.</div>';
-  }
-);
-
-/*
-  OFFICIAL VOTES:
-  Read the totals approved by the administrator.
-  This page never writes votes.
-*/
-const officialVotesReference = ref(db, "faceOfKulzzy/officialVotes");
-
-onValue(
-  officialVotesReference,
-  snapshot => {
-    officialVoteTotals = snapshot.val() || {};
-    refreshVoteDisplays();
-  },
-  error => {
-    console.error("Official vote totals error:", error);
-
-    leaderboardElement.innerHTML =
-      '<div class="empty">Unable to load official vote totals.</div>';
-  }
-);
+onValue(ref(db, "faceOfKulzzy/officialVotes"), snapshot => {
+  officialVoteTotals = snapshot.val() || {};
+  refreshVoteDisplays();
+}, error => {
+  console.error("Official vote totals error:", error);
+  leaderboardElement.innerHTML = '<div class="empty">Unable to load official vote totals.</div>';
+});
 
 function getContestantVotes(contestant) {
   const entry = officialVoteTotals[contestant.id];
   const votes = Number(entry?.votes || 0);
-
   return Number.isSafeInteger(votes) && votes >= 0 ? votes : 0;
 }
 
 function refreshVoteDisplays() {
-  const rankedContestants = [...contestants].sort(
+  const ranked = [...contestants].sort(
     (a, b) => getContestantVotes(b) - getContestantVotes(a)
   );
-
-  displayLeaderboard(rankedContestants);
-  displayContestants(rankedContestants);
+  displayLeaderboard(ranked);
+  displayContestants(ranked);
 }
 
 function displayLeaderboard(list) {
   if (!list.length) {
-    leaderboardElement.innerHTML =
-      '<div class="empty">No contestants have been published yet.</div>';
+    leaderboardElement.innerHTML = '<div class="empty">No contestants have been published yet.</div>';
     return;
   }
 
@@ -307,53 +238,34 @@ function displayLeaderboard(list) {
 
 function displayContestants(list) {
   if (!list.length) {
-    contestantsElement.innerHTML =
-      '<div class="empty">Contestants will appear here soon.</div>';
+    contestantsElement.innerHTML = '<div class="empty">Contestants will appear here soon.</div>';
     return;
   }
 
   contestantsElement.innerHTML = list.map(contestant => `
     <article class="card">
       <div class="photo">
-        <img
-          src="${escapeAttribute(contestant.imageUrl || "")}"
-          alt="${escapeAttribute(contestant.name || "Contestant")}"
-          loading="lazy"
-          onerror="this.style.display='none';"
-        >
-        <div class="contestant-number">
-          CONTESTANT #${escapeHTML(contestant.number || "")}
-        </div>
+        <img src="${escapeAttribute(contestant.imageUrl || "")}"
+             alt="${escapeAttribute(contestant.name || "Contestant")}"
+             loading="lazy"
+             onerror="this.style.display='none';">
+        <div class="contestant-number">CONTESTANT #${escapeHTML(contestant.number || "")}</div>
       </div>
-
       <div class="info">
         <div class="name">${escapeHTML(contestant.name || "Contestant")}</div>
-
-        <div class="votes">
-          ❤️ ${getContestantVotes(contestant).toLocaleString()} VOTES
-        </div>
-
-        <button
-          class="vote-button"
-          data-id="${escapeAttribute(contestant.id)}"
-          type="button"
-        >❤️ VOTE FOR ME</button>
+        <div class="votes">❤️ ${getContestantVotes(contestant).toLocaleString()} VOTES</div>
+        <button class="vote-button" data-id="${escapeAttribute(contestant.id)}" type="button">❤️ VOTE FOR ME</button>
       </div>
     </article>
   `).join("");
 
   contestantsElement.querySelectorAll(".vote-button").forEach(button => {
-    button.addEventListener("click", () => {
-      openVotingModal(button.dataset.id);
-    });
+    button.addEventListener("click", () => openVotingModal(button.dataset.id));
   });
 }
 
 function openVotingModal(contestantId) {
-  selectedContestant = contestants.find(
-    contestant => contestant.id === contestantId
-  );
-
+  selectedContestant = contestants.find(c => c.id === contestantId);
   if (!selectedContestant) return;
 
   selectedContestantElement.textContent =
@@ -365,23 +277,18 @@ function openVotingModal(contestantId) {
   voteAmount.value = "";
   votePreview.textContent = "₦100 = 1 vote";
   voteMessage.textContent = "";
-
   payNow.disabled = false;
   payNow.style.display = "";
   payNow.textContent = "CONTINUE TO PAYMENT";
   cancelVote.textContent = "CANCEL";
-
   voteModal.classList.add("active");
-
   setTimeout(() => voterName.focus(), 100);
 }
 
 cancelVote.addEventListener("click", closeVotingModal);
 
 voteModal.addEventListener("click", event => {
-  if (event.target === voteModal) {
-    closeVotingModal();
-  }
+  if (event.target === voteModal) closeVotingModal();
 });
 
 function closeVotingModal() {
@@ -401,28 +308,28 @@ voteAmount.addEventListener("input", () => {
     votePreview.textContent = "₦100 = 1 vote";
     return;
   }
-
   if (amount < VOTE_UNIT) {
     votePreview.textContent = "Minimum voting amount is ₦100.";
     return;
   }
-
   if (amount % VOTE_UNIT !== 0) {
     votePreview.textContent = "Enter an amount in multiples of ₦100.";
     return;
   }
 
   const votes = amount / VOTE_UNIT;
-
-  votePreview.textContent =
-    "❤️ " + votes.toLocaleString() +
+  votePreview.textContent = "❤️ " + votes.toLocaleString() +
     " vote" + (votes === 1 ? "" : "s") +
     " for ₦" + amount.toLocaleString();
 });
 
+/*
+  Save the pending request before opening the payment page.
+  This does NOT count votes. Admin must verify the payment.
+*/
 payNow.addEventListener("click", startPayment);
 
-function startPayment() {
+async function startPayment() {
   if (!selectedContestant) {
     voteMessage.textContent = "Please select a contestant.";
     return;
@@ -464,111 +371,51 @@ function startPayment() {
   }
 
   payNow.disabled = true;
-  payNow.textContent = "OPENING PAYMENT...";
-  voteMessage.textContent = "Opening the official payment page...";
+  payNow.textContent = "SAVING REQUEST...";
+  voteMessage.textContent = "Saving your support request...";
 
   try {
-    /*
-      Open payment.html from this same repository.
-      Pass the voting details so payment.html can read them.
-    */
-    const paymentUrl = new URL(PAYMENT_PAGE);
+    const requestRef = push(ref(db, "faceOfKulzzy/pendingVoteRequests"));
+    const requestId = requestRef.key;
 
+    if (!requestId) throw new Error("Could not create a request number.");
+
+    await set(requestRef, {
+      requestId: requestId,
+      status: "pending",
+      contestantId: selectedContestant.id,
+      contestantName: selectedContestant.name || "",
+      contestantNumber: selectedContestant.number || "",
+      voterName: name,
+      voterEmail: email,
+      requestedAmount: amount,
+      requestedVotes: votes,
+      paymentProvider: "Selar",
+      createdAt: Date.now()
+    });
+
+    const paymentUrl = new URL(PAYMENT_PAGE);
     paymentUrl.searchParams.set("purpose", FACE_EVENT_NAME);
     paymentUrl.searchParams.set("event", FACE_EVENT_NAME);
     paymentUrl.searchParams.set("contestant", selectedContestant.id);
     paymentUrl.searchParams.set("contestant_id", selectedContestant.id);
-    paymentUrl.searchParams.set(
-      "contestant_name",
-      selectedContestant.name || ""
-    );
+    paymentUrl.searchParams.set("contestant_name", selectedContestant.name || "");
+    paymentUrl.searchParams.set("contestant_number", selectedContestant.number || "");
+    paymentUrl.searchParams.set("request_id", requestId);
     paymentUrl.searchParams.set("votes", String(votes));
     paymentUrl.searchParams.set("amount", String(amount));
     paymentUrl.searchParams.set("email", email);
     paymentUrl.searchParams.set("name", name);
-
-    paymentUrl.searchParams.set(
-      "return",
-      window.location.origin + window.location.pathname
-    );
+    paymentUrl.searchParams.set("return", window.location.origin + window.location.pathname);
 
     window.location.assign(paymentUrl.toString());
-
   } catch (error) {
-    console.error("Payment page error:", error);
-
+    console.error("Support request error:", error);
     payNow.disabled = false;
     payNow.textContent = "CONTINUE TO PAYMENT";
-
     voteMessage.textContent =
-      "Unable to open payment.html. Please try again.";
-  }
-}
-
-/*
-  PAYMENT RETURN:
-  A return status is not proof of successful payment.
-  Votes are only counted after administrator verification and approval.
-*/
-function handlePaymentReturn() {
-  const url = new URL(window.location.href);
-  const params = url.searchParams;
-  const status = String(params.get("status") || "").toLowerCase();
-
-  if (!status) return;
-
-  const contestantId =
-    params.get("contestant_id") || params.get("contestantId");
-
-  const returnedVotes = Number(params.get("votes") || 0);
-  const amount = Number(params.get("amount") || 0);
-
-  const returnedContestant = contestants.find(
-    contestant => contestant.id === contestantId
-  );
-
-  voteModal.classList.add("active");
-
-  selectedContestantElement.textContent = returnedContestant
-    ? "Contestant #" + (returnedContestant.number || "") +
-      " — " + (returnedContestant.name || "")
-    : "Face of Kulzzy Radio Contestant";
-
-  voterName.value = "";
-  voterEmail.value = "";
-  voteAmount.value = "";
-
-  payNow.style.display = "none";
-  cancelVote.textContent = "CLOSE";
-
-  votePreview.textContent = amount
-    ? "❤️ Payment amount: ₦" + amount.toLocaleString()
-    : returnedVotes
-      ? "❤️ Votes requested: " + returnedVotes.toLocaleString()
-      : "";
-
-  if (status === "success") {
-    voteMessage.textContent =
-      "Payment return received. Your transaction must be verified by the administrator before votes are approved. Returning to this page does not confirm payment or mean votes have been added.";
-  } else if (status === "failed" || status === "cancelled") {
-    voteMessage.textContent =
-      "Payment was cancelled or was not successful. If you believe you paid, contact the administrator for verification.";
-  } else {
-    voteMessage.textContent =
-      "Payment processing was not confirmed. Please wait for administrator verification before assuming your votes have been counted.";
-  }
-
-  cleanPaymentUrl();
-}
-
-function cleanPaymentUrl() {
-  try {
-    const cleanUrl =
-      window.location.origin + window.location.pathname;
-
-    window.history.replaceState({}, document.title, cleanUrl);
-  } catch (error) {
-    console.error("Unable to clean URL:", error);
+      "Could not save your request. No votes have been counted. Please try again. " +
+      (error?.message || "");
   }
 }
 
@@ -588,32 +435,6 @@ function escapeHTML(value) {
 
 function escapeAttribute(value) {
   return escapeHTML(value);
-}
-
-/*
-  Handle payment returns after the contestant data has loaded.
-  The message is informational only; no votes are added here.
-*/
-const initialUrl = new URL(window.location.href);
-const initialStatus = String(
-  initialUrl.searchParams.get("status") || ""
-).toLowerCase();
-
-if (initialStatus) {
-  const returnWait = setInterval(() => {
-    if (contestants.length > 0) {
-      clearInterval(returnWait);
-      handlePaymentReturn();
-    }
-  }, 200);
-
-  setTimeout(() => {
-    clearInterval(returnWait);
-
-    if (voteModal.classList.contains("active")) return;
-
-    handlePaymentReturn();
-  }, 3000);
 }
 </script>
 

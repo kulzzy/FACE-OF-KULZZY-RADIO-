@@ -9,339 +9,87 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{
-  font-family:Arial,Helvetica,sans-serif;
-  background:#06122a;
-  color:#fff;
-  min-height:100vh
-}
+body{font-family:Arial,Helvetica,sans-serif;background:#06122a;color:#fff;min-height:100vh}
 
 .hero{
-  min-height:430px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:55px 20px 45px;
-  background:
-    radial-gradient(circle at top,rgba(255,215,0,.18),transparent 45%),
-    linear-gradient(135deg,#020817,#07152f 55%,#0d2146);
-  border-bottom:2px solid #ffd700
+min-height:430px;display:flex;align-items:center;justify-content:center;
+text-align:center;padding:55px 20px 45px;
+background:radial-gradient(circle at top,rgba(255,215,0,.18),transparent 45%),linear-gradient(135deg,#020817,#07152f 55%,#0d2146);
+border-bottom:2px solid #ffd700
 }
 .crown{font-size:60px;margin-bottom:10px}
-.hero h1{
-  font-size:clamp(38px,8vw,75px);
-  line-height:.95;
-  color:#ffd700;
-  font-weight:1000;
-  text-shadow:0 5px 20px rgba(0,0,0,.5)
-}
-.hero h2{
-  margin-top:20px;
-  font-size:clamp(20px,4vw,32px);
-  letter-spacing:4px
-}
-.hero p{
-  max-width:700px;
-  margin:20px auto 0;
-  color:#c8d3e5;
-  line-height:1.7
-}
+.hero h1{font-size:clamp(38px,8vw,75px);line-height:.95;color:#ffd700;font-weight:1000;text-shadow:0 5px 20px rgba(0,0,0,.5)}
+.hero h2{margin-top:20px;font-size:clamp(20px,4vw,32px);letter-spacing:4px}
+.hero p{max-width:700px;margin:20px auto 0;color:#c8d3e5;line-height:1.7}
 
-.prize-wrapper{
-  width:100%;
-  background:#ffd700;
-  color:#06122a;
-  border-bottom:2px solid #fff
-}
-.prize-track{
-  display:flex;
-  width:100%;
-  flex-wrap:wrap;
-  justify-content:center
-}
-.prize{
-  padding:17px 20px;
-  font-size:15px;
-  font-weight:1000;
-  text-align:center
-}
+.prize-wrapper{width:100%;background:#ffd700;color:#06122a;border-bottom:2px solid #fff}
+.prize-track{display:flex;width:100%;flex-wrap:wrap;justify-content:center}
+.prize{padding:17px 20px;font-size:15px;font-weight:1000;text-align:center}
 
-.container{
-  width:100%;
-  max-width:1200px;
-  margin:auto;
-  padding:50px 15px
-}
-.section-title{
-  text-align:center;
-  margin-bottom:30px
-}
-.section-title h2{
-  color:#ffd700;
-  font-size:clamp(28px,5vw,42px);
-  font-weight:1000
-}
-.section-title p{
-  margin-top:10px;
-  color:#aebbd0
-}
+.container{width:100%;max-width:1200px;margin:auto;padding:50px 15px}
+.section-title{text-align:center;margin-bottom:30px}
+.section-title h2{color:#ffd700;font-size:clamp(28px,5vw,42px);font-weight:1000}
+.section-title p{margin-top:10px;color:#aebbd0}
 
 .leaderboard{
-  background:linear-gradient(145deg,#0b1d3d,#061127);
-  border:1px solid rgba(255,215,0,.3);
-  border-radius:20px;
-  padding:20px;
-  margin-bottom:55px
+background:linear-gradient(145deg,#0b1d3d,#061127);
+border:1px solid rgba(255,215,0,.3);border-radius:20px;
+padding:20px;margin-bottom:55px
 }
-.leaderboard h3{
-  text-align:center;
-  color:#ffd700;
-  margin-bottom:15px;
-  font-size:20px
-}
-.rank{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:14px 8px;
-  border-bottom:1px solid rgba(255,255,255,.08)
-}
+.leaderboard h3{text-align:center;color:#ffd700;margin-bottom:15px;font-size:20px}
+.rank{display:flex;align-items:center;gap:12px;padding:14px 8px;border-bottom:1px solid rgba(255,255,255,.08)}
 .rank:last-child{border-bottom:0}
-.rank-number{
-  width:40px;
-  min-width:40px;
-  height:40px;
-  border-radius:50%;
-  display:grid;
-  place-items:center;
-  background:#ffd700;
-  color:#06122a;
-  font-weight:1000
-}
-.rank-name{
-  flex:1;
-  font-weight:bold;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap
-}
-.rank-votes{
-  color:#ffd700;
-  font-weight:1000;
-  white-space:nowrap
-}
+.rank-number{width:40px;min-width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:#ffd700;color:#06122a;font-weight:1000}
+.rank-name{flex:1;font-weight:bold;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rank-votes{color:#ffd700;font-weight:1000;white-space:nowrap}
 
-.contestants{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:25px
-}
-.card{
-  overflow:hidden;
-  background:linear-gradient(145deg,#0c2043,#061126);
-  border:1px solid rgba(255,215,0,.25);
-  border-radius:22px;
-  box-shadow:0 15px 40px rgba(0,0,0,.3);
-  transition:transform .3s,border-color .3s
-}
-.card:hover{
-  transform:translateY(-6px);
-  border-color:#ffd700
-}
-.photo{
-  position:relative;
-  width:100%;
-  aspect-ratio:4/5;
-  background:#14294b;
-  overflow:hidden
-}
-.photo img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  display:block
-}
-.contestant-number{
-  position:absolute;
-  top:14px;
-  left:14px;
-  background:#ffd700;
-  color:#06122a;
-  padding:8px 13px;
-  border-radius:20px;
-  font-size:12px;
-  font-weight:1000
-}
+.contestants{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:25px}
+.card{overflow:hidden;background:linear-gradient(145deg,#0c2043,#061126);border:1px solid rgba(255,215,0,.25);border-radius:22px;box-shadow:0 15px 40px rgba(0,0,0,.3);transition:transform .3s,border-color .3s}
+.card:hover{transform:translateY(-6px);border-color:#ffd700}
+.photo{position:relative;width:100%;aspect-ratio:4/5;background:#14294b;overflow:hidden}
+.photo img{width:100%;height:100%;object-fit:cover;display:block}
+.contestant-number{position:absolute;top:14px;left:14px;background:#ffd700;color:#06122a;padding:8px 13px;border-radius:20px;font-size:12px;font-weight:1000}
 .info{padding:20px;text-align:center}
-.name{
-  font-size:22px;
-  font-weight:1000;
-  word-break:break-word
-}
-.votes{
-  margin-top:12px;
-  color:#ffd700;
-  font-size:24px;
-  font-weight:1000
-}
-.vote-button{
-  width:100%;
-  margin-top:18px;
-  padding:15px;
-  border:0;
-  border-radius:12px;
-  background:#ffd700;
-  color:#06122a;
-  font-size:16px;
-  font-weight:1000;
-  cursor:pointer;
-  transition:.2s
-}
+.name{font-size:22px;font-weight:1000;word-break:break-word}
+.votes{margin-top:12px;color:#ffd700;font-size:24px;font-weight:1000}
+.vote-button{width:100%;margin-top:18px;padding:15px;border:0;border-radius:12px;background:#ffd700;color:#06122a;font-size:16px;font-weight:1000;cursor:pointer;transition:.2s}
 .vote-button:hover{background:#fff}
-.vote-button:disabled{
-  opacity:.6;
-  cursor:not-allowed
-}
-.empty{
-  text-align:center;
-  padding:30px 20px;
-  color:#9baac0;
-  grid-column:1/-1
-}
+.vote-button:disabled{opacity:.6;cursor:not-allowed}
+.empty{text-align:center;padding:30px 20px;color:#9baac0;grid-column:1/-1}
 
-/*
-  IMPORTANT:
-  The support form is part of the normal page flow.
-  It is not fixed to the screen.
-  The page and form scroll together.
-*/
-.vote-modal{
-  display:none;
-  width:100%;
-  padding:20px 15px;
-  background:transparent;
-  scroll-margin-top:15px
-}
-.vote-modal.active{display:block}
+.vote-modal{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.78);backdrop-filter:blur(8px)}
+.vote-modal.active{display:flex}
+.vote-box{width:100%;max-width:450px;max-height:calc(100vh - 40px);overflow:auto;background:linear-gradient(145deg,#0c2145,#061127);border:1px solid rgba(255,215,0,.4);border-radius:22px;padding:25px;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.vote-box h2{color:#ffd700;text-align:center;margin-bottom:8px}
+.vote-box p{text-align:center;color:#aebbd0;line-height:1.5}
+.vote-input,.vote-email,.vote-name{width:100%;margin-top:12px;padding:15px;border-radius:12px;border:1px solid #35517b;background:#06122a;color:#fff;font-size:16px;outline:none}
+.vote-input{margin-top:20px;font-size:18px}
+.vote-input:focus,.vote-email:focus,.vote-name:focus{border-color:#ffd700}
+.vote-preview{text-align:center;margin-top:13px;color:#ffd700;font-weight:900;line-height:1.5}
+.vote-actions{display:flex;gap:10px;margin-top:20px}
+.vote-actions button{flex:1;padding:14px;border:0;border-radius:12px;font-weight:900;cursor:pointer}
+.pay-now{background:#ffd700;color:#06122a}
+.cancel-vote{background:#294568;color:#fff}
+.vote-message{margin-top:15px;text-align:center;min-height:20px;color:#c8d3e5;line-height:1.5;word-break:break-word}
 
-.vote-box{
-  width:100%;
-  max-width:450px;
-  margin:0 auto;
-  background:linear-gradient(145deg,#0c2145,#061127);
-  border:1px solid rgba(255,215,0,.4);
-  border-radius:22px;
-  padding:25px;
-  box-shadow:0 15px 40px rgba(0,0,0,.35)
-}
-.vote-box h2{
-  color:#ffd700;
-  text-align:center;
-  margin-bottom:8px
-}
-.vote-box p{
-  text-align:center;
-  color:#aebbd0;
-  line-height:1.5
-}
-.vote-input,.vote-email,.vote-name{
-  width:100%;
-  margin-top:12px;
-  padding:15px;
-  border-radius:12px;
-  border:1px solid #35517b;
-  background:#06122a;
-  color:#fff;
-  font-size:16px;
-  outline:none
-}
-.vote-input{
-  margin-top:20px;
-  font-size:18px
-}
-.vote-input:focus,
-.vote-email:focus,
-.vote-name:focus{
-  border-color:#ffd700
-}
-.vote-preview{
-  text-align:center;
-  margin-top:13px;
-  color:#ffd700;
-  font-weight:900;
-  line-height:1.5
-}
-.vote-actions{
-  display:flex;
-  gap:10px;
-  margin-top:20px
-}
-.vote-actions button{
-  flex:1;
-  padding:14px;
-  border:0;
-  border-radius:12px;
-  font-weight:900;
-  cursor:pointer
-}
-.pay-now{
-  background:#ffd700;
-  color:#06122a
-}
-.cancel-vote{
-  background:#294568;
-  color:#fff
-}
-.vote-message{
-  margin-top:15px;
-  text-align:center;
-  min-height:20px;
-  color:#c8d3e5;
-  line-height:1.5;
-  word-break:break-word
-}
-
-footer{
-  text-align:center;
-  padding:35px 20px;
-  border-top:1px solid rgba(255,215,0,.2);
-  color:#8290a8;
-  line-height:1.7
-}
+footer{text-align:center;padding:35px 20px;border-top:1px solid rgba(255,215,0,.2);color:#8290a8;line-height:1.7}
 footer strong{color:#ffd700}
 
 @media(max-width:850px){
-  .contestants{
-    grid-template-columns:repeat(2,minmax(0,1fr))
-  }
+.contestants{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media(max-width:560px){
-  .contestants{grid-template-columns:1fr}
-  .hero{
-    min-height:390px;
-    padding:45px 15px 35px
-  }
-  .hero h1{font-size:42px}
-  .hero h2{
-    font-size:19px;
-    letter-spacing:2px
-  }
-  .hero p{font-size:14px}
-  .rank{padding:12px 2px}
-  .rank-number{
-    width:34px;
-    min-width:34px;
-    height:34px;
-    font-size:13px
-  }
-  .rank-name{font-size:14px}
-  .rank-votes{font-size:13px}
-  .vote-actions{flex-direction:column}
-  .prize{
-    width:100%;
-    padding:12px 8px
-  }
+.contestants{grid-template-columns:1fr}
+.hero{min-height:390px;padding:45px 15px 35px}
+.hero h1{font-size:42px}
+.hero h2{font-size:19px;letter-spacing:2px}
+.hero p{font-size:14px}
+.rank{padding:12px 2px}
+.rank-number{width:34px;min-width:34px;height:34px;font-size:13px}
+.rank-name{font-size:14px}
+.rank-votes{font-size:13px}
+.vote-actions{flex-direction:column}
+.prize{width:100%;padding:12px 8px}
 }
 </style>
 </head>
@@ -349,154 +97,92 @@ footer strong{color:#ffd700}
 <body>
 
 <header class="hero">
-  <div>
-    <div class="crown">👑</div>
-
-    <h1>FACE OF<br>KULZZY RADIO 2026</h1>
-
-    <h2>ONLINE PAGEANTRY</h2>
-
-    <p>
-      Welcome to the official Face of Kulzzy Radio 2026
-      online pageantry. Support your favourite contestant
-      and follow the competition live.
-    </p>
-  </div>
+<div>
+<div class="crown">👑</div>
+<h1>FACE OF<br>KULZZY RADIO 2026</h1>
+<h2>ONLINE PAGEANTRY</h2>
+<p>Welcome to the official Face of Kulzzy Radio 2026 online pageantry. Support your favourite contestant and follow the competition live.</p>
+</div>
 </header>
 
 <div class="prize-wrapper">
-  <div class="prize-track">
-    <div class="prize">🥇 1ST PRIZE — ₦1,000,000</div>
-    <div class="prize">🥈 2ND PRIZE — ₦300,000</div>
-    <div class="prize">🥉 3RD PRIZE — ₦100,000</div>
-    <div class="prize">
-      🎁 4TH PRIZE — CONSOLATION PRIZE FOR ALL CONTESTANTS
-    </div>
-  </div>
+<div class="prize-track">
+<div class="prize">🥇 1ST PRIZE — ₦1,000,000</div>
+<div class="prize">🥈 2ND PRIZE — ₦300,000</div>
+<div class="prize">🥉 3RD PRIZE — ₦100,000</div>
+<div class="prize">🎁 4TH PRIZE — CONSOLATION PRIZE FOR ALL CONTESTANTS</div>
+</div>
 </div>
 
 <main class="container">
 
-  <section>
-    <div class="section-title">
-      <h2>🏆 LIVE LEADERBOARD</h2>
-      <p>Contestants are ranked by verified votes.</p>
-    </div>
+<section>
+<div class="section-title">
+<h2>🏆 LIVE LEADERBOARD</h2>
+<p>Contestants are ranked by verified votes.</p>
+</div>
 
-    <div class="leaderboard">
-      <h3>CURRENT RANKING</h3>
+<div class="leaderboard">
+<h3>CURRENT RANKING</h3>
+<div id="leaderboard">
+<div class="empty">Loading leaderboard...</div>
+</div>
+</div>
+</section>
 
-      <div id="leaderboard">
-        <div class="empty">Loading leaderboard...</div>
-      </div>
-    </div>
-  </section>
+<section>
+<div class="section-title">
+<h2>👑 MEET THE CONTESTANTS</h2>
+<p>Choose your favourite contestant and support her journey.</p>
+</div>
 
-  <section>
-    <div class="section-title">
-      <h2>👑 MEET THE CONTESTANTS</h2>
-      <p>Choose your favourite contestant and support her journey.</p>
-    </div>
-
-    <div id="contestants" class="contestants">
-      <div class="empty">Loading contestants...</div>
-    </div>
-  </section>
+<div id="contestants" class="contestants">
+<div class="empty">Loading contestants...</div>
+</div>
+</section>
 
 </main>
 
-<!--
-  THE SUPPORT FORM SCROLLS WITH THE PAGE.
-  It is not a fixed overlay.
--->
-
 <div id="voteModal" class="vote-modal">
-  <div class="vote-box">
+<div class="vote-box">
 
-    <h2>❤️ SUPPORT CONTESTANT</h2>
+<h2>❤️ SUPPORT CONTESTANT</h2>
+<p id="selectedContestant">Contestant</p>
 
-    <p id="selectedContestant">Contestant</p>
+<input id="voterName" class="vote-name" type="text" placeholder="Your name" autocomplete="name">
 
-    <input
-      id="voterName"
-      class="vote-name"
-      type="text"
-      placeholder="Your name"
-      autocomplete="name"
-    >
+<input id="voterEmail" class="vote-email" type="email" placeholder="Your email" autocomplete="email">
 
-    <input
-      id="voterEmail"
-      class="vote-email"
-      type="email"
-      placeholder="Your email"
-      autocomplete="email"
-    >
+<input id="voteAmount" class="vote-input" type="number" min="100" step="100" inputmode="numeric" placeholder="Enter amount e.g. 1000">
 
-    <input
-      id="voteAmount"
-      class="vote-input"
-      type="number"
-      min="100"
-      step="100"
-      inputmode="numeric"
-      placeholder="Enter amount e.g. 1000"
-    >
+<div id="votePreview" class="vote-preview">₦100 = 1 vote</div>
 
-    <div id="votePreview" class="vote-preview">
-      ₦100 = 1 vote
-    </div>
+<div class="vote-actions">
+<button id="cancelVote" class="cancel-vote" type="button">CANCEL</button>
+<button id="payNow" class="pay-now" type="button">CONTINUE TO PAYMENT</button>
+</div>
 
-    <div class="vote-actions">
-      <button
-        id="cancelVote"
-        class="cancel-vote"
-        type="button"
-      >CANCEL</button>
+<div id="voteMessage" class="vote-message"></div>
 
-      <button
-        id="payNow"
-        class="pay-now"
-        type="button"
-      >CONTINUE TO PAYMENT</button>
-    </div>
-
-    <div
-      id="voteMessage"
-      class="vote-message"
-      aria-live="polite"
-    ></div>
-
-  </div>
+</div>
 </div>
 
 <footer>
-  <strong>FACE OF KULZZY RADIO 2026</strong>
-  <br>
-  Kulzzy Radio Network — Celebrating Lives Everyday
+<strong>FACE OF KULZZY RADIO 2026</strong><br>
+Kulzzy Radio Network — Celebrating Lives Everyday
 </footer>
 
 <script type="module">
-
-import {
-  initializeApp
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
   getDatabase,
   ref,
-  onValue,
-  push,
-  set
+  onValue
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-
-/* =====================================================
-   FIREBASE CONFIGURATION
-   ===================================================== */
-
 const firebaseConfig = {
-  apiKey: "AIzaSyD-Oqmq3P5bNoxcHBdkTA9O9W9H9HVsKDVc",
+  apiKey: "AIzaSyD-Oqmq3P5bNoxcHBdkTA9O9W9HVsKDVc",
   authDomain: "face-of-kulzzy-radio-2026.firebaseapp.com",
   databaseURL: "https://face-of-kulzzy-radio-2026-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "face-of-kulzzy-radio-2026",
@@ -509,75 +195,40 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-
-/* =====================================================
-   PAYMENT SETTINGS
-   ===================================================== */
-
-const PAYMENT_PAGE =
-  new URL("payment.html", window.location.href).href;
+/*
+  PAYMENT PAGE:
+  payment.html is in the same GitHub repository as index.html.
+  Change the payment link inside payment.html when needed.
+*/
+const PAYMENT_PAGE = new URL("payment.html", window.location.href).href;
 
 const FACE_EVENT_NAME = "FACE OF KULZZY RADIO 2026";
 const VOTE_UNIT = 100;
 
-
-/* =====================================================
-   PAGE ELEMENTS
-   ===================================================== */
-
-const contestantsElement =
-  document.getElementById("contestants");
-
-const leaderboardElement =
-  document.getElementById("leaderboard");
-
-const voteModal =
-  document.getElementById("voteModal");
-
-const selectedContestantElement =
-  document.getElementById("selectedContestant");
-
-const voteAmount =
-  document.getElementById("voteAmount");
-
-const votePreview =
-  document.getElementById("votePreview");
-
-const voterName =
-  document.getElementById("voterName");
-
-const voterEmail =
-  document.getElementById("voterEmail");
-
-const voteMessage =
-  document.getElementById("voteMessage");
-
-const payNow =
-  document.getElementById("payNow");
-
-const cancelVote =
-  document.getElementById("cancelVote");
-
-
-/* =====================================================
-   LIVE DATA
-   ===================================================== */
+const contestantsElement = document.getElementById("contestants");
+const leaderboardElement = document.getElementById("leaderboard");
+const voteModal = document.getElementById("voteModal");
+const selectedContestantElement = document.getElementById("selectedContestant");
+const voteAmount = document.getElementById("voteAmount");
+const votePreview = document.getElementById("votePreview");
+const voterName = document.getElementById("voterName");
+const voterEmail = document.getElementById("voterEmail");
+const voteMessage = document.getElementById("voteMessage");
+const payNow = document.getElementById("payNow");
+const cancelVote = document.getElementById("cancelVote");
 
 let contestants = [];
 let selectedContestant = null;
 let officialVoteTotals = {};
 
-
-/* =====================================================
-   LOAD CONTESTANTS
-   ===================================================== */
-
-const contestantsReference =
-  ref(db, "faceOfKulzzy/contestants");
+/*
+  CONTESTANTS:
+  Loaded from Firebase in real time.
+*/
+const contestantsReference = ref(db, "faceOfKulzzy/contestants");
 
 onValue(
   contestantsReference,
-
   snapshot => {
     const data = snapshot.val() || {};
 
@@ -590,7 +241,6 @@ onValue(
 
     refreshVoteDisplays();
   },
-
   error => {
     console.error("Firebase contestant error:", error);
 
@@ -602,22 +252,19 @@ onValue(
   }
 );
 
-
-/* =====================================================
-   LOAD OFFICIAL VOTE TOTALS
-   ===================================================== */
-
-const officialVotesReference =
-  ref(db, "faceOfKulzzy/officialVotes");
+/*
+  OFFICIAL VOTES:
+  Read the totals approved by the administrator.
+  This page never writes votes.
+*/
+const officialVotesReference = ref(db, "faceOfKulzzy/officialVotes");
 
 onValue(
   officialVotesReference,
-
   snapshot => {
     officialVoteTotals = snapshot.val() || {};
     refreshVoteDisplays();
   },
-
   error => {
     console.error("Official vote totals error:", error);
 
@@ -626,131 +273,81 @@ onValue(
   }
 );
 
-
-/* =====================================================
-   OFFICIAL VOTE COUNT
-   ===================================================== */
-
 function getContestantVotes(contestant) {
   const entry = officialVoteTotals[contestant.id];
-
   const votes = Number(entry?.votes || 0);
 
-  return Number.isSafeInteger(votes) && votes >= 0
-    ? votes
-    : 0;
+  return Number.isSafeInteger(votes) && votes >= 0 ? votes : 0;
 }
-
-
-/* =====================================================
-   REFRESH PUBLIC DISPLAYS
-   ===================================================== */
 
 function refreshVoteDisplays() {
   const rankedContestants = [...contestants].sort(
-    (a, b) =>
-      getContestantVotes(b) - getContestantVotes(a)
+    (a, b) => getContestantVotes(b) - getContestantVotes(a)
   );
 
   displayLeaderboard(rankedContestants);
   displayContestants(rankedContestants);
 }
 
-
-/* =====================================================
-   DISPLAY LEADERBOARD
-   ===================================================== */
-
 function displayLeaderboard(list) {
   if (!list.length) {
     leaderboardElement.innerHTML =
       '<div class="empty">No contestants have been published yet.</div>';
-
     return;
   }
 
-  leaderboardElement.innerHTML = list.map(
-    (contestant, index) => `
-      <div class="rank">
-        <div class="rank-number">${index + 1}</div>
-
-        <div class="rank-name">
-          ${escapeHTML(contestant.name)}
-        </div>
-
-        <div class="rank-votes">
-          ❤️ ${getContestantVotes(contestant).toLocaleString()}
-        </div>
-      </div>
-    `
-  ).join("");
+  leaderboardElement.innerHTML = list.map((contestant, index) => `
+    <div class="rank">
+      <div class="rank-number">${index + 1}</div>
+      <div class="rank-name">${escapeHTML(contestant.name)}</div>
+      <div class="rank-votes">❤️ ${getContestantVotes(contestant).toLocaleString()}</div>
+    </div>
+  `).join("");
 }
-
-
-/* =====================================================
-   DISPLAY CONTESTANTS
-   ===================================================== */
 
 function displayContestants(list) {
   if (!list.length) {
     contestantsElement.innerHTML =
       '<div class="empty">Contestants will appear here soon.</div>';
-
     return;
   }
 
-  contestantsElement.innerHTML = list.map(
-    contestant => `
-      <article class="card">
+  contestantsElement.innerHTML = list.map(contestant => `
+    <article class="card">
+      <div class="photo">
+        <img
+          src="${escapeAttribute(contestant.imageUrl || "")}"
+          alt="${escapeAttribute(contestant.name || "Contestant")}"
+          loading="lazy"
+          onerror="this.style.display='none';"
+        >
+        <div class="contestant-number">
+          CONTESTANT #${escapeHTML(contestant.number || "")}
+        </div>
+      </div>
 
-        <div class="photo">
-          <img
-            src="${escapeAttribute(contestant.imageUrl || "")}"
-            alt="${escapeAttribute(contestant.name || "Contestant")}"
-            loading="lazy"
-            onerror="this.style.display='none';"
-          >
+      <div class="info">
+        <div class="name">${escapeHTML(contestant.name || "Contestant")}</div>
 
-          <div class="contestant-number">
-            CONTESTANT #${escapeHTML(contestant.number || "")}
-          </div>
+        <div class="votes">
+          ❤️ ${getContestantVotes(contestant).toLocaleString()} VOTES
         </div>
 
-        <div class="info">
+        <button
+          class="vote-button"
+          data-id="${escapeAttribute(contestant.id)}"
+          type="button"
+        >❤️ VOTE FOR ME</button>
+      </div>
+    </article>
+  `).join("");
 
-          <div class="name">
-            ${escapeHTML(contestant.name || "Contestant")}
-          </div>
-
-          <div class="votes">
-            ❤️ ${getContestantVotes(contestant).toLocaleString()} VOTES
-          </div>
-
-          <button
-            class="vote-button"
-            data-id="${escapeAttribute(contestant.id)}"
-            type="button"
-          >❤️ VOTE FOR ME</button>
-
-        </div>
-
-      </article>
-    `
-  ).join("");
-
-  contestantsElement
-    .querySelectorAll(".vote-button")
-    .forEach(button => {
-      button.addEventListener("click", () => {
-        openVotingModal(button.dataset.id);
-      });
+  contestantsElement.querySelectorAll(".vote-button").forEach(button => {
+    button.addEventListener("click", () => {
+      openVotingModal(button.dataset.id);
     });
+  });
 }
-
-
-/* =====================================================
-   OPEN SUPPORT FORM
-   ===================================================== */
 
 function openVotingModal(contestantId) {
   selectedContestant = contestants.find(
@@ -760,66 +357,42 @@ function openVotingModal(contestantId) {
   if (!selectedContestant) return;
 
   selectedContestantElement.textContent =
-    "Contestant #" +
-    (selectedContestant.number || "") +
-    " — " +
-    (selectedContestant.name || "");
+    "Contestant #" + (selectedContestant.number || "") +
+    " — " + (selectedContestant.name || "");
 
   voterName.value = "";
   voterEmail.value = "";
   voteAmount.value = "";
-
   votePreview.textContent = "₦100 = 1 vote";
   voteMessage.textContent = "";
 
   payNow.disabled = false;
   payNow.style.display = "";
   payNow.textContent = "CONTINUE TO PAYMENT";
-
   cancelVote.textContent = "CANCEL";
 
   voteModal.classList.add("active");
 
-  /*
-    Scroll the normal page to the form.
-    The form remains in the document flow and scrolls
-    naturally with the background.
-  */
-  voteModal.scrollIntoView({
-    behavior: "smooth",
-    block: "start"
-  });
-
-  setTimeout(() => voterName.focus(), 350);
+  setTimeout(() => voterName.focus(), 100);
 }
 
+cancelVote.addEventListener("click", closeVotingModal);
 
-/* =====================================================
-   CLOSE SUPPORT FORM
-   ===================================================== */
-
-cancelVote.addEventListener(
-  "click",
-  closeVotingModal
-);
+voteModal.addEventListener("click", event => {
+  if (event.target === voteModal) {
+    closeVotingModal();
+  }
+});
 
 function closeVotingModal() {
   voteModal.classList.remove("active");
-
   payNow.style.display = "";
   cancelVote.textContent = "CANCEL";
 }
 
 document.addEventListener("keydown", event => {
-  if (event.key === "Escape") {
-    closeVotingModal();
-  }
+  if (event.key === "Escape") closeVotingModal();
 });
-
-
-/* =====================================================
-   VOTE AMOUNT PREVIEW
-   ===================================================== */
 
 voteAmount.addEventListener("input", () => {
   const amount = Number(voteAmount.value);
@@ -830,42 +403,28 @@ voteAmount.addEventListener("input", () => {
   }
 
   if (amount < VOTE_UNIT) {
-    votePreview.textContent =
-      "Minimum voting amount is ₦100.";
-
+    votePreview.textContent = "Minimum voting amount is ₦100.";
     return;
   }
 
   if (amount % VOTE_UNIT !== 0) {
-    votePreview.textContent =
-      "Enter an amount in multiples of ₦100.";
-
+    votePreview.textContent = "Enter an amount in multiples of ₦100.";
     return;
   }
 
   const votes = amount / VOTE_UNIT;
 
   votePreview.textContent =
-    "❤️ " +
-    votes.toLocaleString() +
-    " vote" +
-    (votes === 1 ? "" : "s") +
-    " for ₦" +
-    amount.toLocaleString();
+    "❤️ " + votes.toLocaleString() +
+    " vote" + (votes === 1 ? "" : "s") +
+    " for ₦" + amount.toLocaleString();
 });
-
-
-/* =====================================================
-   CONTINUE TO PAYMENT
-   ===================================================== */
 
 payNow.addEventListener("click", startPayment);
 
-async function startPayment() {
+function startPayment() {
   if (!selectedContestant) {
-    voteMessage.textContent =
-      "Please select a contestant.";
-
+    voteMessage.textContent = "Please select a contestant.";
     return;
   }
 
@@ -874,36 +433,25 @@ async function startPayment() {
   const amount = Number(voteAmount.value);
 
   if (!name) {
-    voteMessage.textContent =
-      "Please enter your name.";
-
+    voteMessage.textContent = "Please enter your name.";
     voterName.focus();
     return;
   }
 
   if (!email || !isValidEmail(email)) {
-    voteMessage.textContent =
-      "Please enter a valid email address.";
-
+    voteMessage.textContent = "Please enter a valid email address.";
     voterEmail.focus();
     return;
   }
 
-  if (
-    !Number.isSafeInteger(amount) ||
-    amount < VOTE_UNIT
-  ) {
-    voteMessage.textContent =
-      "Minimum voting amount is ₦100.";
-
+  if (!Number.isSafeInteger(amount) || amount < VOTE_UNIT) {
+    voteMessage.textContent = "Minimum voting amount is ₦100.";
     voteAmount.focus();
     return;
   }
 
   if (amount % VOTE_UNIT !== 0) {
-    voteMessage.textContent =
-      "Amount must be a multiple of ₦100.";
-
+    voteMessage.textContent = "Amount must be a multiple of ₦100.";
     voteAmount.focus();
     return;
   }
@@ -911,117 +459,33 @@ async function startPayment() {
   const votes = amount / VOTE_UNIT;
 
   if (!Number.isSafeInteger(votes) || votes < 1) {
-    voteMessage.textContent =
-      "Invalid vote quantity.";
-
+    voteMessage.textContent = "Invalid vote quantity.";
     return;
   }
 
   payNow.disabled = true;
-  payNow.textContent = "SAVING REQUEST...";
-
-  voteMessage.textContent =
-    "Saving your support request before opening payment...";
+  payNow.textContent = "OPENING PAYMENT...";
+  voteMessage.textContent = "Opening the official payment page...";
 
   try {
     /*
-      Save the support request as pending.
-
-      IMPORTANT:
-      This does not add votes to the contestant.
-      The administrator must verify payment and approve it.
+      Open payment.html from this same repository.
+      Pass the voting details so payment.html can read them.
     */
-
-    const requestRef = push(
-      ref(db, "faceOfKulzzy/pendingVoteRequests")
-    );
-
-    const requestData = {
-      requestId: requestRef.key,
-
-      contestantId: selectedContestant.id,
-
-      contestantNumber:
-        selectedContestant.number || "",
-
-      contestantName:
-        selectedContestant.name || "",
-
-      voterName: name,
-
-      voterEmail: email,
-
-      requestedAmount: amount,
-
-      requestedVotes: votes,
-
-      status: "pending",
-
-      createdAt: Date.now(),
-
-      updatedAt: Date.now()
-    };
-
-    await set(requestRef, requestData);
-
-
-    /*
-      Open the existing payment page.
-      The payment page remains separate so its link can
-      be changed without changing this public page.
-    */
-
     const paymentUrl = new URL(PAYMENT_PAGE);
 
-    paymentUrl.searchParams.set(
-      "request_id",
-      requestRef.key
-    );
-
-    paymentUrl.searchParams.set(
-      "purpose",
-      FACE_EVENT_NAME
-    );
-
-    paymentUrl.searchParams.set(
-      "event",
-      FACE_EVENT_NAME
-    );
-
-    paymentUrl.searchParams.set(
-      "contestant",
-      selectedContestant.id
-    );
-
-    paymentUrl.searchParams.set(
-      "contestant_id",
-      selectedContestant.id
-    );
-
+    paymentUrl.searchParams.set("purpose", FACE_EVENT_NAME);
+    paymentUrl.searchParams.set("event", FACE_EVENT_NAME);
+    paymentUrl.searchParams.set("contestant", selectedContestant.id);
+    paymentUrl.searchParams.set("contestant_id", selectedContestant.id);
     paymentUrl.searchParams.set(
       "contestant_name",
       selectedContestant.name || ""
     );
-
-    paymentUrl.searchParams.set(
-      "votes",
-      String(votes)
-    );
-
-    paymentUrl.searchParams.set(
-      "amount",
-      String(amount)
-    );
-
-    paymentUrl.searchParams.set(
-      "email",
-      email
-    );
-
-    paymentUrl.searchParams.set(
-      "name",
-      name
-    );
+    paymentUrl.searchParams.set("votes", String(votes));
+    paymentUrl.searchParams.set("amount", String(amount));
+    paymentUrl.searchParams.set("email", email);
+    paymentUrl.searchParams.set("name", name);
 
     paymentUrl.searchParams.set(
       "return",
@@ -1031,64 +495,33 @@ async function startPayment() {
     window.location.assign(paymentUrl.toString());
 
   } catch (error) {
-    console.error("Payment request error:", error);
+    console.error("Payment page error:", error);
 
     payNow.disabled = false;
     payNow.textContent = "CONTINUE TO PAYMENT";
 
-    const errorCode = error?.code || "unknown";
-
-    if (
-      errorCode === "PERMISSION_DENIED" ||
-      errorCode.includes("permission-denied")
-    ) {
-      voteMessage.textContent =
-        "Firebase denied the request. The database rules " +
-        "must allow public submissions to pendingVoteRequests.";
-    } else if (
-      errorCode.includes("network") ||
-      errorCode.includes("unavailable")
-    ) {
-      voteMessage.textContent =
-        "Network error connecting to Firebase. Check your " +
-        "internet connection and try again.";
-    } else {
-      voteMessage.textContent =
-        "Request failed: " + errorCode +
-        ". Please try again.";
-    }
+    voteMessage.textContent =
+      "Unable to open payment.html. Please try again.";
   }
-
-
-/* =====================================================
-   PAYMENT RETURN MESSAGE
-   ===================================================== */
+}
 
 /*
-  A return from the payment page is not proof that
-  a payment succeeded. Votes must not be added here.
+  PAYMENT RETURN:
+  A return status is not proof of successful payment.
+  Votes are only counted after administrator verification and approval.
 */
-
 function handlePaymentReturn() {
   const url = new URL(window.location.href);
-
   const params = url.searchParams;
-
-  const status = String(
-    params.get("status") || ""
-  ).toLowerCase();
+  const status = String(params.get("status") || "").toLowerCase();
 
   if (!status) return;
 
   const contestantId =
-    params.get("contestant_id") ||
-    params.get("contestantId");
+    params.get("contestant_id") || params.get("contestantId");
 
-  const returnedVotes =
-    Number(params.get("votes") || 0);
-
-  const amount =
-    Number(params.get("amount") || 0);
+  const returnedVotes = Number(params.get("votes") || 0);
+  const amount = Number(params.get("amount") || 0);
 
   const returnedContestant = contestants.find(
     contestant => contestant.id === contestantId
@@ -1096,13 +529,10 @@ function handlePaymentReturn() {
 
   voteModal.classList.add("active");
 
-  selectedContestantElement.textContent =
-    returnedContestant
-      ? "Contestant #" +
-        (returnedContestant.number || "") +
-        " — " +
-        (returnedContestant.name || "")
-      : "Face of Kulzzy Radio Contestant";
+  selectedContestantElement.textContent = returnedContestant
+    ? "Contestant #" + (returnedContestant.number || "") +
+      " — " + (returnedContestant.name || "")
+    : "Face of Kulzzy Radio Contestant";
 
   voterName.value = "";
   voterEmail.value = "";
@@ -1114,103 +544,57 @@ function handlePaymentReturn() {
   votePreview.textContent = amount
     ? "❤️ Payment amount: ₦" + amount.toLocaleString()
     : returnedVotes
-      ? "❤️ Votes requested: " +
-        returnedVotes.toLocaleString()
+      ? "❤️ Votes requested: " + returnedVotes.toLocaleString()
       : "";
 
   if (status === "success") {
     voteMessage.textContent =
-      "Payment return received. Your transaction must be " +
-      "verified by the administrator before votes are approved. " +
-      "Returning to this page does not confirm payment or mean " +
-      "votes have been added.";
-
-  } else if (
-    status === "failed" ||
-    status === "cancelled"
-  ) {
+      "Payment return received. Your transaction must be verified by the administrator before votes are approved. Returning to this page does not confirm payment or mean votes have been added.";
+  } else if (status === "failed" || status === "cancelled") {
     voteMessage.textContent =
-      "Payment was cancelled or was not successful. " +
-      "If you believe you paid, contact the administrator " +
-      "for verification.";
-
+      "Payment was cancelled or was not successful. If you believe you paid, contact the administrator for verification.";
   } else {
     voteMessage.textContent =
-      "Payment processing was not confirmed. Please wait " +
-      "for administrator verification before assuming your " +
-      "votes have been counted.";
+      "Payment processing was not confirmed. Please wait for administrator verification before assuming your votes have been counted.";
   }
-
-  voteModal.scrollIntoView({
-    behavior: "smooth",
-    block: "start"
-  });
 
   cleanPaymentUrl();
 }
 
-
-/* =====================================================
-   CLEAN RETURN URL
-   ===================================================== */
-
 function cleanPaymentUrl() {
   try {
     const cleanUrl =
-      window.location.origin +
-      window.location.pathname;
+      window.location.origin + window.location.pathname;
 
-    window.history.replaceState(
-      {},
-      document.title,
-      cleanUrl
-    );
-
+    window.history.replaceState({}, document.title, cleanUrl);
   } catch (error) {
     console.error("Unable to clean URL:", error);
   }
 }
 
-
-/* =====================================================
-   VALIDATE EMAIL
-   ===================================================== */
-
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-
-/* =====================================================
-   SAFE HTML OUTPUT
-   ===================================================== */
-
 function escapeHTML(value) {
-  return String(value ?? "").replace(
-    /[&<>"']/g,
-
-    character => ({
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#039;"
-    }[character])
-  );
+  return String(value ?? "").replace(/[&<>"']/g, character => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  }[character]));
 }
 
 function escapeAttribute(value) {
   return escapeHTML(value);
 }
 
-
-/* =====================================================
-   HANDLE PAYMENT RETURNS
-   ===================================================== */
-
-const initialUrl =
-  new URL(window.location.href);
-
+/*
+  Handle payment returns after the contestant data has loaded.
+  The message is informational only; no votes are added here.
+*/
+const initialUrl = new URL(window.location.href);
 const initialStatus = String(
   initialUrl.searchParams.get("status") || ""
 ).toLowerCase();
@@ -1226,10 +610,11 @@ if (initialStatus) {
   setTimeout(() => {
     clearInterval(returnWait);
 
+    if (voteModal.classList.contains("active")) return;
+
     handlePaymentReturn();
   }, 3000);
 }
-
 </script>
 
 </body>

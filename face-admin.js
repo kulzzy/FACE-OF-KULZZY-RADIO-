@@ -8,7 +8,7 @@
    ===================================================== */
 
 const firebaseConfig = {
-    apiKey: "AIzaSyD-Oqmq3P5bNoxcHBdkTA9O9W9HVsKDVc",
+    apiKey: apiKey: "AIzaSyD-Oqmq3P5bNoxcHBdkTAw7O9W9HVsKDVc",
     authDomain: "face-of-kulzzy-radio-2026.firebaseapp.com",
     databaseURL: "https://face-of-kulzzy-radio-2026-default-rtdb.europe-west1.firebasedatabase.app",
     projectId: "face-of-kulzzy-radio-2026",

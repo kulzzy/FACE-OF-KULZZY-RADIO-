@@ -1,10 +1,12 @@
 /* =====================================================
    FACE OF KULZZY RADIO 2026
-   ADMIN SYSTEM
+   COMPLETE ADMIN SYSTEM
+   File: face-admin.js
    ===================================================== */
 
+
 /* =====================================================
-   FIREBASE CONFIG
+   1. FIREBASE CONFIGURATION
    ===================================================== */
 
 const firebaseConfig = {
@@ -18,8 +20,9 @@ const firebaseConfig = {
     measurementId: "G-WQDFT2B0RH"
 };
 
+
 /* =====================================================
-   FIREBASE IMPORTS
+   2. FIREBASE IMPORTS
    ===================================================== */
 
 import {
@@ -43,36 +46,58 @@ import {
     onValue
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
+
 /* =====================================================
-   INITIALIZE FIREBASE
+   3. INITIALIZE FIREBASE
    ===================================================== */
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
+
 /* =====================================================
-   ADMIN SECURITY
+   4. ADMIN SECURITY
    ===================================================== */
 
 const ADMIN_EMAIL = "dstnewz.ng@gmail.com";
 
+
+function isAuthorizedAdmin(user) {
+    return Boolean(
+        user &&
+        user.email &&
+        user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()
+    );
+}
+
+
 /* =====================================================
-   CLOUDINARY CONFIGURATION
+   5. CLOUDINARY CONFIGURATION
    ===================================================== */
 
 const CLOUDINARY_CLOUD_NAME = "s4j0x7dk";
-const CLOUDINARY_UPLOAD_PRESET = "face-of-kulzzy-radio-2026";
+
+const CLOUDINARY_UPLOAD_PRESET =
+    "face-of-kulzzy-radio-2026";
+
 
 /* =====================================================
-   ELEMENT HELPER
+   6. DATABASE PATHS
+
+   Keep these paths consistent with the public page.
+   ===================================================== */
+
+const CONTESTANTS_PATH =
+    "faceOfKulzzy/contestants";
+
+
+/* =====================================================
+   7. HTML ELEMENT HELPER
    ===================================================== */
 
 const $ = id => document.getElementById(id);
 
-/* =====================================================
-   STATUS HELPER
-   ===================================================== */
 
 function setStatus(id, message) {
     const element = $(id);
@@ -82,8 +107,9 @@ function setStatus(id, message) {
     }
 }
 
+
 /* =====================================================
-   REQUIRED ELEMENT CHECK
+   8. CHECK REQUIRED HTML ELEMENTS
    ===================================================== */
 
 const requiredElements = [
@@ -108,30 +134,60 @@ const requiredElements = [
     "logoutBtn"
 ];
 
-const missingElements = requiredElements.filter(id => !$(id));
 
-if (missingElements.length) {
-    console.error(
-        "Admin HTML is missing required element IDs:",
-        missingElements
+function checkRequiredElements() {
+    const missing = requiredElements.filter(
+        id => !$(id)
     );
+
+    if (missing.length) {
+        console.error(
+            "FACE OF KULZZY ADMIN: Missing HTML elements:",
+            missing
+        );
+
+        setStatus(
+            "loginStatus",
+            "Admin page setup error. Missing HTML elements: " +
+            missing.join(", ")
+        );
+
+        return false;
+    }
+
+    return true;
 }
 
+
 /* =====================================================
-   DATA
+   9. APPLICATION STATE
    ===================================================== */
 
 let contestants = {};
+
 let contestantsListenerStarted = false;
-let contestantsListenerError = false;
+
 let contestantsUnsubscribe = null;
 
+let loginInProgress = false;
+
+let savingContestant = false;
+
+
 /* =====================================================
-   FRIENDLY FIREBASE ERRORS
+   10. FRIENDLY ERROR MESSAGES
    ===================================================== */
 
 function friendlyError(error) {
     const code = error?.code || "";
+
+    const message = error?.message || "";
+
+    console.error(
+        "FACE OF KULZZY ADMIN ERROR:",
+        code,
+        message
+    );
 
     if (
         code.includes("invalid-credential") ||
@@ -140,165 +196,246 @@ function friendlyError(error) {
         return "Incorrect admin email or password.";
     }
 
-    if (code.includes("user-not-found")) {
-        return "Admin account not found.";
+    if (
+        code.includes("user-not-found") ||
+        code.includes("auth/user-not-found")
+    ) {
+        return "Admin account not found. Check the Firebase Authentication account.";
     }
 
-    if (code.includes("invalid-email")) {
-        return "Enter a valid email address.";
+    if (
+        code.includes("invalid-email") ||
+        code.includes("auth/invalid-email")
+    ) {
+        return "Please enter a valid email address.";
     }
 
-    if (code.includes("too-many-requests")) {
-        return "Too many login attempts. Try again later.";
+    if (
+        code.includes("too-many-requests")
+    ) {
+        return "Too many login attempts. Please wait and try again.";
     }
 
-    if (code.includes("network-request-failed")) {
-        return "Network error. Check your internet connection and try again.";
+    if (
+        code.includes("network-request-failed")
+    ) {
+        return "Network connection failed. Check your internet and try again.";
     }
 
-    if (code.includes("permission-denied")) {
-        return "Firebase permission denied. Check your Realtime Database rules and admin login.";
-    }
-
-    if (code.includes("unauthorized-domain")) {
+    if (
+        code.includes("unauthorized-domain")
+    ) {
         return "This website domain is not authorized in Firebase Authentication.";
     }
 
-    if (code.includes("storage/unauthorized")) {
-        return "Image upload permission failed. Check the upload configuration.";
+    if (
+        code.includes("operation-not-allowed")
+    ) {
+        return "Email/password login is disabled in Firebase Authentication.";
     }
 
-    return error?.message || "An unexpected error occurred.";
+    if (
+        code.includes("email-already-in-use")
+    ) {
+        return "This email is already registered.";
+    }
+
+    if (
+        code.includes("weak-password")
+    ) {
+        return "The password does not meet Firebase password requirements.";
+    }
+
+    if (
+        code.includes("permission-denied") ||
+        code.includes("PERMISSION_DENIED")
+    ) {
+        return "Firebase denied database access. Check your Realtime Database rules.";
+    }
+
+    if (
+        code.includes("storage/unauthorized")
+    ) {
+        return "Image upload was rejected. Check the Cloudinary upload preset.";
+    }
+
+    if (
+        code.includes("storage/") ||
+        code.includes("upload")
+    ) {
+        return "Image upload failed. Check your internet and Cloudinary configuration.";
+    }
+
+    if (
+        code.includes("auth/")
+    ) {
+        return "Firebase login failed: " + code.replace("auth/", "");
+    }
+
+    return message || "An unexpected error occurred. Check the browser console.";
 }
+
 
 /* =====================================================
-   ADMIN AUTHORIZATION
+   11. LOGIN
    ===================================================== */
-
-function isAuthorizedAdmin(user) {
-    return Boolean(
-        user &&
-        user.email &&
-        user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()
-    );
-}
-
-/* =====================================================
-   LOGIN
-   ===================================================== */
-
-if ($("loginBtn")) {
-    $("loginBtn").addEventListener("click", login);
-}
-
-if ($("password")) {
-    $("password").addEventListener("keydown", event => {
-        if (event.key === "Enter") {
-            login();
-        }
-    });
-}
-
-if ($("email")) {
-    $("email").addEventListener("keydown", event => {
-        if (event.key === "Enter") {
-            login();
-        }
-    });
-}
 
 async function login() {
-    const email = $("email")?.value.trim() || "";
-    const password = $("password")?.value || "";
+    if (loginInProgress) {
+        return;
+    }
+
+    const emailElement = $("email");
+
+    const passwordElement = $("password");
+
+    const loginButton = $("loginBtn");
+
+    if (!emailElement || !passwordElement) {
+        setStatus(
+            "loginStatus",
+            "Login form elements are missing from face-admin.html."
+        );
+
+        return;
+    }
+
+    const email = emailElement.value.trim();
+
+    const password = passwordElement.value;
 
     if (!email || !password) {
         setStatus(
             "loginStatus",
-            "Please enter your email and password."
+            "Please enter your admin email and password."
         );
+
         return;
     }
 
-    const loginButton = $("loginBtn");
+    if (
+        email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()
+    ) {
+        setStatus(
+            "loginStatus",
+            "Access denied. Please use the authorized admin email."
+        );
+
+        return;
+    }
+
+    loginInProgress = true;
 
     if (loginButton) {
         loginButton.disabled = true;
     }
 
-    setStatus("loginStatus", "Logging in...");
+    setStatus(
+        "loginStatus",
+        "Connecting to Firebase..."
+    );
 
     try {
-        const credential = await signInWithEmailAndPassword(
-            auth,
-            email,
-            password
-        );
+        const credential =
+            await signInWithEmailAndPassword(
+                auth,
+                email,
+                password
+            );
 
         if (!isAuthorizedAdmin(credential.user)) {
             await signOut(auth);
 
             setStatus(
                 "loginStatus",
-                "Access denied. This account is not the authorized admin."
+                "Access denied. This account is not authorized."
             );
 
             return;
         }
 
-        setStatus("loginStatus", "Login successful.");
+        setStatus(
+            "loginStatus",
+            "Login successful. Opening admin dashboard..."
+        );
+
+        showAdminPanel();
+
+        loadContestants();
 
     } catch (error) {
-        console.error("Admin login error:", error);
-
         setStatus(
             "loginStatus",
             friendlyError(error)
         );
 
     } finally {
+        loginInProgress = false;
+
         if (loginButton) {
             loginButton.disabled = false;
         }
     }
 }
 
+
 /* =====================================================
-   AUTH STATE
+   12. LOGIN BUTTON AND ENTER KEY
    ===================================================== */
 
-onAuthStateChanged(auth, async user => {
-    if (user && isAuthorizedAdmin(user)) {
-        if ($("loginPanel")) {
-            $("loginPanel").classList.add("hidden");
+if ($("loginBtn")) {
+    $("loginBtn").addEventListener(
+        "click",
+        event => {
+            event.preventDefault();
+            login();
         }
+    );
+}
 
-        if ($("adminPanel")) {
-            $("adminPanel").classList.remove("hidden");
+
+if ($("password")) {
+    $("password").addEventListener(
+        "keydown",
+        event => {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                login();
+            }
         }
+    );
+}
 
-        setStatus("loginStatus", "");
 
-        loadContestants();
+if ($("email")) {
+    $("email").addEventListener(
+        "keydown",
+        event => {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                login();
+            }
+        }
+    );
+}
 
-        return;
+
+/* =====================================================
+   13. SHOW AND HIDE ADMIN PANELS
+   ===================================================== */
+
+function showAdminPanel() {
+    if ($("loginPanel")) {
+        $("loginPanel").classList.add("hidden");
     }
 
-    if (user && !isAuthorizedAdmin(user)) {
-        try {
-            await signOut(auth);
-        } catch (error) {
-            console.error(
-                "Unauthorized logout error:",
-                error
-            );
-        }
-
-        setStatus(
-            "loginStatus",
-            "Access denied. Please use the authorized admin account."
-        );
+    if ($("adminPanel")) {
+        $("adminPanel").classList.remove("hidden");
     }
+}
 
+
+function showLoginPanel() {
     if ($("loginPanel")) {
         $("loginPanel").classList.remove("hidden");
     }
@@ -306,66 +443,157 @@ onAuthStateChanged(auth, async user => {
     if ($("adminPanel")) {
         $("adminPanel").classList.add("hidden");
     }
+}
 
-    contestantsListenerStarted = false;
-
-    if (typeof contestantsUnsubscribe === "function") {
-        contestantsUnsubscribe();
-        contestantsUnsubscribe = null;
-    }
-});
 
 /* =====================================================
-   PHOTO PREVIEW
+   14. AUTHENTICATION STATE
+   ===================================================== */
+
+onAuthStateChanged(
+    auth,
+
+    async user => {
+        if (user && isAuthorizedAdmin(user)) {
+            showAdminPanel();
+
+            setStatus(
+                "loginStatus",
+                ""
+            );
+
+            loadContestants();
+
+            return;
+        }
+
+        if (user && !isAuthorizedAdmin(user)) {
+            try {
+                await signOut(auth);
+            } catch (error) {
+                console.error(
+                    "Unauthorized logout error:",
+                    error
+                );
+            }
+
+            setStatus(
+                "loginStatus",
+                "Access denied. Use the authorized admin account."
+            );
+        }
+
+        showLoginPanel();
+
+        contestantsListenerStarted = false;
+
+        if (typeof contestantsUnsubscribe === "function") {
+            contestantsUnsubscribe();
+        }
+
+        contestantsUnsubscribe = null;
+
+        contestants = {};
+    },
+
+    error => {
+        console.error(
+            "Authentication state error:",
+            error
+        );
+
+        setStatus(
+            "loginStatus",
+            friendlyError(error)
+        );
+
+        showLoginPanel();
+    }
+);
+
+
+/* =====================================================
+   15. PHOTO PREVIEW
    ===================================================== */
 
 if ($("photoFile")) {
-    $("photoFile").addEventListener("change", () => {
-        const file = $("photoFile").files?.[0];
+    $("photoFile").addEventListener(
+        "change",
+        () => {
+            const file = $("photoFile").files?.[0];
 
-        if (!file) {
-            return;
-        }
+            if (!file) {
+                return;
+            }
 
-        if (!file.type.startsWith("image/")) {
+            if (!file.type.startsWith("image/")) {
+                setStatus(
+                    "formStatus",
+                    "Please select a valid image file."
+                );
+
+                $("photoFile").value = "";
+
+                return;
+            }
+
+            const previousURL =
+                $("preview")?.dataset.objectUrl;
+
+            if (previousURL) {
+                URL.revokeObjectURL(previousURL);
+            }
+
+            const imageURL =
+                URL.createObjectURL(file);
+
+            $("preview").src = imageURL;
+
+            $("preview").dataset.objectUrl =
+                imageURL;
+
             setStatus(
                 "formStatus",
-                "Please select an image file."
+                ""
             );
-
-            $("photoFile").value = "";
-            return;
         }
-
-        const previousURL = $("preview").dataset.objectUrl;
-
-        if (previousURL) {
-            URL.revokeObjectURL(previousURL);
-        }
-
-        const imageURL = URL.createObjectURL(file);
-
-        $("preview").src = imageURL;
-        $("preview").dataset.objectUrl = imageURL;
-
-        setStatus("formStatus", "");
-    });
+    );
 }
 
+
 /* =====================================================
-   CLOUDINARY IMAGE UPLOAD
+   16. CLOUDINARY IMAGE UPLOAD
    ===================================================== */
 
 async function uploadImage(file) {
     if (!file) {
-        throw new Error("Please select a contestant image.");
+        throw new Error(
+            "Please select a contestant image."
+        );
+    }
+
+    if (!file.type.startsWith("image/")) {
+        throw new Error(
+            "The selected file is not an image."
+        );
     }
 
     const formData = new FormData();
 
-    formData.append("file", file);
-    formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
-    formData.append("folder", "face-of-kulzzy-radio-2026");
+    formData.append(
+        "file",
+        file
+    );
+
+    formData.append(
+        "upload_preset",
+        CLOUDINARY_UPLOAD_PRESET
+    );
+
+    formData.append(
+        "folder",
+        "face-of-kulzzy-radio-2026"
+    );
 
     const response = await fetch(
         `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
@@ -381,92 +609,154 @@ async function uploadImage(file) {
         data = await response.json();
     } catch {
         throw new Error(
-            "Image upload returned an invalid response."
+            "Cloudinary returned an invalid response."
         );
     }
 
     if (!response.ok) {
         throw new Error(
-            data?.error?.message || "Image upload failed."
+            data?.error?.message ||
+            "Cloudinary image upload failed."
         );
     }
 
     if (!data?.secure_url) {
         throw new Error(
-            "Image upload did not return an image URL."
+            "Cloudinary did not return a secure image URL."
         );
     }
 
     return data.secure_url;
 }
 
+
 /* =====================================================
-   SAVE CONTESTANT
+   17. SAVE CONTESTANT BUTTON
    ===================================================== */
 
 if ($("saveBtn")) {
-    $("saveBtn").addEventListener("click", saveContestant);
+    $("saveBtn").addEventListener(
+        "click",
+        event => {
+            event.preventDefault();
+            saveContestant();
+        }
+    );
 }
 
-async function saveContestant() {
-    const user = auth.currentUser;
 
-    if (!isAuthorizedAdmin(user)) {
+/* =====================================================
+   18. ADD OR UPDATE CONTESTANT
+   ===================================================== */
+
+async function saveContestant() {
+    if (savingContestant) {
+        return;
+    }
+
+    if (!isAuthorizedAdmin(auth.currentUser)) {
         setStatus(
             "formStatus",
             "Please log in with the authorized admin account."
         );
+
         return;
     }
 
-    const number = $("contestantNo").value.trim();
-    const name = $("contestantName").value.trim();
-    const url = $("photoUrl").value.trim();
-    const file = $("photoFile").files?.[0] || null;
-    const editId = $("editId").value.trim();
+    const numberElement = $("contestantNo");
+
+    const nameElement = $("contestantName");
+
+    const urlElement = $("photoUrl");
+
+    const fileElement = $("photoFile");
+
+    const editElement = $("editId");
+
+    const saveButton = $("saveBtn");
+
+    if (
+        !numberElement ||
+        !nameElement ||
+        !urlElement ||
+        !fileElement ||
+        !editElement
+    ) {
+        setStatus(
+            "formStatus",
+            "The contestant form is incomplete. Check face-admin.html."
+        );
+
+        return;
+    }
+
+    const number = numberElement.value.trim();
+
+    const name = nameElement.value.trim();
+
+    const url = urlElement.value.trim();
+
+    const file = fileElement.files?.[0] || null;
+
+    const editId = editElement.value.trim();
 
     if (!number) {
         setStatus(
             "formStatus",
-            "Enter contestant number."
+            "Enter the contestant number."
         );
+
         return;
     }
 
     if (!name) {
         setStatus(
             "formStatus",
-            "Enter contestant name."
+            "Enter the contestant name."
         );
+
         return;
     }
 
     if (!file && !url && !editId) {
         setStatus(
             "formStatus",
-            "Upload a contestant picture or enter an image URL."
+            "Select a contestant picture or enter an image URL."
         );
+
         return;
     }
 
     if (url && !file) {
         try {
-            new URL(url);
+            const parsedURL = new URL(url);
+
+            if (
+                parsedURL.protocol !== "https:" &&
+                parsedURL.protocol !== "http:"
+            ) {
+                throw new Error(
+                    "Invalid image URL protocol."
+                );
+            }
+
         } catch {
             setStatus(
                 "formStatus",
-                "Enter a valid image URL."
+                "Enter a valid image URL beginning with https:// or http://."
             );
+
             return;
         }
     }
 
-    const saveButton = $("saveBtn");
+    savingContestant = true;
 
-    saveButton.disabled = true;
+    if (saveButton) {
+        saveButton.disabled = true;
+    }
 
     try {
-        let imageUrl = url;
         let oldData = null;
 
         if (editId) {
@@ -474,10 +764,12 @@ async function saveContestant() {
 
             if (!oldData) {
                 throw new Error(
-                    "The contestant being edited could not be found. Refresh the list and try again."
+                    "Contestant not found. Refresh the contestant list and try again."
                 );
             }
         }
+
+        let imageUrl = url;
 
         if (file) {
             setStatus(
@@ -501,39 +793,51 @@ async function saveContestant() {
 
         if (!contestantId) {
             contestantId = push(
-                ref(db, "faceOfKulzzy/contestants")
+                ref(
+                    db,
+                    CONTESTANTS_PATH
+                )
             ).key;
         }
 
         if (!contestantId) {
             throw new Error(
-                "Could not create a contestant record."
+                "Unable to create the contestant record."
             );
         }
 
         const contestant = {
-            number,
-            name,
-            imageUrl,
+            number: number,
 
-            votes: Number(oldData?.votes || 0),
-            money: Number(oldData?.money || 0),
+            name: name,
+
+            imageUrl: imageUrl,
+
+            votes: Number(
+                oldData?.votes || 0
+            ),
+
+            money: Number(
+                oldData?.money || 0
+            ),
 
             active: oldData?.active !== false,
 
-            createdAt: oldData?.createdAt || Date.now(),
+            createdAt:
+                oldData?.createdAt || Date.now(),
+
             updatedAt: Date.now()
         };
 
         setStatus(
             "formStatus",
-            "Saving contestant..."
+            "Saving contestant to Firebase..."
         );
 
         await set(
             ref(
                 db,
-                `faceOfKulzzy/contestants/${contestantId}`
+                `${CONTESTANTS_PATH}/${contestantId}`
             ),
             contestant
         );
@@ -548,7 +852,10 @@ async function saveContestant() {
         clearForm();
 
     } catch (error) {
-        console.error("Save contestant error:", error);
+        console.error(
+            "Save contestant error:",
+            error
+        );
 
         setStatus(
             "formStatus",
@@ -556,12 +863,17 @@ async function saveContestant() {
         );
 
     } finally {
-        saveButton.disabled = false;
+        savingContestant = false;
+
+        if (saveButton) {
+            saveButton.disabled = false;
+        }
     }
 }
 
+
 /* =====================================================
-   LOAD CONTESTANTS
+   19. LOAD CONTESTANTS
    ===================================================== */
 
 function loadContestants() {
@@ -570,26 +882,25 @@ function loadContestants() {
             "listStatus",
             "Please log in with the authorized admin account."
         );
+
         return;
     }
 
-    if (contestantsListenerStarted && contestantsUnsubscribe) {
-        setStatus(
-            "listStatus",
-            "Contestant list is already connected."
-        );
+    if (contestantsListenerStarted) {
         return;
     }
 
-    setStatus("listStatus", "Loading contestants...");
+    setStatus(
+        "listStatus",
+        "Connecting to contestant database..."
+    );
 
     const contestantsRef = ref(
         db,
-        "faceOfKulzzy/contestants"
+        CONTESTANTS_PATH
     );
 
     contestantsListenerStarted = true;
-    contestantsListenerError = false;
 
     contestantsUnsubscribe = onValue(
         contestantsRef,
@@ -599,16 +910,21 @@ function loadContestants() {
 
             renderContestants();
 
-            const count = Object.keys(contestants).length;
+            const count =
+                Object.keys(contestants).length;
 
             setStatus(
                 "listStatus",
-                `${count} contestant(s) found.`
+                count === 0
+                    ? "No contestants found in the database."
+                    : `${count} contestant(s) loaded successfully.`
             );
         },
 
         error => {
-            contestantsListenerError = true;
+            contestantsListenerStarted = false;
+
+            contestantsUnsubscribe = null;
 
             console.error(
                 "Load contestants error:",
@@ -617,15 +933,16 @@ function loadContestants() {
 
             setStatus(
                 "listStatus",
-                "Error loading contestants: " +
+                "Could not load contestants: " +
                 friendlyError(error)
             );
         }
     );
 }
 
+
 /* =====================================================
-   DISPLAY CONTESTANTS
+   20. DISPLAY CONTESTANTS
    ===================================================== */
 
 function renderContestants() {
@@ -633,138 +950,207 @@ function renderContestants() {
 
     if (!rows) {
         console.error(
-            "Missing contestantRows element."
+            "The contestantRows element is missing."
         );
+
         return;
     }
 
     rows.innerHTML = "";
 
-    const list = Object.entries(contestants);
-
-    list.sort((a, b) =>
-        String(a[1]?.number ?? "").localeCompare(
-            String(b[1]?.number ?? ""),
-            undefined,
-            { numeric: true }
-        )
+    const list = Object.entries(
+        contestants || {}
     );
 
-    list.forEach(([id, contestant]) => {
-        if (!contestant) {
-            return;
-        }
+    list.sort(
+        (a, b) => {
+            const first = a[1]?.number ?? "";
 
+            const second = b[1]?.number ?? "";
+
+            return String(first).localeCompare(
+                String(second),
+                undefined,
+                {
+                    numeric: true,
+                    sensitivity: "base"
+                }
+            );
+        }
+    );
+
+    if (list.length === 0) {
         const row = document.createElement("tr");
 
-        const imageCell = document.createElement("td");
-        const image = document.createElement("img");
+        const cell = document.createElement("td");
 
-        image.className = "thumb";
-        image.alt = "Contestant";
-        image.loading = "lazy";
-        image.src = contestant.imageUrl || "";
+        cell.colSpan = 7;
 
-        imageCell.appendChild(image);
+        cell.textContent =
+            "No contestants have been added yet.";
 
-        const numberCell = document.createElement("td");
-        numberCell.textContent = contestant.number ?? "";
-
-        const nameCell = document.createElement("td");
-        nameCell.textContent = contestant.name ?? "";
-
-        const votesCell = document.createElement("td");
-        votesCell.textContent = Number(
-            contestant.votes || 0
-        ).toLocaleString();
-
-        const moneyCell = document.createElement("td");
-        moneyCell.textContent =
-            "₦" + Number(
-                contestant.money || 0
-            ).toLocaleString();
-
-        const statusCell = document.createElement("td");
-
-        statusCell.textContent =
-            contestant.active === false
-                ? "HIDDEN"
-                : "PUBLISHED";
-
-        const actionsCell = document.createElement("td");
-
-        const editButton = document.createElement("button");
-        editButton.type = "button";
-        editButton.className = "secondary";
-        editButton.textContent = "EDIT";
-        editButton.dataset.edit = id;
-
-        const toggleButton = document.createElement("button");
-        toggleButton.type = "button";
-        toggleButton.className = "secondary";
-
-        toggleButton.textContent =
-            contestant.active === false
-                ? "PUBLISH"
-                : "HIDE";
-
-        toggleButton.dataset.toggle = id;
-
-        const deleteButton = document.createElement("button");
-        deleteButton.type = "button";
-        deleteButton.className = "danger";
-        deleteButton.textContent = "DELETE";
-        deleteButton.dataset.delete = id;
-
-        actionsCell.append(
-            editButton,
-            toggleButton,
-            deleteButton
-        );
-
-        row.append(
-            imageCell,
-            numberCell,
-            nameCell,
-            votesCell,
-            moneyCell,
-            statusCell,
-            actionsCell
-        );
+        row.appendChild(cell);
 
         rows.appendChild(row);
-    });
 
-    /* EDIT */
+        return;
+    }
 
-    rows.querySelectorAll("[data-edit]").forEach(button => {
-        button.addEventListener("click", () => {
-            editContestant(button.dataset.edit);
-        });
-    });
+    list.forEach(
+        ([id, contestant]) => {
+            if (!contestant) {
+                return;
+            }
 
-    /* HIDE / PUBLISH */
+            const row = document.createElement("tr");
 
-    rows.querySelectorAll("[data-toggle]").forEach(button => {
-        button.addEventListener("click", () => {
-            toggleContestant(button.dataset.toggle);
-        });
-    });
+            const imageCell =
+                document.createElement("td");
 
-    /* DELETE */
+            const image =
+                document.createElement("img");
 
-    rows.querySelectorAll("[data-delete]").forEach(button => {
-        button.addEventListener("click", () => {
-            deleteContestant(button.dataset.delete);
-        });
-    });
+            image.className = "thumb";
+
+            image.alt =
+                contestant.name
+                    ? `${contestant.name} photo`
+                    : "Contestant photo";
+
+            image.loading = "lazy";
+
+            image.src =
+                contestant.imageUrl || "";
+
+            image.onerror = () => {
+                image.style.display = "none";
+            };
+
+            imageCell.appendChild(image);
+
+
+            const numberCell =
+                document.createElement("td");
+
+            numberCell.textContent =
+                contestant.number ?? "";
+
+
+            const nameCell =
+                document.createElement("td");
+
+            nameCell.textContent =
+                contestant.name ?? "";
+
+
+            const votesCell =
+                document.createElement("td");
+
+            votesCell.textContent =
+                Number(
+                    contestant.votes || 0
+                ).toLocaleString();
+
+
+            const moneyCell =
+                document.createElement("td");
+
+            moneyCell.textContent =
+                "₦" +
+                Number(
+                    contestant.money || 0
+                ).toLocaleString();
+
+
+            const statusCell =
+                document.createElement("td");
+
+            statusCell.textContent =
+                contestant.active === false
+                    ? "HIDDEN"
+                    : "PUBLISHED";
+
+
+            const actionsCell =
+                document.createElement("td");
+
+
+            const editButton =
+                document.createElement("button");
+
+            editButton.type = "button";
+
+            editButton.className = "secondary";
+
+            editButton.textContent = "EDIT";
+
+            editButton.dataset.edit = id;
+
+
+            const toggleButton =
+                document.createElement("button");
+
+            toggleButton.type = "button";
+
+            toggleButton.className = "secondary";
+
+            toggleButton.textContent =
+                contestant.active === false
+                    ? "PUBLISH"
+                    : "HIDE";
+
+            toggleButton.dataset.toggle = id;
+
+
+            const deleteButton =
+                document.createElement("button");
+
+            deleteButton.type = "button";
+
+            deleteButton.className = "danger";
+
+            deleteButton.textContent = "DELETE";
+
+            deleteButton.dataset.delete = id;
+
+
+            actionsCell.append(
+                editButton,
+                toggleButton,
+                deleteButton
+            );
+
+
+            row.append(
+                imageCell,
+                numberCell,
+                nameCell,
+                votesCell,
+                moneyCell,
+                statusCell,
+                actionsCell
+            );
+
+            rows.appendChild(row);
+        }
+    );
 }
 
+
 /* =====================================================
-   EDIT CONTESTANT
+   21. EDIT CONTESTANT
    ===================================================== */
 
 function editContestant(id) {
+    if (!isAuthorizedAdmin(auth.currentUser)) {
+        setStatus(
+            "formStatus",
+            "Please log in first."
+        );
+
+        return;
+    }
+
     const contestant = contestants[id];
 
     if (!contestant) {
@@ -772,28 +1158,43 @@ function editContestant(id) {
             "formStatus",
             "Contestant not found."
         );
+
         return;
     }
 
     $("editId").value = id;
-    $("contestantNo").value = contestant.number || "";
-    $("contestantName").value = contestant.name || "";
-    $("photoUrl").value = contestant.imageUrl || "";
+
+    $("contestantNo").value =
+        contestant.number || "";
+
+    $("contestantName").value =
+        contestant.name || "";
+
+    $("photoUrl").value =
+        contestant.imageUrl || "";
 
     $("photoFile").value = "";
 
-    const previousURL = $("preview").dataset.objectUrl;
+    const preview = $("preview");
 
-    if (previousURL) {
-        URL.revokeObjectURL(previousURL);
-        delete $("preview").dataset.objectUrl;
+    if (preview) {
+        const previousURL =
+            preview.dataset.objectUrl;
+
+        if (previousURL) {
+            URL.revokeObjectURL(previousURL);
+
+            delete preview.dataset.objectUrl;
+        }
+
+        preview.src =
+            contestant.imageUrl || "";
     }
-
-    $("preview").src = contestant.imageUrl || "";
 
     setStatus(
         "formStatus",
-        "Editing contestant #" + contestant.number
+        "Editing contestant #" +
+        (contestant.number || "")
     );
 
     window.scrollTo({
@@ -802,8 +1203,9 @@ function editContestant(id) {
     });
 }
 
+
 /* =====================================================
-   HIDE / PUBLISH CONTESTANT
+   22. HIDE OR PUBLISH CONTESTANT
    ===================================================== */
 
 async function toggleContestant(id) {
@@ -811,26 +1213,32 @@ async function toggleContestant(id) {
         alert(
             "Please log in with the authorized admin account."
         );
+
         return;
     }
 
     const contestant = contestants[id];
 
     if (!contestant) {
-        alert("Contestant not found.");
+        alert(
+            "Contestant not found."
+        );
+
         return;
     }
 
-    const newActiveState = contestant.active === false;
+    const newActiveState =
+        contestant.active === false;
 
     try {
         await update(
             ref(
                 db,
-                `faceOfKulzzy/contestants/${id}`
+                `${CONTESTANTS_PATH}/${id}`
             ),
             {
                 active: newActiveState,
+
                 updatedAt: Date.now()
             }
         );
@@ -855,8 +1263,9 @@ async function toggleContestant(id) {
     }
 }
 
+
 /* =====================================================
-   DELETE CONTESTANT
+   23. DELETE CONTESTANT
    ===================================================== */
 
 async function deleteContestant(id) {
@@ -864,22 +1273,26 @@ async function deleteContestant(id) {
         alert(
             "Please log in with the authorized admin account."
         );
+
         return;
     }
 
     const contestant = contestants[id];
 
     if (!contestant) {
-        alert("Contestant not found.");
+        alert(
+            "Contestant not found."
+        );
+
         return;
     }
 
     const confirmed = confirm(
-        "Delete contestant #" +
+        "Are you sure you want to delete contestant #" +
         contestant.number +
         " — " +
         contestant.name +
-        "?"
+        "?\n\nThis action cannot be undone."
     );
 
     if (!confirmed) {
@@ -890,7 +1303,7 @@ async function deleteContestant(id) {
         await remove(
             ref(
                 db,
-                `faceOfKulzzy/contestants/${id}`
+                `${CONTESTANTS_PATH}/${id}`
             )
         );
 
@@ -899,7 +1312,10 @@ async function deleteContestant(id) {
             "Contestant deleted successfully."
         );
 
-        if ($("editId").value === id) {
+        if (
+            $("editId") &&
+            $("editId").value === id
+        ) {
             clearForm();
         }
 
@@ -916,13 +1332,21 @@ async function deleteContestant(id) {
     }
 }
 
+
 /* =====================================================
-   CLEAR FORM
+   24. CLEAR FORM
    ===================================================== */
 
 if ($("clearBtn")) {
-    $("clearBtn").addEventListener("click", clearForm);
+    $("clearBtn").addEventListener(
+        "click",
+        event => {
+            event.preventDefault();
+            clearForm();
+        }
+    );
 }
+
 
 function clearForm() {
     if ($("editId")) {
@@ -945,70 +1369,105 @@ function clearForm() {
         $("photoFile").value = "";
     }
 
-    if ($("preview")) {
-        const previousURL = $("preview").dataset.objectUrl;
+    const preview = $("preview");
+
+    if (preview) {
+        const previousURL =
+            preview.dataset.objectUrl;
 
         if (previousURL) {
             URL.revokeObjectURL(previousURL);
-            delete $("preview").dataset.objectUrl;
+
+            delete preview.dataset.objectUrl;
         }
 
-        $("preview").removeAttribute("src");
+        preview.removeAttribute("src");
     }
 
-    setStatus("formStatus", "");
+    setStatus(
+        "formStatus",
+        ""
+    );
 }
 
+
 /* =====================================================
-   REFRESH CONTESTANTS
+   25. REFRESH CONTESTANTS
    ===================================================== */
 
 if ($("refreshBtn")) {
-    $("refreshBtn").addEventListener("click", () => {
-        if (!isAuthorizedAdmin(auth.currentUser)) {
-            setStatus(
-                "listStatus",
-                "Please log in with the authorized admin account."
-            );
-            return;
+    $("refreshBtn").addEventListener(
+        "click",
+        event => {
+            event.preventDefault();
+
+            if (!isAuthorizedAdmin(auth.currentUser)) {
+                setStatus(
+                    "listStatus",
+                    "Please log in with the authorized admin account."
+                );
+
+                return;
+            }
+
+            if (
+                typeof contestantsUnsubscribe === "function"
+            ) {
+                contestantsUnsubscribe();
+            }
+
+            contestantsUnsubscribe = null;
+
+            contestantsListenerStarted = false;
+
+            loadContestants();
         }
-
-        if (typeof contestantsUnsubscribe === "function") {
-            contestantsUnsubscribe();
-        }
-
-        contestantsUnsubscribe = null;
-        contestantsListenerStarted = false;
-
-        loadContestants();
-    });
+    );
 }
 
+
 /* =====================================================
-   LOGOUT
+   26. LOGOUT
    ===================================================== */
 
 if ($("logoutBtn")) {
-    $("logoutBtn").addEventListener("click", async () => {
-        try {
-            await signOut(auth);
+    $("logoutBtn").addEventListener(
+        "click",
+        async event => {
+            event.preventDefault();
 
-            setStatus(
-                "loginStatus",
-                "You have been logged out."
-            );
+            try {
+                await signOut(auth);
 
-        } catch (error) {
-            console.error("Logout error:", error);
+                setStatus(
+                    "loginStatus",
+                    "You have been logged out."
+                );
 
-            alert(
-                "Logout failed: " +
-                friendlyError(error)
-            );
+                showLoginPanel();
+
+            } catch (error) {
+                console.error(
+                    "Logout error:",
+                    error
+                );
+
+                alert(
+                    "Logout failed: " +
+                    friendlyError(error)
+                );
+            }
         }
-    });
+    );
 }
 
+
 /* =====================================================
-   END OF FACE OF KULZZY RADIO ADMIN SYSTEM
+   27. STARTUP CHECK
    ===================================================== */
+
+checkRequiredElements();
+
+console.log(
+    "FACE OF KULZZY RADIO 2026 ADMIN SYSTEM LOADED."
+);

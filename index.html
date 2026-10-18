@@ -195,7 +195,13 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-const KULZZY_PAYMENT_CORE = "https://kulzzy.github.io/KULZZY-PAYMENT-CORE/";
+/*
+  PAYMENT PAGE:
+  payment.html is in the same GitHub repository as index.html.
+  Change the payment link inside payment.html when needed.
+*/
+const PAYMENT_PAGE = new URL("payment.html", window.location.href).href;
+
 const FACE_EVENT_NAME = "FACE OF KULZZY RADIO 2026";
 const VOTE_UNIT = 100;
 
@@ -459,34 +465,43 @@ function startPayment() {
 
   payNow.disabled = true;
   payNow.textContent = "OPENING PAYMENT...";
-  voteMessage.textContent = "Opening KULZZY PAYMENT CORE...";
+  voteMessage.textContent = "Opening the official payment page...";
 
   try {
-    const returnUrl =
-      window.location.origin + window.location.pathname;
-
-    const paymentUrl = new URL(KULZZY_PAYMENT_CORE);
+    /*
+      Open payment.html from this same repository.
+      Pass the voting details so payment.html can read them.
+    */
+    const paymentUrl = new URL(PAYMENT_PAGE);
 
     paymentUrl.searchParams.set("purpose", FACE_EVENT_NAME);
     paymentUrl.searchParams.set("event", FACE_EVENT_NAME);
     paymentUrl.searchParams.set("contestant", selectedContestant.id);
     paymentUrl.searchParams.set("contestant_id", selectedContestant.id);
-    paymentUrl.searchParams.set("contestant_name", selectedContestant.name || "");
+    paymentUrl.searchParams.set(
+      "contestant_name",
+      selectedContestant.name || ""
+    );
     paymentUrl.searchParams.set("votes", String(votes));
     paymentUrl.searchParams.set("amount", String(amount));
     paymentUrl.searchParams.set("email", email);
     paymentUrl.searchParams.set("name", name);
-    paymentUrl.searchParams.set("return", returnUrl);
+
+    paymentUrl.searchParams.set(
+      "return",
+      window.location.origin + window.location.pathname
+    );
 
     window.location.assign(paymentUrl.toString());
+
   } catch (error) {
-    console.error("KULZZY PAYMENT CORE error:", error);
+    console.error("Payment page error:", error);
 
     payNow.disabled = false;
     payNow.textContent = "CONTINUE TO PAYMENT";
 
     voteMessage.textContent =
-      "Unable to open KULZZY PAYMENT CORE. Please try again.";
+      "Unable to open payment.html. Please try again.";
   }
 }
 

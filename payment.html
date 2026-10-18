@@ -5,71 +5,115 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#06122a">
 
-<title>Kulzzy Radio | Services Payment</title>
+<title>FACE OF KULZZY RADIO 2026 | Payment</title>
 
 <style>
 * {
   box-sizing: border-box;
 }
 
-html,
-body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
+html {
   min-height: 100%;
+  background: #06122a;
 }
 
 body {
+  margin: 0;
   min-height: 100vh;
   min-height: 100dvh;
+  padding: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
   background: #06122a;
-  color: #ffffff;
+  color: #fff;
   font-family: Arial, Helvetica, sans-serif;
 }
 
 .payment-page {
   width: 100%;
-  max-width: 440px;
-  padding: 28px 22px;
+  max-width: 460px;
+  padding: 26px 20px;
   text-align: center;
   background: linear-gradient(145deg, #0b1b38, #102b50);
   border: 2px solid #d4a017;
   border-radius: 18px;
-  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 10px 35px rgba(0,0,0,.4);
 }
 
 .brand {
-  margin: 0 0 10px;
+  margin: 0;
   color: #ffd700;
-  font-size: 29px;
+  font-size: 27px;
   font-weight: 900;
   letter-spacing: 1px;
 }
 
+.edition {
+  margin: 8px 0 22px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
 .heading {
-  margin: 0;
-  color: #ffffff;
+  margin: 0 0 10px;
   font-size: 21px;
-  font-weight: 800;
   line-height: 1.4;
 }
 
 .subtitle {
-  margin: 14px 0;
-  color: #e1e7f0;
-  font-size: 15px;
+  color: #dce5f3;
+  font-size: 14px;
   line-height: 1.7;
 }
 
-.amount-label {
-  margin-top: 25px;
-  color: #ffffff;
+.details {
+  margin-top: 22px;
+  padding: 16px;
+  text-align: left;
+  background: rgba(0,0,0,.2);
+  border: 1px solid rgba(255,215,0,.35);
+  border-radius: 12px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,.12);
   font-size: 14px;
+}
+
+.detail-row:last-child {
+  border-bottom: 0;
+}
+
+.detail-label {
+  color: #d5dceb;
+  flex-shrink: 0;
+}
+
+.detail-value {
+  text-align: right;
+  overflow-wrap: anywhere;
+  font-weight: bold;
+}
+
+.amount {
+  margin: 24px 0 5px;
+  color: #ffd700;
+  font-size: 34px;
+  font-weight: 900;
+  overflow-wrap: anywhere;
+}
+
+.amount-caption {
+  margin: 0;
+  color: #dce5f3;
+  font-size: 13px;
 }
 
 .pay-button {
@@ -81,46 +125,80 @@ body {
   border-radius: 10px;
   background: #ffd700;
   color: #06122a;
-  font-size: 19px;
+  font-size: 18px;
   font-weight: 900;
-  text-align: center;
   text-decoration: none;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
 
 .pay-button:active {
-  transform: scale(0.98);
+  transform: scale(.98);
 }
 
 .notice {
   margin: 18px 0 0;
   color: #d5dceb;
-  font-size: 13px;
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.warning {
+  margin-top: 16px;
+  padding: 12px;
+  color: #fff2b0;
+  background: rgba(212,160,23,.12);
+  border: 1px solid rgba(255,215,0,.3);
+  border-radius: 9px;
+  font-size: 12px;
   line-height: 1.7;
 }
 
-.footer {
-  margin-top: 27px;
-  padding-top: 17px;
-  border-top: 1px solid rgba(212, 160, 23, 0.4);
+.back-link {
+  display: inline-block;
+  margin-top: 20px;
   color: #ffd700;
-  font-size: 12px;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.footer {
+  margin-top: 25px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(212,160,23,.4);
+  color: #ffd700;
+  font-size: 11px;
   font-weight: bold;
-  letter-spacing: 1px;
+  letter-spacing: .8px;
+}
+
+.error {
+  display: none;
+  margin-top: 16px;
+  color: #ffb6b6;
+  font-size: 13px;
+  line-height: 1.6;
 }
 
 @media (max-width: 380px) {
+  body {
+    padding: 12px;
+  }
+
   .payment-page {
-    padding: 24px 17px;
+    padding: 22px 15px;
   }
 
   .brand {
-    font-size: 25px;
+    font-size: 23px;
   }
 
   .heading {
     font-size: 19px;
+  }
+
+  .amount {
+    font-size: 29px;
   }
 }
 </style>
@@ -132,29 +210,163 @@ body {
 
   <h1 class="brand">KULZZY RADIO</h1>
 
-  <h2 class="heading">
-    OFFICIAL SERVICES PAYMENT
-  </h2>
+  <p class="edition">FACE OF KULZZY RADIO 2026</p>
+
+  <h2 class="heading">CONTESTANT VOTING PAYMENT</h2>
+
+  <p class="subtitle">
+    Support your favourite contestant. Confirm your voting details
+    before proceeding to payment.
+  </p>
+
+  <section class="details">
+
+    <div class="detail-row">
+      <span class="detail-label">Contestant</span>
+      <span class="detail-value" id="contestantName">Not provided</span>
+    </div>
+
+    <div class="detail-row">
+      <span class="detail-label">Contestant number</span>
+      <span class="detail-value" id="contestantNumber">Not provided</span>
+    </div>
+
+    <div class="detail-row">
+      <span class="detail-label">Supporter</span>
+      <span class="detail-value" id="supporterName">Not provided</span>
+    </div>
+
+    <div class="detail-row">
+      <span class="detail-label">Votes requested</span>
+      <span class="detail-value" id="voteCount">Not provided</span>
+    </div>
+
+  </section>
+
+  <div class="amount" id="paymentAmount">₦0</div>
+  <p class="amount-caption">Requested payment amount</p>
 
   <a
     id="payNow"
     class="pay-button"
-    href="https://selar.com/d1s4a16c20?add_to_cart=1"
+    href="https://selar.com/5772b1677z"
     target="_blank"
     rel="noopener noreferrer"
   >
     PAY NOW
   </a>
 
+  <div class="error" id="errorMessage"></div>
+
   <p class="notice">
-    Tap PAY NOW to continue to the designated payment checkout and follow the instructions to complete your payment.
+    After making payment, keep your payment confirmation.
+    Your votes are not added automatically.
   </p>
+
+  <div class="warning">
+    IMPORTANT: The amount displayed here is based on the voting
+    request. The Selar checkout may not automatically use this
+    amount. Confirm the actual checkout price before paying.
+    Votes count only after payment verification and admin approval.
+  </div>
+
+  <a id="backLink" class="back-link" href="index.html">
+    ← Back to Face of Kulzzy Radio
+  </a>
 
   <footer class="footer">
     KULZZY RADIO — CELEBRATING LIVES EVERYDAY
   </footer>
 
 </main>
+
+<script>
+(function () {
+  "use strict";
+
+  const params = new URLSearchParams(window.location.search);
+
+  const requestId = params.get("request_id") || "";
+  const contestantId = params.get("contestant_id") || "";
+  const contestantName = params.get("contestant_name") || "";
+  const contestantNumber = params.get("contestant_number") || "";
+  const supporterName = params.get("name") || "";
+  const supporterEmail = params.get("email") || "";
+  const votes = Number(params.get("votes") || 0);
+  const amount = Number(params.get("amount") || 0);
+
+  const selarPaymentUrl = "https://selar.com/5772b1677z";
+
+  function display(id, value, fallback) {
+    document.getElementById(id).textContent =
+      value && String(value).trim()
+        ? String(value).trim()
+        : fallback;
+  }
+
+  function formatNumber(value) {
+    return new Intl.NumberFormat("en-NG", {
+      maximumFractionDigits: 2
+    }).format(value);
+  }
+
+  display("contestantName", contestantName, "Not provided");
+  display("contestantNumber", contestantNumber, "Not provided");
+  display("supporterName", supporterName, "Not provided");
+
+  display(
+    "voteCount",
+    Number.isFinite(votes) && votes > 0
+      ? formatNumber(votes)
+      : "",
+    "Not provided"
+  );
+
+  document.getElementById("paymentAmount").textContent =
+    Number.isFinite(amount) && amount > 0
+      ? "₦" + formatNumber(amount)
+      : "Amount unavailable";
+
+  const payButton = document.getElementById("payNow");
+  const errorMessage = document.getElementById("errorMessage");
+
+  const validRequest =
+    requestId &&
+    contestantId &&
+    Number.isFinite(votes) &&
+    votes > 0 &&
+    Number.isFinite(amount) &&
+    amount > 0;
+
+  if (!validRequest) {
+    payButton.style.opacity = "0.55";
+
+    errorMessage.textContent =
+      "Voting details are missing or invalid. Return to the voting page and submit your request again.";
+
+    errorMessage.style.display = "block";
+
+    payButton.addEventListener("click", function (event) {
+      event.preventDefault();
+      errorMessage.style.display = "block";
+    });
+
+    return;
+  }
+
+  /*
+    This opens the fixed Selar product checkout.
+    Query details cannot change the Selar product price automatically.
+    Payment verification and vote approval must happen separately.
+  */
+  payButton.href = selarPaymentUrl;
+
+  /*
+    Do not count votes here.
+    Opening checkout is not proof of payment.
+  */
+})();
+</script>
 
 </body>
 </html>

@@ -1,498 +1,647 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+/* =====================================================
+   FACE OF KULZZY RADIO 2026
+   MANUAL VOTE APPROVAL SYSTEM
+   ===================================================== */
 
-<title>Face of Kulzzy Radio 2026 — Admin</title>
+import { getApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
-<style>
-*{
-    box-sizing:border-box;
+import {
+    getAuth,
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+import {
+    getDatabase,
+    ref,
+    get,
+    push,
+    update,
+    onValue
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+
+/* ================= CONFIGURATION ================= */
+
+const ADMIN_EMAIL = "dstnewz.ng@gmail.com";
+const ROOT = "faceOfKulzzy";
+const VOTE_PRICE = 100;
+
+const app = getApp();
+const auth = getAuth(app);
+const db = getDatabase(app);
+
+let contestants = {};
+let officialVotes = {};
+let currentUser = null;
+let panelCreated = false;
+let saving = false;
+
+
+/* ================= HELPERS ================= */
+
+const $ = id => document.getElementById(id);
+
+function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+    })[character]);
 }
 
-body{
-    margin:0;
-    font-family:Arial,Helvetica,sans-serif;
-    background:#06122a;
-    color:#fff;
+function money(value) {
+    return "₦" + Number(value || 0).toLocaleString("en-NG");
 }
 
-header{
-    padding:25px 15px;
-    text-align:center;
-    background:
-        radial-gradient(circle at top,
-        rgba(255,215,0,.18),
-        transparent 45%),
-        linear-gradient(135deg,#020817,#0b2044);
+function showStatus(message, error = false) {
+    const element = $("voteApprovalStatus");
 
-    border-bottom:2px solid #ffd700;
+    if (!element) return;
+
+    element.textContent = message;
+    element.style.color = error ? "#ff8585" : "#8ff0ad";
 }
 
-header h1{
-    margin:0;
-    color:#ffd700;
-    font-size:clamp(25px,6vw,45px);
-}
 
-header p{
-    margin:8px 0 0;
-    color:#b9c6da;
-}
+/* ================= CREATE ADMIN PANEL ================= */
 
-.container{
-    max-width:1100px;
-    margin:auto;
-    padding:20px;
-}
+function createPanel() {
+    if (panelCreated) return;
 
-.panel{
-    background:#0b1d3d;
-    border:1px solid rgba(255,215,0,.3);
-    border-radius:18px;
-    padding:20px;
-    margin-bottom:20px;
-}
+    const adminPanel = $("adminPanel");
 
-h2{
-    color:#ffd700;
-    margin-top:0;
-}
-
-label{
-    display:block;
-    font-weight:bold;
-    margin-bottom:7px;
-    color:#dce5f5;
-}
-
-input{
-    width:100%;
-    padding:14px;
-    border-radius:10px;
-    border:1px solid #29466f;
-    background:#06122a;
-    color:#fff;
-    outline:none;
-}
-
-input:focus{
-    border-color:#ffd700;
-}
-
-.grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:15px;
-}
-
-button{
-    border:0;
-    border-radius:10px;
-    padding:13px 18px;
-    font-weight:900;
-    cursor:pointer;
-}
-
-.primary{
-    background:#ffd700;
-    color:#06122a;
-}
-
-.secondary{
-    background:#284467;
-    color:#fff;
-}
-
-.danger{
-    background:#c92b3d;
-    color:#fff;
-}
-
-.actions{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    margin-top:16px;
-}
-
-.status{
-    margin-top:12px;
-    color:#b9c6da;
-    min-height:20px;
-}
-
-.preview{
-    width:160px;
-    height:200px;
-    object-fit:cover;
-    border-radius:12px;
-    background:#14294b;
-    border:1px solid #34517b;
-    display:block;
-    margin-top:12px;
-}
-
-.table-wrap{
-    width:100%;
-    overflow-x:auto;
-}
-
-table{
-    width:100%;
-    border-collapse:collapse;
-}
-
-th,
-td{
-    padding:12px;
-    border-bottom:1px solid rgba(255,255,255,.1);
-    text-align:left;
-    white-space:nowrap;
-}
-
-th{
-    color:#ffd700;
-}
-
-.thumb{
-    width:55px;
-    height:65px;
-    object-fit:cover;
-    border-radius:8px;
-}
-
-.hidden{
-    display:none;
-}
-
-@media(max-width:700px){
-
-    .grid{
-        grid-template-columns:1fr;
+    if (!adminPanel) {
+        setTimeout(createPanel, 300);
+        return;
     }
 
-    .container{
-        padding:12px;
+    panelCreated = true;
+
+    const panel = document.createElement("section");
+
+    panel.id = "manualVoteApprovalPanel";
+    panel.className = "panel";
+
+    panel.innerHTML = `
+        <h2>🗳️ MANUAL VOTE APPROVAL</h2>
+
+        <p style="color:#c8d3e5;line-height:1.7">
+            Confirm that payment has actually been received before
+            approving votes. Each vote costs ₦100.
+        </p>
+
+        <div style="margin-top:18px">
+            <label for="voteContestant">Select Contestant</label>
+
+            <select id="voteContestant"
+                style="width:100%;padding:14px;border-radius:10px;
+                background:#06122a;color:#fff;border:1px solid #29466f">
+                <option value="">Loading contestants...</option>
+            </select>
+        </div>
+
+        <div class="grid" style="margin-top:15px">
+            <div>
+                <label for="voteVoterName">Voter's Name</label>
+                <input id="voteVoterName" type="text"
+                    placeholder="Enter voter name">
+            </div>
+
+            <div>
+                <label for="voteVoterEmail">Voter's Email (optional)</label>
+                <input id="voteVoterEmail" type="email"
+                    placeholder="Enter voter email">
+            </div>
+        </div>
+
+        <div class="grid" style="margin-top:15px">
+            <div>
+                <label for="voteCount">Number of Votes</label>
+                <input id="voteCount" type="number"
+                    min="1" step="1" inputmode="numeric"
+                    placeholder="Enter votes">
+            </div>
+
+            <div>
+                <label for="voteAmount">Payment Amount (₦)</label>
+                <input id="voteAmount" type="number"
+                    readonly placeholder="Automatically calculated">
+            </div>
+        </div>
+
+        <div style="margin-top:15px">
+            <label for="votePaymentReference">Payment Reference (optional)</label>
+            <input id="votePaymentReference" type="text"
+                placeholder="Transaction reference">
+        </div>
+
+        <div style="margin-top:18px;line-height:1.8">
+            <label style="display:flex;gap:10px;align-items:flex-start">
+                <input id="votePaymentConfirmed" type="checkbox"
+                    style="width:auto;margin-top:5px">
+                <span>
+                    I have verified the transaction and confirm that
+                    the payment has been received.
+                </span>
+            </label>
+        </div>
+
+        <div class="actions">
+            <button id="approveVotesButton" class="primary">
+                APPROVE VOTES
+            </button>
+
+            <button id="refreshVotesButton" class="secondary">
+                REFRESH CONTESTANTS
+            </button>
+        </div>
+
+        <div id="voteApprovalStatus" class="status" aria-live="polite"></div>
+
+        <hr style="border-color:#29466f;margin:25px 0">
+
+        <h2>📋 APPROVED VOTER RECORDS</h2>
+
+        <p style="color:#c8d3e5;line-height:1.7">
+            Select a contestant to view approved voter records.
+            Private payment information is not shown publicly.
+        </p>
+
+        <div style="margin-top:15px">
+            <label for="recordsContestant">Contestant Records</label>
+
+            <select id="recordsContestant"
+                style="width:100%;padding:14px;border-radius:10px;
+                background:#06122a;color:#fff;border:1px solid #29466f">
+                <option value="">Select contestant</option>
+            </select>
+        </div>
+
+        <div id="approvedRecords" style="margin-top:15px">
+            <p style="color:#c8d3e5">Select a contestant to view records.</p>
+        </div>
+    `;
+
+    adminPanel.appendChild(panel);
+
+    $("voteCount").addEventListener("input", calculateAmount);
+
+    $("voteContestant").addEventListener("change", () => {
+        $("recordsContestant").value = $("voteContestant").value;
+        loadApprovedRecords();
+    });
+
+    $("recordsContestant").addEventListener(
+        "change",
+        loadApprovedRecords
+    );
+
+    $("approveVotesButton").addEventListener(
+        "click",
+        approveVotes
+    );
+
+    $("refreshVotesButton").addEventListener(
+        "click",
+        loadContestants
+    );
+
+    loadContestants();
+}
+
+
+/* ================= AUTHORIZATION ================= */
+
+onAuthStateChanged(auth, user => {
+    currentUser = user;
+
+    if (!user || user.email?.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
+        const existingPanel = $("manualVoteApprovalPanel");
+
+        if (existingPanel) {
+            existingPanel.remove();
+        }
+
+        panelCreated = false;
+        return;
     }
 
-    .panel{
-        padding:15px;
+    createPanel();
+});
+
+
+/* ================= LOAD CONTESTANTS ================= */
+
+function loadContestants() {
+    if (!currentUser ||
+        currentUser.email?.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
+        return;
     }
 
-    .actions button{
-        width:100%;
+    showStatus("Loading contestants...");
+
+    onValue(
+        ref(db, `${ROOT}/contestants`),
+        snapshot => {
+            contestants = snapshot.val() || {};
+
+            onValue(
+                ref(db, `${ROOT}/officialVotes`),
+                voteSnapshot => {
+                    officialVotes = voteSnapshot.val() || {};
+                    renderContestantOptions();
+                    showStatus("Contestants loaded.");
+                },
+                error => showStatus(
+                    "Could not load official vote totals: " + error.message,
+                    true
+                )
+            );
+        },
+        error => showStatus(
+            "Could not load contestants: " + error.message,
+            true
+        )
+    );
+}
+
+
+/* ================= CONTESTANT OPTIONS ================= */
+
+function renderContestantOptions() {
+    const voteSelect = $("voteContestant");
+    const recordsSelect = $("recordsContestant");
+
+    if (!voteSelect || !recordsSelect) return;
+
+    const previousVote = voteSelect.value;
+    const previousRecords = recordsSelect.value;
+
+    const list = Object.entries(contestants).sort((a, b) =>
+        String(a[1]?.number || "").localeCompare(
+            String(b[1]?.number || ""),
+            undefined,
+            { numeric: true }
+        )
+    );
+
+    const options = list
+        .filter(([, contestant]) => contestant)
+        .map(([id, contestant]) => {
+            const label =
+                `#${contestant.number || "—"} — ${contestant.name || "Unnamed contestant"}`;
+
+            return `
+                <option value="${escapeHTML(id)}">
+                    ${escapeHTML(label)}
+                </option>
+            `;
+        })
+        .join("");
+
+    voteSelect.innerHTML =
+        `<option value="">Select contestant</option>` + options;
+
+    recordsSelect.innerHTML =
+        `<option value="">Select contestant</option>` + options;
+
+    if (contestants[previousVote]) {
+        voteSelect.value = previousVote;
+    }
+
+    if (contestants[previousRecords]) {
+        recordsSelect.value = previousRecords;
     }
 }
-</style>
-</head>
 
-<body>
 
-<header>
+/* ================= CALCULATE PAYMENT ================= */
 
-    <h1>👑 FACE OF KULZZY RADIO 2026</h1>
+function calculateAmount() {
+    const votes = Number($("voteCount")?.value || 0);
 
-    <p>
-        ADMIN CONTROL CENTER
-        • IN PARTNERSHIP WITH BW EMPIRE
-    </p>
+    $("voteAmount").value =
+        Number.isSafeInteger(votes) && votes > 0
+            ? votes * VOTE_PRICE
+            : "";
+}
 
-</header>
 
+/* ================= READ CURRENT OFFICIAL TOTAL ================= */
 
-<div class="container">
+function getOfficialTotal(contestantId) {
+    const value = officialVotes[contestantId];
 
+    if (value && typeof value === "object") {
+        return Number(value.votes || 0);
+    }
 
-<!-- ==========================
-     LOGIN
-========================== -->
+    return Number(value || 0);
+}
 
-<section
-    id="loginPanel"
-    class="panel"
->
 
-    <h2>🔐 ADMIN LOGIN</h2>
+/* ================= APPROVE VOTES ================= */
 
-    <p>
-        Login with the Firebase administrator account
-        authorized to manage the pageantry.
-    </p>
+async function approveVotes() {
+    if (saving) return;
 
-    <div class="grid">
+    if (!currentUser ||
+        currentUser.email?.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
+        showStatus("Administrator authorization required.", true);
+        return;
+    }
+
+    const contestantId = $("voteContestant").value;
+    const voterName = $("voteVoterName").value.trim();
+    const voterEmail = $("voteVoterEmail").value.trim();
+    const votes = Number($("voteCount").value);
+    const amount = Number($("voteAmount").value);
+    const paymentReference = $("votePaymentReference").value.trim();
+    const paymentConfirmed = $("votePaymentConfirmed").checked;
 
-        <div>
+    if (!contestantId || !contestants[contestantId]) {
+        showStatus("Please select a valid contestant.", true);
+        return;
+    }
 
-            <label>
-                Email
-            </label>
+    if (!voterName) {
+        showStatus("Enter the voter's name.", true);
+        return;
+    }
 
-            <input
-                id="email"
-                type="email"
-                placeholder="Admin email"
-                autocomplete="username"
-            >
+    if (!Number.isSafeInteger(votes) || votes < 1) {
+        showStatus("Enter a valid whole number of votes.", true);
+        return;
+    }
 
-        </div>
+    if (!Number.isSafeInteger(votes * VOTE_PRICE) ||
+        amount !== votes * VOTE_PRICE) {
+        showStatus("The payment amount does not match the vote count.", true);
+        return;
+    }
 
+    if (!paymentConfirmed) {
+        showStatus("Confirm that you have verified the payment first.", true);
+        return;
+    }
 
-        <div>
+    const contestant = contestants[contestantId];
 
-            <label>
-                Password
-            </label>
+    const confirmed = window.confirm(
+        `Approve ${votes.toLocaleString()} vote(s) for ` +
+        `${contestant.name || "this contestant"}?\n\n` +
+        `Payment: ${money(amount)}\n\n` +
+        "Only continue if you have verified the payment."
+    );
 
-            <input
-                id="password"
-                type="password"
-                placeholder="Password"
-                autocomplete="current-password"
-            >
-
-        </div>
-
-    </div>
-
-
-    <div class="actions">
-
-        <button
-            id="loginBtn"
-            class="primary"
-        >
-            LOGIN
-        </button>
-
-    </div>
-
-
-    <div
-        id="loginStatus"
-        class="status"
-    ></div>
-
-</section>
-
-
-
-<!-- ==========================
-     ADMIN AREA
-========================== -->
-
-<section
-    id="adminPanel"
-    class="hidden"
->
-
-
-<!-- ADD CONTESTANT -->
-
-<div class="panel">
-
-    <h2>
-        ➕ ADD CONTESTANT
-    </h2>
-
-
-    <input
-        id="editId"
-        type="hidden"
-    >
-
-
-    <div class="grid">
-
-        <div>
-
-            <label>
-                Contestant Number
-            </label>
-
-            <input
-                id="contestantNo"
-                type="text"
-                placeholder="001"
-            >
-
-        </div>
-
-
-        <div>
-
-            <label>
-                Contestant Name
-            </label>
-
-            <input
-                id="contestantName"
-                type="text"
-                placeholder="Full name"
-            >
-
-        </div>
-
-    </div>
-
-
-    <br>
-
-
-    <label>
-        Contestant Picture
-    </label>
-
-    <input
-        id="photoFile"
-        type="file"
-        accept="image/*"
-    >
-
-
-    <img
-        id="preview"
-        class="preview"
-        alt="Picture preview"
-    >
-
-
-    <br>
-
-
-    <label>
-        OR IMAGE URL
-    </label>
-
-    <input
-        id="photoUrl"
-        type="url"
-        placeholder="https://example.com/photo.jpg"
-    >
-
-
-    <div class="actions">
-
-        <button
-            id="saveBtn"
-            class="primary"
-        >
-            👑 PUBLISH CONTESTANT
-        </button>
-
-
-        <button
-            id="clearBtn"
-            class="secondary"
-        >
-            CLEAR
-        </button>
-
-    </div>
-
-
-    <div
-        id="formStatus"
-        class="status"
-    ></div>
-
-</div>
-
-
-
-<!-- CONTESTANT LIST -->
-
-<div class="panel">
-
-    <h2>
-        👑 PUBLISHED CONTESTANTS
-    </h2>
-
-
-    <div class="actions">
-
-        <button
-            id="refreshBtn"
-            class="secondary"
-        >
-            🔄 REFRESH
-        </button>
-
-
-        <button
-            id="logoutBtn"
-            class="danger"
-        >
-            LOGOUT
-        </button>
-
-    </div>
-
-
-    <div
-        id="listStatus"
-        class="status"
-    ></div>
-
-
-    <div class="table-wrap">
-
-        <table>
-
-            <thead>
-
-                <tr>
-
-                    <th>
-                        PHOTO
-                    </th>
-
-                    <th>
-                        NUMBER
-                    </th>
-
-                    <th>
-                        NAME
-                    </th>
-
-                    <th>
-                        VOTES
-                    </th>
-
-                    <th>
-                        RAISED
-                    </th>
-
-                    <th>
-                        STATUS
-                    </th>
-
-                    <th>
-                        ACTIONS
-                    </th>
-
-                </tr>
-
-            </thead>
-
-
-            <tbody
-                id="contestantRows"
-            ></tbody>
-
-        </table>
-
-    </div>
-
-</div>
-
-</section>
-
-</div>
-
-
-<script type="module" src="face-admin.js"></script>
-
-</body>
-</html>
+    if (!confirmed) return;
+
+    saving = true;
+    $("approveVotesButton").disabled = true;
+
+    showStatus("Saving approved votes...");
+
+    try {
+        /*
+         * Re-read database values immediately before updating.
+         * This reduces the risk of using a stale total.
+         */
+        const contestantRef = ref(
+            db,
+            `${ROOT}/contestants/${contestantId}`
+        );
+
+        const officialRef = ref(
+            db,
+            `${ROOT}/officialVotes/${contestantId}`
+        );
+
+        const [contestantSnapshot, officialSnapshot] =
+            await Promise.all([
+                get(contestantRef),
+                get(officialRef)
+            ]);
+
+        const latestContestant = contestantSnapshot.val();
+
+        if (!latestContestant) {
+            throw new Error("The selected contestant no longer exists.");
+        }
+
+        const officialValue = officialSnapshot.val();
+
+        const officialTotal =
+            officialValue && typeof officialValue === "object"
+                ? Number(officialValue.votes || 0)
+                : Number(officialValue || 0);
+
+        const contestantTotal = Number(latestContestant.votes || 0);
+
+        if (
+            !Number.isSafeInteger(officialTotal) ||
+            officialTotal < 0 ||
+            !Number.isSafeInteger(contestantTotal) ||
+            contestantTotal < 0
+        ) {
+            throw new Error("The existing vote total is invalid.");
+        }
+
+        const currentTotal = Math.max(
+            officialTotal,
+            contestantTotal
+        );
+
+        const newTotal = currentTotal + votes;
+
+        if (!Number.isSafeInteger(newTotal)) {
+            throw new Error("The new vote total is too large.");
+        }
+
+        const now = Date.now();
+
+        /*
+         * Save public and private records under the same record ID.
+         */
+        const publicRecordRef = push(
+            ref(db, `${ROOT}/publicVoterRecords/${contestantId}`)
+        );
+
+        const recordId = publicRecordRef.key;
+
+        if (!recordId) {
+            throw new Error("Could not create a voter record ID.");
+        }
+
+        const privateRecordRef = ref(
+            db,
+            `${ROOT}/voterRecordPrivateDetails/${contestantId}/${recordId}`
+        );
+
+        const changes = {};
+
+        changes[
+            `${ROOT}/contestants/${contestantId}/votes`
+        ] = newTotal;
+
+        changes[
+            `${ROOT}/officialVotes/${contestantId}`
+        ] = {
+            votes: newTotal,
+            updatedAt: now
+        };
+
+        changes[
+            `${ROOT}/publicVoterRecords/${contestantId}/${recordId}`
+        ] = {
+            voterName,
+            votes,
+            createdAt: now,
+            approved: true
+        };
+
+        changes[
+            `${ROOT}/voterRecordPrivateDetails/${contestantId}/${recordId}`
+        ] = {
+            voterName,
+            voterEmail,
+            votes,
+            paymentAmount: amount,
+            paymentReference,
+            contestantId,
+            contestantName: contestant.name || "",
+            createdAt: now,
+            approved: true,
+            approvedBy: currentUser.email
+        };
+
+        await update(ref(db), changes);
+
+        $("voteVoterName").value = "";
+        $("voteVoterEmail").value = "";
+        $("voteCount").value = "";
+        $("voteAmount").value = "";
+        $("votePaymentReference").value = "";
+        $("votePaymentConfirmed").checked = false;
+
+        showStatus(
+            `SUCCESS: ${votes.toLocaleString()} vote(s) approved for ` +
+            `${contestant.name}. New total: ${newTotal.toLocaleString()}.`
+        );
+
+        $("recordsContestant").value = contestantId;
+        loadApprovedRecords();
+
+    } catch (error) {
+        console.error("Vote approval error:", error);
+
+        showStatus(
+            "Vote approval failed: " +
+            (error?.message || "Unknown error") +
+            ". No success should be assumed until the database confirms the update.",
+            true
+        );
+    } finally {
+        saving = false;
+
+        if ($("approveVotesButton")) {
+            $("approveVotesButton").disabled = false;
+        }
+    }
+}
+
+
+/* ================= VIEW APPROVED RECORDS ================= */
+
+async function loadApprovedRecords() {
+    const contestantId = $("recordsContestant")?.value;
+    const container = $("approvedRecords");
+
+    if (!container) return;
+
+    if (!contestantId) {
+        container.innerHTML =
+            `<p style="color:#c8d3e5">Select a contestant to view records.</p>`;
+        return;
+    }
+
+    container.innerHTML =
+        `<p style="color:#c8d3e5">Loading approved records...</p>`;
+
+    try {
+        const snapshot = await get(
+            ref(db, `${ROOT}/publicVoterRecords/${contestantId}`)
+        );
+
+        const data = snapshot.val() || {};
+
+        const list = Object.entries(data)
+            .filter(([, record]) => record && record.approved === true)
+            .sort((a, b) =>
+                Number(b[1].createdAt || 0) -
+                Number(a[1].createdAt || 0)
+            );
+
+        if (!list.length) {
+            container.innerHTML =
+                `<p style="color:#c8d3e5">No approved voter records yet.</p>`;
+            return;
+        }
+
+        container.innerHTML = list.map(([id, record]) => {
+            const date = record.createdAt
+                ? new Date(Number(record.createdAt)).toLocaleString()
+                : "Not available";
+
+            return `
+                <div style="padding:14px 0;border-bottom:1px solid #29466f">
+                    <strong style="color:#ffd700">
+                        ${escapeHTML(record.voterName || "Voter")}
+                    </strong>
+
+                    <div style="margin-top:6px">
+                        Votes: ${Number(record.votes || 0).toLocaleString()}
+                    </div>
+
+                    <div style="margin-top:6px;color:#c8d3e5">
+                        ${escapeHTML(date)}
+                    </div>
+
+                    <div style="margin-top:6px;color:#8ff0ad">
+                        APPROVED
+                    </div>
+
+                    <button
+                        class="secondary"
+                        style="margin-top:10px"
+                        data-copy-record="${escapeHTML(id)}"
+                    >
+                        COPY SHARE LINK
+                    </button>
+                </div>
+            `;
+        }).join("");
+
+        container.querySelectorAll("[data-copy-record]").forEach(button => {
+            button.addEventListener("click", async () => {
+                const url = new URL("contestant-voters.html", window.location.href);
+                url.searchParams.set("id", contestantId);
+
+                try {
+                    await navigator.clipboard.writeText(url.href);
+                    showStatus("Contestant voter-record link copied.");
+                } catch {
+                    window.prompt("Copy this voter-record link:", url.href);
+                }
+            });
+        });
+
+    } catch (error) {
+        console.error(error);
+
+        container.innerHTML =
+            `<p style="color:#ff8585">Unable to load records: ` +
+            `${escapeHTML(error.message)}</p>`;
+    }
+}

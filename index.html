@@ -96,14 +96,18 @@ footer strong{color:#ffd700}
 </div>
 
 <main class="container">
+
 <section>
 <div class="section-title">
 <h2>🏆 LIVE LEADERBOARD</h2>
 <p>Contestants are ranked by verified votes.</p>
 </div>
+
 <div class="leaderboard">
 <h3>CURRENT RANKING</h3>
-<div id="leaderboard"><div class="empty">Loading leaderboard...</div></div>
+<div id="leaderboard">
+<div class="empty">Connecting to the contest...</div>
+</div>
 </div>
 </section>
 
@@ -112,10 +116,12 @@ footer strong{color:#ffd700}
 <h2>👑 MEET THE CONTESTANTS</h2>
 <p>Choose your favourite contestant and support her journey.</p>
 </div>
+
 <div id="contestants" class="contestants">
-<div class="empty">Loading contestants...</div>
+<div class="empty">Connecting to the contestants...</div>
 </div>
 </section>
+
 </main>
 
 <div id="voteModal" class="vote-modal">
@@ -144,7 +150,7 @@ Kulzzy Radio Network — Celebrating Lives Everyday
 </footer>
 
 <script type="module">
-import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
   getDatabase,
@@ -154,8 +160,9 @@ import {
   set
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
+/* FIXED: only one apiKey property label */
 const firebaseConfig = {
-  apiKey: apiKey: "AIzaSyD-Oqmq3P5bNoxcHBdkTAw7O9W9HVsKDVc",
+  apiKey: "AIzaSyD-Oqmq3P5bNoxcHBdkTAw7O9W9HVsKDVc",
   authDomain: "face-of-kulzzy-radio-2026.firebaseapp.com",
   databaseURL: "https://face-of-kulzzy-radio-2026-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "face-of-kulzzy-radio-2026",
@@ -167,6 +174,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+
 const PAYMENT_PAGE = new URL("payment.html", window.location.href).href;
 const FACE_EVENT_NAME = "FACE OF KULZZY RADIO 2026";
 const VOTE_UNIT = 100;
@@ -187,29 +195,65 @@ let contestants = [];
 let selectedContestant = null;
 let officialVoteTotals = {};
 
-onValue(ref(db, "faceOfKulzzy/contestants"), snapshot => {
-  const data = snapshot.val() || {};
-  contestants = Object.entries(data)
-    .map(([id, contestant]) => ({id, ...contestant}))
-    .filter(contestant => contestant.active !== false);
-  refreshVoteDisplays();
-}, error => {
-  console.error("Firebase contestant error:", error);
-  contestantsElement.innerHTML = '<div class="empty">Unable to load contestants. Please try again later.</div>';
-  leaderboardElement.innerHTML = '<div class="empty">Unable to load leaderboard.</div>';
-});
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, character => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  }[character]));
+}
 
-onValue(ref(db, "faceOfKulzzy/officialVotes"), snapshot => {
-  officialVoteTotals = snapshot.val() || {};
-  refreshVoteDisplays();
-}, error => {
-  console.error("Official vote totals error:", error);
-  leaderboardElement.innerHTML = '<div class="empty">Unable to load official vote totals.</div>';
-});
+function escapeAttribute(value) {
+  return escapeHTML(value);
+}
+
+function showDatabaseError(message) {
+  contestantsElement.innerHTML =
+    '<div class="empty">' + escapeHTML(message) + '</div>';
+  leaderboardElement.innerHTML =
+    '<div class="empty">' + escapeHTML(message) + '</div>';
+}
+
+/* Load contestants from the same database path used by the admin. */
+onValue(
+  ref(db, "faceOfKulzzy/contestants"),
+  snapshot => {
+    const data = snapshot.val() || {};
+
+    contestants = Object.entries(data)
+      .map(([id, contestant]) => ({ id, ...contestant }))
+      .filter(contestant => contestant.active !== false);
+
+    refreshVoteDisplays();
+  },
+  error => {
+    console.error("Firebase contestant error:", error);
+    showDatabaseError(
+      "Unable to load contestants. Check Firebase database permissions and connection."
+    );
+  }
+);
+
+/* Load verified vote totals. */
+onValue(
+  ref(db, "faceOfKulzzy/officialVotes"),
+  snapshot => {
+    officialVoteTotals = snapshot.val() || {};
+    refreshVoteDisplays();
+  },
+  error => {
+    console.error("Official vote totals error:", error);
+    leaderboardElement.innerHTML =
+      '<div class="empty">Unable to load official vote totals. Check Firebase permissions.</div>';
+  }
+);
 
 function getContestantVotes(contestant) {
   const entry = officialVoteTotals[contestant.id];
-  const votes = Number(entry?.votes || 0);
+  const votes = Number(entry?.votes ?? contestant.votes ?? 0);
+
   return Number.isSafeInteger(votes) && votes >= 0 ? votes : 0;
 }
 
@@ -217,20 +261,22 @@ function refreshVoteDisplays() {
   const ranked = [...contestants].sort(
     (a, b) => getContestantVotes(b) - getContestantVotes(a)
   );
+
   displayLeaderboard(ranked);
   displayContestants(ranked);
 }
 
 function displayLeaderboard(list) {
   if (!list.length) {
-    leaderboardElement.innerHTML = '<div class="empty">No contestants have been published yet.</div>';
+    leaderboardElement.innerHTML =
+      '<div class="empty">No contestants have been published yet.</div>';
     return;
   }
 
   leaderboardElement.innerHTML = list.map((contestant, index) => `
     <div class="rank">
       <div class="rank-number">${index + 1}</div>
-      <div class="rank-name">${escapeHTML(contestant.name)}</div>
+      <div class="rank-name">${escapeHTML(contestant.name || "Contestant")}</div>
       <div class="rank-votes">❤️ ${getContestantVotes(contestant).toLocaleString()}</div>
     </div>
   `).join("");
@@ -238,29 +284,43 @@ function displayLeaderboard(list) {
 
 function displayContestants(list) {
   if (!list.length) {
-    contestantsElement.innerHTML = '<div class="empty">Contestants will appear here soon.</div>';
+    contestantsElement.innerHTML =
+      '<div class="empty">Contestants will appear here soon.</div>';
     return;
   }
 
   contestantsElement.innerHTML = list.map(contestant => `
     <article class="card">
       <div class="photo">
-        <img src="${escapeAttribute(contestant.imageUrl || "")}"
-             alt="${escapeAttribute(contestant.name || "Contestant")}"
-             loading="lazy"
-             onerror="this.style.display='none';">
-        <div class="contestant-number">CONTESTANT #${escapeHTML(contestant.number || "")}</div>
+        <img
+          src="${escapeAttribute(contestant.imageUrl || "")}"
+          alt="${escapeAttribute(contestant.name || "Contestant")}"
+          loading="lazy"
+          onerror="this.style.display='none';"
+        >
+        <div class="contestant-number">
+          CONTESTANT #${escapeHTML(contestant.number || "")}
+        </div>
       </div>
+
       <div class="info">
         <div class="name">${escapeHTML(contestant.name || "Contestant")}</div>
-        <div class="votes">❤️ ${getContestantVotes(contestant).toLocaleString()} VOTES</div>
-        <button class="vote-button" data-id="${escapeAttribute(contestant.id)}" type="button">❤️ VOTE FOR ME</button>
+        <div class="votes">
+          ❤️ ${getContestantVotes(contestant).toLocaleString()} VOTES
+        </div>
+        <button
+          class="vote-button"
+          data-id="${escapeAttribute(contestant.id)}"
+          type="button"
+        >❤️ VOTE FOR ME</button>
       </div>
     </article>
   `).join("");
 
   contestantsElement.querySelectorAll(".vote-button").forEach(button => {
-    button.addEventListener("click", () => openVotingModal(button.dataset.id));
+    button.addEventListener("click", () => {
+      openVotingModal(button.dataset.id);
+    });
   });
 }
 
@@ -278,11 +338,14 @@ function openVotingModal(contestantId) {
   votePreview.textContent = "₦100 = 1 vote";
   voteMessage.textContent = "";
   payNow.disabled = false;
-  payNow.style.display = "";
   payNow.textContent = "CONTINUE TO PAYMENT";
-  cancelVote.textContent = "CANCEL";
+
   voteModal.classList.add("active");
   setTimeout(() => voterName.focus(), 100);
+}
+
+function closeVotingModal() {
+  voteModal.classList.remove("active");
 }
 
 cancelVote.addEventListener("click", closeVotingModal);
@@ -290,12 +353,6 @@ cancelVote.addEventListener("click", closeVotingModal);
 voteModal.addEventListener("click", event => {
   if (event.target === voteModal) closeVotingModal();
 });
-
-function closeVotingModal() {
-  voteModal.classList.remove("active");
-  payNow.style.display = "";
-  cancelVote.textContent = "CANCEL";
-}
 
 document.addEventListener("keydown", event => {
   if (event.key === "Escape") closeVotingModal();
@@ -308,25 +365,25 @@ voteAmount.addEventListener("input", () => {
     votePreview.textContent = "₦100 = 1 vote";
     return;
   }
+
   if (amount < VOTE_UNIT) {
     votePreview.textContent = "Minimum voting amount is ₦100.";
     return;
   }
+
   if (amount % VOTE_UNIT !== 0) {
     votePreview.textContent = "Enter an amount in multiples of ₦100.";
     return;
   }
 
   const votes = amount / VOTE_UNIT;
-  votePreview.textContent = "❤️ " + votes.toLocaleString() +
+
+  votePreview.textContent =
+    "❤️ " + votes.toLocaleString() +
     " vote" + (votes === 1 ? "" : "s") +
     " for ₦" + amount.toLocaleString();
 });
 
-/*
-  Save the pending request before opening the payment page.
-  This does NOT count votes. Admin must verify the payment.
-*/
 payNow.addEventListener("click", startPayment);
 
 async function startPayment() {
@@ -345,7 +402,7 @@ async function startPayment() {
     return;
   }
 
-  if (!email || !isValidEmail(email)) {
+  if (!isValidEmail(email)) {
     voteMessage.textContent = "Please enter a valid email address.";
     voterEmail.focus();
     return;
@@ -365,11 +422,6 @@ async function startPayment() {
 
   const votes = amount / VOTE_UNIT;
 
-  if (!Number.isSafeInteger(votes) || votes < 1) {
-    voteMessage.textContent = "Invalid vote quantity.";
-    return;
-  }
-
   payNow.disabled = true;
   payNow.textContent = "SAVING REQUEST...";
   voteMessage.textContent = "Saving your support request...";
@@ -378,10 +430,12 @@ async function startPayment() {
     const requestRef = push(ref(db, "faceOfKulzzy/pendingVoteRequests"));
     const requestId = requestRef.key;
 
-    if (!requestId) throw new Error("Could not create a request number.");
+    if (!requestId) {
+      throw new Error("Could not create a request number.");
+    }
 
     await set(requestRef, {
-      requestId: requestId,
+      requestId,
       status: "pending",
       contestantId: selectedContestant.id,
       contestantName: selectedContestant.name || "",
@@ -395,6 +449,7 @@ async function startPayment() {
     });
 
     const paymentUrl = new URL(PAYMENT_PAGE);
+
     paymentUrl.searchParams.set("purpose", FACE_EVENT_NAME);
     paymentUrl.searchParams.set("event", FACE_EVENT_NAME);
     paymentUrl.searchParams.set("contestant", selectedContestant.id);
@@ -406,35 +461,27 @@ async function startPayment() {
     paymentUrl.searchParams.set("amount", String(amount));
     paymentUrl.searchParams.set("email", email);
     paymentUrl.searchParams.set("name", name);
-    paymentUrl.searchParams.set("return", window.location.origin + window.location.pathname);
+    paymentUrl.searchParams.set(
+      "return",
+      window.location.origin + window.location.pathname
+    );
 
     window.location.assign(paymentUrl.toString());
+
   } catch (error) {
     console.error("Support request error:", error);
+
     payNow.disabled = false;
     payNow.textContent = "CONTINUE TO PAYMENT";
+
     voteMessage.textContent =
-      "Could not save your request. No votes have been counted. Please try again. " +
-      (error?.message || "");
+      "Could not save your request. No votes have been counted. " +
+      "Please try again. " + (error?.message || "");
   }
 }
 
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
-
-function escapeHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, character => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#039;"
-  }[character]));
-}
-
-function escapeAttribute(value) {
-  return escapeHTML(value);
 }
 </script>
 

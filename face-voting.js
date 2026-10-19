@@ -720,7 +720,26 @@ async function approvePendingRequest(requestId) {
     ] = user.email;
 
     /*
-      Save the changes together.
+      PUBLIC-SAFE CONTESTANT ACTIVITY SUMMARY
+
+      Do not add supporter names, email addresses,
+      payment references, or private payment details here.
+
+      The record is saved in the same Firebase update
+      as the official vote totals and approval status.
+    */
+
+    changes[
+      `${ROOT}/contestantPublicActivity/${contestantId}/${requestId}`
+    ] = {
+      status: "approved",
+      amount: amount,
+      votes: votes,
+      approvedAt: now
+    };
+
+    /*
+      Save all changes together.
       Firebase must permit writes to every listed path.
     */
 

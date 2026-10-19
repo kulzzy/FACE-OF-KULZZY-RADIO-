@@ -1,14 +1,13 @@
 /* =====================================================
    FACE OF KULZZY RADIO 2026
-   CONTESTANT TRACKING LINK BUTTONS
+   CONTESTANT TRACKING LINKS
    File: contestant-link-buttons.js
 
-   Uses the existing contestant-voters.html page.
-   Does not modify payment approval logic.
+   Uses the existing Firebase admin login.
+   Preserves payment approval and voting code.
    ===================================================== */
 
 import {
-    initializeApp,
     getApps
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
@@ -19,50 +18,33 @@ import {
 
 
 /* =====================================================
-   1. FIREBASE CONFIGURATION
-   ===================================================== */
-
-const firebaseConfig = {
-    apiKey: "AIzaSyD-Oqmq3P5bNoxcHBdkTAw7O9W9HVsKDVc",
-    authDomain: "face-of-kulzzy-radio-2026.firebaseapp.com",
-    databaseURL: "https://face-of-kulzzy-radio-2026-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "face-of-kulzzy-radio-2026",
-    storageBucket: "face-of-kulzzy-radio-2026.firebasestorage.app",
-    messagingSenderId: "175657004245",
-    appId: "1:175657004245:web:022d50bc14ed86e036065c",
-    measurementId: "G-WQDFT2B0RH"
-};
-
-
-/* =====================================================
-   2. ADMIN CONFIGURATION
+   1. CONFIGURATION
    ===================================================== */
 
 const ADMIN_EMAIL = "dstnewz.ng@gmail.com";
 
+const TRACKING_PAGE = "contestant-voters.html";
+
 
 /* =====================================================
-   3. INITIALIZE FIREBASE WITHOUT REPLACING THE
-      EXISTING ADMIN APP
+   2. USE THE EXISTING DEFAULT FIREBASE APP
    ===================================================== */
 
-let app = getApps().find(
-    existingApp =>
-        existingApp.name === "KulzzyTrackingLinks"
+const defaultApp = getApps().find(
+    app => app.name === "[DEFAULT]"
 );
 
-if (!app) {
-    app = initializeApp(
-        firebaseConfig,
-        "KulzzyTrackingLinks"
+if (!defaultApp) {
+    throw new Error(
+        "Firebase default app not found. Check face-admin.js."
     );
 }
 
-const auth = getAuth(app);
+const auth = getAuth(defaultApp);
 
 
 /* =====================================================
-   4. PAGE ELEMENTS
+   3. PAGE ELEMENTS
    ===================================================== */
 
 const contestantRows =
@@ -71,12 +53,12 @@ const contestantRows =
 const listStatus =
     document.getElementById("listStatus");
 
+let authorizedAdmin = false;
+
 
 /* =====================================================
-   5. ADMIN AUTHORIZATION
+   4. STATUS MESSAGE
    ===================================================== */
-
-let authorizedAdmin = false;
 
 function showMessage(message) {
     if (listStatus) {
@@ -84,25 +66,25 @@ function showMessage(message) {
     }
 }
 
-onAuthStateChanged(auth, user => {
-    authorizedAdmin = Boolean(
-        user &&
-        user.email &&
-        user.email.toLowerCase() ===
-            ADMIN_EMAIL.toLowerCase()
+
+/* =====================================================
+   5. BUILD THE CONTESTANT LINK
+   ===================================================== */
+
+function buildTrackingLink(contestantId) {
+    const url = new URL(
+        TRACKING_PAGE,
+        window.location.href
     );
 
-    if (!authorizedAdmin) {
-        removeTrackingButtons();
-        return;
-    }
+    url.searchParams.set("id", contestantId);
 
-    addTrackingButtons();
-});
+    return url.href;
+}
 
 
 /* =====================================================
-   6. REMOVE TRACKING BUTTONS WHEN ADMIN LOGS OUT
+   6. REMOVE BUTTONS WHEN ADMIN IS NOT AUTHORIZED
    ===================================================== */
 
 function removeTrackingButtons() {
@@ -113,23 +95,7 @@ function removeTrackingButtons() {
 
 
 /* =====================================================
-   7. BUILD A CONTESTANT'S TRACKING LINK
-   ===================================================== */
-
-function buildTrackingLink(contestantId) {
-    const page = new URL(
-        "contestant-voters.html",
-        window.location.href
-    );
-
-    page.searchParams.set("id", contestantId);
-
-    return page.href;
-}
-
-
-/* =====================================================
-   8. COPY TRACKING LINK
+   7. COPY LINK
    ===================================================== */
 
 async function copyTrackingLink(
@@ -140,7 +106,6 @@ async function copyTrackingLink(
         showMessage(
             "Please log in with the authorized admin account."
         );
-
         return;
     }
 
@@ -148,13 +113,12 @@ async function copyTrackingLink(
         showMessage(
             "Unable to identify this contestant."
         );
-
         return;
     }
 
     const link = buildTrackingLink(contestantId);
 
-    const originalText = button.textContent;
+    const originalText = "COPY TRACKING LINK";
 
     button.disabled = true;
     button.textContent = "PREPARING LINK...";
@@ -169,67 +133,62 @@ async function copyTrackingLink(
             button.textContent = "LINK COPIED!";
 
             showMessage(
-                "Contestant tracking link copied. You can now send it to the contestant."
+                "Tracking link copied successfully. Send it to the contestant."
             );
-
         } else {
-            showCopyPrompt(link);
+            window.prompt(
+                "Copy this contestant tracking link:",
+                link
+            );
 
             button.textContent = "LINK READY";
 
             showMessage(
-                "The tracking link is displayed. Copy it and send it to the contestant."
+                "Copy the displayed link and send it to the contestant."
             );
         }
-
     } catch (error) {
         console.error(
             "Tracking link copy error:",
             error
         );
 
-        showCopyPrompt(link);
+        window.prompt(
+            "Copy this contestant tracking link:",
+            link
+        );
 
         button.textContent = "LINK READY";
 
         showMessage(
             "Copy the displayed link and send it to the contestant."
         );
-
-    } finally {
-        button.disabled = false;
-
-        setTimeout(() => {
-            if (button.isConnected) {
-                button.textContent = originalText;
-            }
-        }, 2500);
     }
+
+    button.disabled = false;
+
+    setTimeout(() => {
+        if (button.isConnected) {
+            button.textContent = originalText;
+        }
+    }, 2500);
 }
 
 
 /* =====================================================
-   9. FALLBACK FOR MOBILE BROWSERS
-   ===================================================== */
-
-function showCopyPrompt(link) {
-    window.prompt(
-        "Copy this contestant tracking link:",
-        link
-    );
-}
-
-
-/* =====================================================
-   10. ADD TRACKING BUTTONS TO EACH CONTESTANT
+   8. ADD BUTTONS TO CONTESTANT ROWS
    ===================================================== */
 
 function addTrackingButtons() {
-    if (!authorizedAdmin || !contestantRows) {
+    if (
+        !authorizedAdmin ||
+        !contestantRows
+    ) {
         return;
     }
 
-    const rows = contestantRows.querySelectorAll("tr");
+    const rows =
+        contestantRows.querySelectorAll("tr");
 
     rows.forEach(row => {
         const actionsCell = row.lastElementChild;
@@ -239,8 +198,8 @@ function addTrackingButtons() {
         }
 
         /*
-         * The existing EDIT button stores the
-         * Firebase contestant ID in data-edit.
+         * The existing EDIT button contains
+         * the contestant's Firebase database ID.
          */
 
         const editButton =
@@ -257,45 +216,39 @@ function addTrackingButtons() {
             return;
         }
 
-        /*
-         * Do not add duplicate buttons when the
-         * contestant list refreshes.
-         */
-
-        let trackingButton =
+        let button =
             actionsCell.querySelector(
                 ".contestant-tracking-button"
             );
 
-        if (!trackingButton) {
-            trackingButton =
-                document.createElement("button");
+        if (!button) {
+            button = document.createElement("button");
 
-            trackingButton.type = "button";
+            button.type = "button";
 
-            trackingButton.className =
-                "primary contestant-tracking-button";
+            button.className =
+                "secondary contestant-tracking-button";
 
-            trackingButton.textContent =
+            button.textContent =
                 "COPY TRACKING LINK";
 
-            trackingButton.style.marginTop = "6px";
-            trackingButton.style.display = "block";
-            trackingButton.style.width = "100%";
-            trackingButton.style.whiteSpace = "normal";
-            trackingButton.style.overflowWrap = "anywhere";
+            button.style.display = "block";
+            button.style.width = "100%";
+            button.style.marginTop = "8px";
+            button.style.whiteSpace = "normal";
+            button.style.overflowWrap = "anywhere";
 
-            actionsCell.appendChild(trackingButton);
+            actionsCell.appendChild(button);
         }
 
         /*
-         * Replace the previous handler safely.
+         * Assign the click action.
          */
 
-        trackingButton.onclick = () => {
+        button.onclick = () => {
             copyTrackingLink(
                 contestantId,
-                trackingButton
+                button
             );
         };
     });
@@ -303,7 +256,7 @@ function addTrackingButtons() {
 
 
 /* =====================================================
-   11. WATCH FOR CONTESTANT LIST UPDATES
+   9. WATCH FOR CONTESTANT LIST CHANGES
    ===================================================== */
 
 if (contestantRows) {
@@ -322,9 +275,52 @@ if (contestantRows) {
 
 
 /* =====================================================
-   12. STARTUP
+   10. USE THE EXISTING ADMIN LOGIN SESSION
+   ===================================================== */
+
+onAuthStateChanged(
+    auth,
+
+    user => {
+        authorizedAdmin = Boolean(
+            user &&
+            user.email &&
+            user.email.toLowerCase() ===
+                ADMIN_EMAIL.toLowerCase()
+        );
+
+        if (authorizedAdmin) {
+            addTrackingButtons();
+
+            showMessage(
+                "Admin verified. Contestant tracking links are available."
+            );
+        } else {
+            removeTrackingButtons();
+        }
+    },
+
+    error => {
+        console.error(
+            "Tracking-link authentication error:",
+            error
+        );
+
+        authorizedAdmin = false;
+
+        removeTrackingButtons();
+
+        showMessage(
+            "Unable to verify admin login. Refresh the page and log in again."
+        );
+    }
+);
+
+
+/* =====================================================
+   11. STARTUP
    ===================================================== */
 
 console.log(
-    "KULZZY CONTESTANT TRACKING LINK FEATURE LOADED."
+    "FACE OF KULZZY RADIO: TRACKING LINK FEATURE LOADED."
 );

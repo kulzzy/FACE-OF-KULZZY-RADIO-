@@ -85,9 +85,20 @@ main {
 
 .total {
   color: #ffd700;
-  font-size: 29px;
+  font-size: 25px;
   font-weight: 900;
   margin-top: 15px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.amount {
+  color: #39e58c;
+  font-size: 24px;
+  font-weight: 900;
+  margin-top: 10px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 
 h2 {
@@ -138,7 +149,11 @@ footer {
   }
 
   .total {
-    font-size: 24px;
+    font-size: 22px;
+  }
+
+  .amount {
+    font-size: 22px;
   }
 }
 </style>
@@ -300,10 +315,20 @@ if (!contestantId) {
             <div class="total" id="officialTotal">
               Official votes: loading...
             </div>
+
+            <div class="amount" id="amountRaised">
+              Amount raised: calculating...
+            </div>
           </div>
 
         </div>
       `;
+
+      /*
+       * If the official vote count has already loaded,
+       * restore the displayed values after rendering.
+       */
+      updateDisplayedTotals();
     },
 
     error => {
@@ -316,8 +341,38 @@ if (!contestantId) {
 
 
   /* =========================================
-     LIVE APPROVED OFFICIAL VOTE TOTAL
+     LIVE OFFICIAL VOTES AND AMOUNT RAISED
+     ₦100 PER OFFICIAL VOTE
      ========================================= */
+
+  let latestOfficialVotes = 0;
+  let officialVotesLoaded = false;
+
+  function updateDisplayedTotals() {
+    const totalElement =
+      document.getElementById("officialTotal");
+
+    const amountElement =
+      document.getElementById("amountRaised");
+
+    if (!officialVotesLoaded) {
+      return;
+    }
+
+    if (totalElement) {
+      totalElement.textContent =
+        "Official votes: " +
+        latestOfficialVotes.toLocaleString("en-NG");
+    }
+
+    if (amountElement) {
+      const amount = latestOfficialVotes * 100;
+
+      amountElement.textContent =
+        "Amount raised: ₦" +
+        amount.toLocaleString("en-NG");
+    }
+  }
 
   onValue(
     ref(db, `faceOfKulzzy/officialVotes/${contestantId}`),
@@ -330,20 +385,16 @@ if (!contestantId) {
           ? entry.votes
           : entry;
 
-      const total = Number(rawTotal || 0);
+      const parsedTotal = Number(rawTotal || 0);
 
-      const totalElement =
-        document.getElementById("officialTotal");
+      latestOfficialVotes =
+        Number.isSafeInteger(parsedTotal) && parsedTotal >= 0
+          ? parsedTotal
+          : 0;
 
-      if (totalElement) {
-        totalElement.textContent =
-          "Official votes: " +
-          (
-            Number.isSafeInteger(total) && total >= 0
-              ? total
-              : 0
-          ).toLocaleString();
-      }
+      officialVotesLoaded = true;
+
+      updateDisplayedTotals();
     },
 
     error => {
@@ -352,8 +403,15 @@ if (!contestantId) {
       const totalElement =
         document.getElementById("officialTotal");
 
+      const amountElement =
+        document.getElementById("amountRaised");
+
       if (totalElement) {
         totalElement.textContent = "Vote total unavailable";
+      }
+
+      if (amountElement) {
+        amountElement.textContent = "Amount raised unavailable";
       }
     }
   );
@@ -396,7 +454,7 @@ if (!contestantId) {
 
         const safeVotes =
           Number.isSafeInteger(votes) && votes >= 0
-            ? votes.toLocaleString()
+            ? votes.toLocaleString("en-NG")
             : "0";
 
         return `

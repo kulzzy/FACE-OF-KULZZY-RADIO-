@@ -1,7 +1,9 @@
+
 /* =====================================================
    FACE OF KULZZY RADIO 2026
    COMPLETE ADMIN SYSTEM
    File: face-admin.js
+   EDIT AND DELETE FIXED
    ===================================================== */
 
 
@@ -62,7 +64,6 @@ const db = getDatabase(app);
 
 const ADMIN_EMAIL = "dstnewz.ng@gmail.com";
 
-
 function isAuthorizedAdmin(user) {
     return Boolean(
         user &&
@@ -84,8 +85,6 @@ const CLOUDINARY_UPLOAD_PRESET =
 
 /* =====================================================
    6. DATABASE PATHS
-
-   Keep these paths consistent with the public page.
    ===================================================== */
 
 const CONTESTANTS_PATH =
@@ -97,7 +96,6 @@ const CONTESTANTS_PATH =
    ===================================================== */
 
 const $ = id => document.getElementById(id);
-
 
 function setStatus(id, message) {
     const element = $(id);
@@ -133,7 +131,6 @@ const requiredElements = [
     "refreshBtn",
     "logoutBtn"
 ];
-
 
 function checkRequiredElements() {
     const missing = requiredElements.filter(
@@ -210,39 +207,27 @@ function friendlyError(error) {
         return "Please enter a valid email address.";
     }
 
-    if (
-        code.includes("too-many-requests")
-    ) {
+    if (code.includes("too-many-requests")) {
         return "Too many login attempts. Please wait and try again.";
     }
 
-    if (
-        code.includes("network-request-failed")
-    ) {
+    if (code.includes("network-request-failed")) {
         return "Network connection failed. Check your internet and try again.";
     }
 
-    if (
-        code.includes("unauthorized-domain")
-    ) {
+    if (code.includes("unauthorized-domain")) {
         return "This website domain is not authorized in Firebase Authentication.";
     }
 
-    if (
-        code.includes("operation-not-allowed")
-    ) {
+    if (code.includes("operation-not-allowed")) {
         return "Email/password login is disabled in Firebase Authentication.";
     }
 
-    if (
-        code.includes("email-already-in-use")
-    ) {
+    if (code.includes("email-already-in-use")) {
         return "This email is already registered.";
     }
 
-    if (
-        code.includes("weak-password")
-    ) {
+    if (code.includes("weak-password")) {
         return "The password does not meet Firebase password requirements.";
     }
 
@@ -253,9 +238,7 @@ function friendlyError(error) {
         return "Firebase denied database access. Check your Realtime Database rules.";
     }
 
-    if (
-        code.includes("storage/unauthorized")
-    ) {
+    if (code.includes("storage/unauthorized")) {
         return "Image upload was rejected. Check the Cloudinary upload preset.";
     }
 
@@ -266,9 +249,7 @@ function friendlyError(error) {
         return "Image upload failed. Check your internet and Cloudinary configuration.";
     }
 
-    if (
-        code.includes("auth/")
-    ) {
+    if (code.includes("auth/")) {
         return "Firebase login failed: " + code.replace("auth/", "");
     }
 
@@ -281,14 +262,10 @@ function friendlyError(error) {
    ===================================================== */
 
 async function login() {
-    if (loginInProgress) {
-        return;
-    }
+    if (loginInProgress) return;
 
     const emailElement = $("email");
-
     const passwordElement = $("password");
-
     const loginButton = $("loginBtn");
 
     if (!emailElement || !passwordElement) {
@@ -301,7 +278,6 @@ async function login() {
     }
 
     const email = emailElement.value.trim();
-
     const password = passwordElement.value;
 
     if (!email || !password) {
@@ -313,9 +289,7 @@ async function login() {
         return;
     }
 
-    if (
-        email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()
-    ) {
+    if (email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
         setStatus(
             "loginStatus",
             "Access denied. Please use the authorized admin email."
@@ -393,7 +367,6 @@ if ($("loginBtn")) {
     );
 }
 
-
 if ($("password")) {
     $("password").addEventListener(
         "keydown",
@@ -405,7 +378,6 @@ if ($("password")) {
         }
     );
 }
-
 
 if ($("email")) {
     $("email").addEventListener(
@@ -434,7 +406,6 @@ function showAdminPanel() {
     }
 }
 
-
 function showLoginPanel() {
     if ($("loginPanel")) {
         $("loginPanel").classList.remove("hidden");
@@ -457,10 +428,7 @@ onAuthStateChanged(
         if (user && isAuthorizedAdmin(user)) {
             showAdminPanel();
 
-            setStatus(
-                "loginStatus",
-                ""
-            );
+            setStatus("loginStatus", "");
 
             loadContestants();
 
@@ -522,9 +490,7 @@ if ($("photoFile")) {
         () => {
             const file = $("photoFile").files?.[0];
 
-            if (!file) {
-                return;
-            }
+            if (!file) return;
 
             if (!file.type.startsWith("image/")) {
                 setStatus(
@@ -552,10 +518,7 @@ if ($("photoFile")) {
             $("preview").dataset.objectUrl =
                 imageURL;
 
-            setStatus(
-                "formStatus",
-                ""
-            );
+            setStatus("formStatus", "");
         }
     );
 }
@@ -580,10 +543,7 @@ async function uploadImage(file) {
 
     const formData = new FormData();
 
-    formData.append(
-        "file",
-        file
-    );
+    formData.append("file", file);
 
     formData.append(
         "upload_preset",
@@ -650,9 +610,7 @@ if ($("saveBtn")) {
    ===================================================== */
 
 async function saveContestant() {
-    if (savingContestant) {
-        return;
-    }
+    if (savingContestant) return;
 
     if (!isAuthorizedAdmin(auth.currentUser)) {
         setStatus(
@@ -664,15 +622,10 @@ async function saveContestant() {
     }
 
     const numberElement = $("contestantNo");
-
     const nameElement = $("contestantName");
-
     const urlElement = $("photoUrl");
-
     const fileElement = $("photoFile");
-
     const editElement = $("editId");
-
     const saveButton = $("saveBtn");
 
     if (
@@ -691,30 +644,18 @@ async function saveContestant() {
     }
 
     const number = numberElement.value.trim();
-
     const name = nameElement.value.trim();
-
     const url = urlElement.value.trim();
-
     const file = fileElement.files?.[0] || null;
-
     const editId = editElement.value.trim();
 
     if (!number) {
-        setStatus(
-            "formStatus",
-            "Enter the contestant number."
-        );
-
+        setStatus("formStatus", "Enter the contestant number.");
         return;
     }
 
     if (!name) {
-        setStatus(
-            "formStatus",
-            "Enter the contestant name."
-        );
-
+        setStatus("formStatus", "Enter the contestant name.");
         return;
     }
 
@@ -735,9 +676,7 @@ async function saveContestant() {
                 parsedURL.protocol !== "https:" &&
                 parsedURL.protocol !== "http:"
             ) {
-                throw new Error(
-                    "Invalid image URL protocol."
-                );
+                throw new Error("Invalid image URL protocol.");
             }
 
         } catch {
@@ -793,10 +732,7 @@ async function saveContestant() {
 
         if (!contestantId) {
             contestantId = push(
-                ref(
-                    db,
-                    CONTESTANTS_PATH
-                )
+                ref(db, CONTESTANTS_PATH)
             ).key;
         }
 
@@ -808,24 +744,12 @@ async function saveContestant() {
 
         const contestant = {
             number: number,
-
             name: name,
-
             imageUrl: imageUrl,
-
-            votes: Number(
-                oldData?.votes || 0
-            ),
-
-            money: Number(
-                oldData?.money || 0
-            ),
-
+            votes: Number(oldData?.votes || 0),
+            money: Number(oldData?.money || 0),
             active: oldData?.active !== false,
-
-            createdAt:
-                oldData?.createdAt || Date.now(),
-
+            createdAt: oldData?.createdAt || Date.now(),
             updatedAt: Date.now()
         };
 
@@ -834,13 +758,36 @@ async function saveContestant() {
             "Saving contestant to Firebase..."
         );
 
-        await set(
-            ref(
-                db,
-                `${CONTESTANTS_PATH}/${contestantId}`
-            ),
-            contestant
+        const contestantRef = ref(
+            db,
+            `${CONTESTANTS_PATH}/${contestantId}`
         );
+
+        if (editId) {
+
+            // EDIT FIX:
+            // Update only the edited fields.
+            // Preserve votes, money and other existing data.
+
+            await update(
+                contestantRef,
+                {
+                    number: contestant.number,
+                    name: contestant.name,
+                    imageUrl: contestant.imageUrl,
+                    updatedAt: contestant.updatedAt
+                }
+            );
+
+        } else {
+
+            // NEW CONTESTANT
+
+            await set(
+                contestantRef,
+                contestant
+            );
+        }
 
         setStatus(
             "formStatus",
@@ -886,9 +833,7 @@ function loadContestants() {
         return;
     }
 
-    if (contestantsListenerStarted) {
-        return;
-    }
+    if (contestantsListenerStarted) return;
 
     setStatus(
         "listStatus",
@@ -965,7 +910,6 @@ function renderContestants() {
     list.sort(
         (a, b) => {
             const first = a[1]?.number ?? "";
-
             const second = b[1]?.number ?? "";
 
             return String(first).localeCompare(
@@ -998,9 +942,7 @@ function renderContestants() {
 
     list.forEach(
         ([id, contestant]) => {
-            if (!contestant) {
-                return;
-            }
+            if (!contestant) return;
 
             const row = document.createElement("tr");
 
@@ -1012,15 +954,13 @@ function renderContestants() {
 
             image.className = "thumb";
 
-            image.alt =
-                contestant.name
-                    ? `${contestant.name} photo`
-                    : "Contestant photo";
+            image.alt = contestant.name
+                ? `${contestant.name} photo`
+                : "Contestant photo";
 
             image.loading = "lazy";
 
-            image.src =
-                contestant.imageUrl || "";
+            image.src = contestant.imageUrl || "";
 
             image.onerror = () => {
                 image.style.display = "none";
@@ -1028,20 +968,17 @@ function renderContestants() {
 
             imageCell.appendChild(image);
 
-
             const numberCell =
                 document.createElement("td");
 
             numberCell.textContent =
                 contestant.number ?? "";
 
-
             const nameCell =
                 document.createElement("td");
 
             nameCell.textContent =
                 contestant.name ?? "";
-
 
             const votesCell =
                 document.createElement("td");
@@ -1050,7 +987,6 @@ function renderContestants() {
                 Number(
                     contestant.votes || 0
                 ).toLocaleString();
-
 
             const moneyCell =
                 document.createElement("td");
@@ -1061,7 +997,6 @@ function renderContestants() {
                     contestant.money || 0
                 ).toLocaleString();
 
-
             const statusCell =
                 document.createElement("td");
 
@@ -1070,28 +1005,21 @@ function renderContestants() {
                     ? "HIDDEN"
                     : "PUBLISHED";
 
-
             const actionsCell =
                 document.createElement("td");
-
 
             const editButton =
                 document.createElement("button");
 
             editButton.type = "button";
-
             editButton.className = "secondary";
-
             editButton.textContent = "EDIT";
-
             editButton.dataset.edit = id;
-
 
             const toggleButton =
                 document.createElement("button");
 
             toggleButton.type = "button";
-
             toggleButton.className = "secondary";
 
             toggleButton.textContent =
@@ -1101,25 +1029,19 @@ function renderContestants() {
 
             toggleButton.dataset.toggle = id;
 
-
             const deleteButton =
                 document.createElement("button");
 
             deleteButton.type = "button";
-
             deleteButton.className = "danger";
-
             deleteButton.textContent = "DELETE";
-
             deleteButton.dataset.delete = id;
-
 
             actionsCell.append(
                 editButton,
                 toggleButton,
                 deleteButton
             );
-
 
             row.append(
                 imageCell,
@@ -1138,7 +1060,56 @@ function renderContestants() {
 
 
 /* =====================================================
-   21. EDIT CONTESTANT
+   21. FIXED CONTESTANT ACTION BUTTON CONNECTION
+   ===================================================== */
+
+// This listener connects EDIT, HIDE/PUBLISH and DELETE
+// to their respective functions.
+
+const contestantRowsElement = $("contestantRows");
+
+if (contestantRowsElement) {
+
+    contestantRowsElement.addEventListener(
+        "click",
+        event => {
+
+            const button = event.target.closest("button");
+
+            if (
+                !button ||
+                !contestantRowsElement.contains(button)
+            ) {
+                return;
+            }
+
+            // EDIT BUTTON
+
+            if (button.dataset.edit) {
+                editContestant(button.dataset.edit);
+                return;
+            }
+
+            // HIDE / PUBLISH BUTTON
+
+            if (button.dataset.toggle) {
+                toggleContestant(button.dataset.toggle);
+                return;
+            }
+
+            // DELETE BUTTON
+
+            if (button.dataset.delete) {
+                deleteContestant(button.dataset.delete);
+                return;
+            }
+        }
+    );
+}
+
+
+/* =====================================================
+   22. EDIT CONTESTANT
    ===================================================== */
 
 function editContestant(id) {
@@ -1205,7 +1176,7 @@ function editContestant(id) {
 
 
 /* =====================================================
-   22. HIDE OR PUBLISH CONTESTANT
+   23. HIDE OR PUBLISH CONTESTANT
    ===================================================== */
 
 async function toggleContestant(id) {
@@ -1220,10 +1191,7 @@ async function toggleContestant(id) {
     const contestant = contestants[id];
 
     if (!contestant) {
-        alert(
-            "Contestant not found."
-        );
-
+        alert("Contestant not found.");
         return;
     }
 
@@ -1238,7 +1206,6 @@ async function toggleContestant(id) {
             ),
             {
                 active: newActiveState,
-
                 updatedAt: Date.now()
             }
         );
@@ -1265,7 +1232,7 @@ async function toggleContestant(id) {
 
 
 /* =====================================================
-   23. DELETE CONTESTANT
+   24. DELETE CONTESTANT
    ===================================================== */
 
 async function deleteContestant(id) {
@@ -1280,10 +1247,7 @@ async function deleteContestant(id) {
     const contestant = contestants[id];
 
     if (!contestant) {
-        alert(
-            "Contestant not found."
-        );
-
+        alert("Contestant not found.");
         return;
     }
 
@@ -1295,11 +1259,13 @@ async function deleteContestant(id) {
         "?\n\nThis action cannot be undone."
     );
 
-    if (!confirmed) {
-        return;
-    }
+    if (!confirmed) return;
 
     try {
+
+        // DELETE THE SELECTED CONTESTANT
+        // USING ITS EXACT FIREBASE DATABASE ID.
+
         await remove(
             ref(
                 db,
@@ -1307,10 +1273,8 @@ async function deleteContestant(id) {
             )
         );
 
-        setStatus(
-            "listStatus",
-            "Contestant deleted successfully."
-        );
+        // CLEAR THE FORM IF THIS WAS THE
+        // CONTESTANT CURRENTLY BEING EDITED.
 
         if (
             $("editId") &&
@@ -1318,6 +1282,11 @@ async function deleteContestant(id) {
         ) {
             clearForm();
         }
+
+        setStatus(
+            "listStatus",
+            "Contestant deleted successfully."
+        );
 
     } catch (error) {
         console.error(
@@ -1334,7 +1303,7 @@ async function deleteContestant(id) {
 
 
 /* =====================================================
-   24. CLEAR FORM
+   25. CLEAR FORM
    ===================================================== */
 
 if ($("clearBtn")) {
@@ -1346,7 +1315,6 @@ if ($("clearBtn")) {
         }
     );
 }
-
 
 function clearForm() {
     if ($("editId")) {
@@ -1384,15 +1352,12 @@ function clearForm() {
         preview.removeAttribute("src");
     }
 
-    setStatus(
-        "formStatus",
-        ""
-    );
+    setStatus("formStatus", "");
 }
 
 
 /* =====================================================
-   25. REFRESH CONTESTANTS
+   26. REFRESH CONTESTANTS
    ===================================================== */
 
 if ($("refreshBtn")) {
@@ -1427,7 +1392,7 @@ if ($("refreshBtn")) {
 
 
 /* =====================================================
-   26. LOGOUT
+   27. LOGOUT
    ===================================================== */
 
 if ($("logoutBtn")) {
@@ -1463,7 +1428,7 @@ if ($("logoutBtn")) {
 
 
 /* =====================================================
-   27. STARTUP CHECK
+   28. STARTUP CHECK
    ===================================================== */
 
 checkRequiredElements();
